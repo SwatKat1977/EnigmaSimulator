@@ -18,7 +18,7 @@ from RotorContact import RotorContact
 # ***********************************************************************
 # Class representing an Enigma rotor / wheel /drum / Walzen (German).
 # ***********************************************************************
-class Rotor(object):
+class Rotor:
 
     ##
     # Property getter 'Name' : Name of the rotor.

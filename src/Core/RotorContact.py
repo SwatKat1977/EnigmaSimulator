@@ -19,7 +19,7 @@ from Singleton import Singleton
 # Enumeration for converting a rotor pin/contact to a letter
 # ***********************************************************************
 @Singleton
-class RotorContact(object):
+class RotorContact:
 
     # Number of rotor contacts.
     NUMBER_OF_CONTACTS = 26
