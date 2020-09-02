@@ -14,7 +14,7 @@
 '''
 import json
 import jsonschema
-from Rotor import Rotor
+from rotor import Rotor
 from rotor_contact import RotorContact
 
 
