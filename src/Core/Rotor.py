@@ -20,6 +20,9 @@ from RotorContact import RotorContact
 # ***********************************************************************
 class Rotor:
 
+    NoOfContactsOnRotor = 26
+
+
     ##
     # Property getter 'Name' : Name of the rotor.
     @property
@@ -93,7 +96,7 @@ class Rotor:
         if not isinstance(wiring, (dict)):
             raise ValueError("Incompatible rotor wiring diagram")
 
-        if len(wiring) != RotorContact.Instance().NUMBER_OF_CONTACTS:
+        if len(wiring) != self.NoOfContactsOnRotor:
             raise ValueError("Incomplete wiring diagram")
 
         # define how the rotor is internally wired.

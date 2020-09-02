@@ -12,162 +12,132 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-import xml.etree.ElementTree as ElementTree
+import json
+import jsonschema
 from Rotor import *
-from Singleton import Singleton
 from RotorContact import RotorContact
 
 
-@Singleton
-class RotorFactory(object):
+class RotorFactory:
 
-    # XML Element : Rotors (root object)
-    XML_ELEMENT_ROOT = 'ROTORS'
+    slots = ['_BodyElement_Notches', '_BodyElement_Wiring',
+             '_BodyElement_WiringIn', '_BodyElement_WiringOut',
+            '_JsonSchema']
 
-    # XML Element (and attribute): Rotor
-    XML_ELEMENT_ROTOR = 'ROTOR'
-    XML_ELEMENT_ATTRIB_ROTOR_NAME = 'NAME'
+    _BodyElement_Name = 'name'
+    _BodyElement_Notches = 'notches'
+    _BodyElement_Wiring = 'wiring'
+    _BodyElement_WiringIn = 'in'
+    _BodyElement_WiringOut = 'out'
 
-    # XML Element: Rotor notch
-    XML_ELEMENT_ROTOR_NOTCH = 'NOTCH'
+    _JsonSchema = {
+        "definitions":
+        {
+            "PinWiringEntry":
+            {
+                "type": "object",
+                "additionalProperties" : False,
+                "required": [_BodyElement_WiringIn, _BodyElement_WiringOut],
+                "properties":
+                {
+                    _BodyElement_WiringIn: {"type": "string"},
+                    _BodyElement_WiringOut: {"type": "string"}
+                }
+            }
+        },
+        "type" : "object",
+        "properties":
+        {
+            "additionalProperties" : False,
+            _BodyElement_Name: {"type": "string"},
+            _BodyElement_Notches:
+            {
+                "type": "array",
+                "items": {"type": "string"}
+            },
+            _BodyElement_Wiring:
+            {
+                "type" : "array",
+                "items": {"$ref": "#/definitions/PinWiringEntry"}
+            }
+        },
+        "required": [_BodyElement_Name, _BodyElement_Notches,
+                     _BodyElement_Wiring],
+        "additionalProperties" : False
+    }
 
-    # XML Element (and attributes): Circuit
-    XML_ELEMENT_ROTOR_CIRCUIT = 'CIRCUIT'
-    XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_IN = 'IN'
-    XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_OUT = 'OUT'
+    ## Property getter : The last reported error message, blank if none.
+    @property
+    def LastErrorMessage(self):
+        return self._lastErrorMsg
 
 
-    ##
-    # Read a rotors XML file.  If the XML file is incorrectly formatted or if
-    # there is a validity issue (duplicate wiring) then False is returned.
-    # @param xmlFile XML filename string
-    # @return Success = True, failure = False
-    def CreateFromXML(self, xmlFile):
-        rotors = {}
+    def __init__(self):
+        self._lastErrorMsg = ''
 
-        # Attempt to parse the XML file
+
+    ## Read a rotor JSON file.  If the file is incorrectly formatted or if
+    #  there is a validity issue (duplicate wiring) then None is returned
+    #  along with lastErrorMessage being set.
+    #  @param self The object pointer
+    #  @param jsonFile JSON configuration filename
+    # @return Success: Rotor object, failure: None with LastErrorMessage set.
+    def BuildFromJson(self, jsonFile):
+
         try:
-            tree = ElementTree.parse(xmlFile)
+            with open(jsonFile) as fileHandle:
+                fileContents = fileHandle.read()
 
-        # Catch exception if file doesn't exist or can't be read.
-        except IOError as ioException:
-            errStr = 'IO error, reason : {0}'.format(ioException.strerror)            
-            return (None, errStr)
+        except IOError as excpt:
+            self._lastErrorMsg = "Unable to open configuration file '" + \
+                f"{jsonFile}', reason: {excpt.strerror}"
+            return None
 
-        # Catch exception if file isn't correctly formed.
-        except ElementTree.ParseError as parseException:
-            errStr = 'XML Failed to parse \'{0}\', reason : {1}'.format(
-                xmlFile, parseException.message)    
-            return (None, errStr)
+        try:
+            rotorJson = json.loads(fileContents)
 
-        # Get the root object
-        root = tree.getroot()
+        except json.JSONDecodeError as excpt:
+            self._lastErrorMsg = "Unable to parse configuration file" + \
+                f"{jsonFile}, reason: {excpt}"
+            return None
 
-        # Expecting correct root (rotors), verify it!
-        if root.tag.upper() != self.XML_ELEMENT_ROOT:
-            return (None, 'missing root element ({0})'.format(
-                self.XML_ELEMENT_ROOT))
+        try:
+            jsonschema.validate(instance=rotorJson,
+                                schema=self._JsonSchema)
 
-        # Iterate through elements, one at a time.
-        for element in root:
+        except jsonschema.exceptions.ValidationError as ex:
+            self.__lastErrorMsg = f"Configuration file {jsonFile} failed " + \
+                "to validate against expected schema.  Please check!.  "+ \
+                f"Msg: {ex}"
+            return None
 
-            # If element is 'ROTOR'.
-            if element.tag.upper() == self.XML_ELEMENT_ROTOR:
-                rotor = self.__ParseRotorElement(element)
+        wiring = {}
+        wiringReverse = {}
 
-                # If rot an instance of rotor - e.g. a string then failure.
-                if type(rotor) == str:
-                    return (None, rotor)
+        turnoverNotches = []
 
-                # It was OK, add to temporary list, which only gets added if
-                # all entries are OK.
-                rotors[rotor.Name] = rotor 
+        for notch in rotorJson[self._BodyElement_Notches]:
+            turnoverNotches.append(notch)
 
-            # Invalid tag - expecting 'rotor'...
-            else:
-                return (None, 'Invalid XML tag : {0}'.format(element.tag))
+        for pin in  rotorJson[self._BodyElement_Wiring]:
+            inPin = pin[self._BodyElement_WiringIn]
+            outPin = pin[self._BodyElement_WiringOut]
+            if inPin in wiring:
+                self._lastErrorMsg = f"Circuit {inPin}:{outPin}) input " + \
+                         "pin is already defined"
 
-        # Everything went through successfully, return list of rotors.
-        return (rotors, '')
+            if outPin in wiringReverse:
+                self._lastErrorMsg = f"Circuit {inPin}:{outPin}) output " + \
+                         "pin is already defined"
 
+            wiring[inPin] = outPin
+            wiringReverse = inPin
 
-    ##
-    # Parse a rotor element from the XML file, if it fails validation checking
-    # then a string with the error message, otherwise a rotor class instance is
-    # created.
-    # @param element Element to parse.
-    # @return Success = Rotor instance, failure = string containing error.
-    def __ParseRotorElement(self, element):
-        rotorName = None
-        notches = []
-        circuits = {}
-
-        # Convert the elements attribute keys to upper-case.
-        elementAttribs = dict((key.upper(), value)
-         for key, value in element.attrib.iteritems())
-
-        # Check if rotor has a name, if it does then set it, or abort.
-        if self.XML_ELEMENT_ATTRIB_ROTOR_NAME in elementAttribs:
-            rotorName = elementAttribs[self.XML_ELEMENT_ATTRIB_ROTOR_NAME]
-
-        # No rotor name specified - invalid XMl.
-        else:
-            return "Rotor doesn't have name attribute!"
-
-        # Iterate through sub-elements, checking them.
-        for subelement in element:
-
-            subelementName = subelement.tag.upper()
-
-            # Wiring circuit
-            if subelementName == self.XML_ELEMENT_ROTOR_CIRCUIT:
-                attribs = dict((key.upper(), value)
-                 for key, value in subelement.attrib.iteritems())
-
-                # Check that the circuit tag have the in and out attributes.
-                if self.XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_IN not in attribs or \
-                   self.XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_OUT not in attribs:
-                    return "Circuit wiring tag missing attrib!"
-
-                circuitIn = attribs[self.XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_IN]
-                circuitOut = attribs[self.XML_ELEMENT_ATTRIB_ROTOR_CIRCUIT_OUT]
-
-                # Convert the circuit letters to pins, if either fails then an
-                # exception is generated.
-                try:
-                    circuitIn = RotorContact.Instance().CharacterToContact(
-                        circuitIn)
-                    circuitOut = RotorContact.Instance().CharacterToContact(
-                        circuitOut)
-
-                except ValueError:
-                    return "Circuit wiring in/out invalid!"
-
-                # Check that neither end of the circuit is already in use.
-                if circuitIn in circuits or circuitOut in circuits.values():
-                    return "One end of circuit ({0}:{1}) already defined".format(
-                    circuitIn, circuitOut)
-
-                circuits[circuitIn] = circuitOut
-
-            # Notch 
-            elif subelementName == self.XML_ELEMENT_ROTOR_NOTCH:
-                # Convert a character (should be a-zA-Z) to a pin number, if
-                # if there is an issue or invalid then exception of ValueError
-                # is raised.
-                try:
-                    notches.append(RotorContact.Instance().CharacterToContact(
-                        subelement.text))
-
-                except ValueError:
-                    return "Rotor {0} had invalid notch of '{1}'".format(
-                    rotorName, subelement.text)
-
-            # Invalid element.
-            else:
-                return "Invalid xml tag '{0}'".format(subelementName)
-
-        return Rotor(rotorName, circuits, notches)
+        # Everything went through successfully, return rotor.
+        return Rotor(rotorJson[self._BodyElement_Name], wiring, turnoverNotches)
 
 
-rotorFactory = RotorFactory.Instance()
+rotorFactory = RotorFactory()
+r = rotorFactory.BuildFromJson('../data/rotors/Enigma1_I.json')
+if r is None:
+    print(rotorFactory.LastErrorMessage)
