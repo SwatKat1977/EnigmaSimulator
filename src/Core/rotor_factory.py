@@ -119,8 +119,9 @@ class RotorFactory:
             turnover_notches.append(notch)
 
         for pin in  rotor_json[self._BodyElement_Wiring]:
-            in_pin = pin[self._BodyElement_WiringIn]
-            out_pin = pin[self._BodyElement_WiringOut]
+            in_pin = RotorContact[pin[self._BodyElement_WiringIn]].value
+            out_pin = RotorContact[pin[self._BodyElement_WiringOut]].value
+
             if in_pin in wiring:
                 self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
                          "input pin is already defined"
@@ -129,8 +130,8 @@ class RotorFactory:
                 self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
                          "output pin is already defined"
 
-            wiring[RotorContact[in_pin]] = RotorContact[out_pin]
-            wiring_reverse[RotorContact[out_pin]] = RotorContact[in_pin]
+            wiring[in_pin] = out_pin
+            wiring_reverse[out_pin] = in_pin
 
         # Everything went through successfully, return rotor.
         return Rotor(rotor_json[self._BodyElement_Name], wiring,
@@ -142,4 +143,10 @@ ROTOR = FACTORY.build_from_json('../data/rotors/Enigma1_I.json')
 if ROTOR is None:
     print(FACTORY.last_error_message)
 else:
-    print(ROTOR)
+    ROTOR.position = 2
+    output = RotorContact(ROTOR.get_forward_circuit(RotorContact.Z))
+    print(f'Output is {output}')
+
+    ROTOR.position = 1
+    reverse = RotorContact(ROTOR.get_return_circuit(RotorContact.A))
+    print(reverse)

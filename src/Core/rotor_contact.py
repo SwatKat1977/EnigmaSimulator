@@ -15,6 +15,9 @@
 from enum import Enum
 
 
+NO_OF_ROTOR_CONTACTS = 26
+
+
 ## Enumeration of a rotor contact character (A-Z).
 class RotorContact(Enum):
     A = 1
