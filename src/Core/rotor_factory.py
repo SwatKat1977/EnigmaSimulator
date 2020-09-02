@@ -14,7 +14,7 @@
 '''
 import json
 import jsonschema
-from Rotor import *
+from Rotor import Rotor
 from RotorContact import RotorContact
 
 
@@ -22,7 +22,7 @@ class RotorFactory:
 
     slots = ['_BodyElement_Notches', '_BodyElement_Wiring',
              '_BodyElement_WiringIn', '_BodyElement_WiringOut',
-            '_JsonSchema']
+             '_JsonSchema']
 
     _BodyElement_Name = 'name'
     _BodyElement_Notches = 'notches'
@@ -68,76 +68,78 @@ class RotorFactory:
 
     ## Property getter : The last reported error message, blank if none.
     @property
-    def LastErrorMessage(self):
-        return self._lastErrorMsg
+    def last_error_message(self):
+        return self.last_error_msg
 
 
     def __init__(self):
-        self._lastErrorMsg = ''
+        self.last_error_msg = ''
 
 
     ## Read a rotor JSON file.  If the file is incorrectly formatted or if
     #  there is a validity issue (duplicate wiring) then None is returned
     #  along with lastErrorMessage being set.
     #  @param self The object pointer
-    #  @param jsonFile JSON configuration filename
+    #  @param json_file JSON configuration filename
     # @return Success: Rotor object, failure: None with LastErrorMessage set.
-    def BuildFromJson(self, jsonFile):
+    def build_from_json(self, json_file):
 
         try:
-            with open(jsonFile) as fileHandle:
-                fileContents = fileHandle.read()
+            with open(json_file) as file_handle:
+                file_contents = file_handle.read()
 
         except IOError as excpt:
-            self._lastErrorMsg = "Unable to open configuration file '" + \
-                f"{jsonFile}', reason: {excpt.strerror}"
+            self.last_error_msg = "Unable to open rotor file '" + \
+                f"{json_file}', reason: {excpt.strerror}"
             return None
 
         try:
-            rotorJson = json.loads(fileContents)
+            rotor_json = json.loads(file_contents)
 
         except json.JSONDecodeError as excpt:
-            self._lastErrorMsg = "Unable to parse configuration file" + \
-                f"{jsonFile}, reason: {excpt}"
+            self.last_error_msg = "Unable to parse rotor file" + \
+                f"{json_file}, reason: {excpt}"
             return None
 
         try:
-            jsonschema.validate(instance=rotorJson,
+            jsonschema.validate(instance=rotor_json,
                                 schema=self._JsonSchema)
 
         except jsonschema.exceptions.ValidationError as ex:
-            self.__lastErrorMsg = f"Configuration file {jsonFile} failed " + \
+            self.last_error_msg = f"Rotor file {json_file} failed " + \
                 "to validate against expected schema.  Please check!.  "+ \
                 f"Msg: {ex}"
             return None
 
         wiring = {}
-        wiringReverse = {}
+        wiring_reverse = {}
+        turnover_notches = []
 
-        turnoverNotches = []
+        for notch in rotor_json[self._BodyElement_Notches]:
+            turnover_notches.append(notch)
 
-        for notch in rotorJson[self._BodyElement_Notches]:
-            turnoverNotches.append(notch)
+        for pin in  rotor_json[self._BodyElement_Wiring]:
+            in_pin = pin[self._BodyElement_WiringIn]
+            out_pin = pin[self._BodyElement_WiringOut]
+            if in_pin in wiring:
+                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                         "input pin is already defined"
 
-        for pin in  rotorJson[self._BodyElement_Wiring]:
-            inPin = pin[self._BodyElement_WiringIn]
-            outPin = pin[self._BodyElement_WiringOut]
-            if inPin in wiring:
-                self._lastErrorMsg = f"Circuit {inPin}:{outPin}) input " + \
-                         "pin is already defined"
+            if out_pin in wiring_reverse:
+                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                         "output pin is already defined"
 
-            if outPin in wiringReverse:
-                self._lastErrorMsg = f"Circuit {inPin}:{outPin}) output " + \
-                         "pin is already defined"
-
-            wiring[inPin] = outPin
-            wiringReverse = inPin
+            wiring[RotorContact[in_pin]] = RotorContact[out_pin]
+            wiring_reverse[RotorContact[out_pin]] = RotorContact[in_pin]
 
         # Everything went through successfully, return rotor.
-        return Rotor(rotorJson[self._BodyElement_Name], wiring, turnoverNotches)
+        return Rotor(rotor_json[self._BodyElement_Name], wiring,
+                     turnover_notches)
 
 
-rotorFactory = RotorFactory()
-r = rotorFactory.BuildFromJson('../data/rotors/Enigma1_I.json')
-if r is None:
-    print(rotorFactory.LastErrorMessage)
+FACTORY = RotorFactory()
+ROTOR = FACTORY.build_from_json('../data/rotors/Enigma1_I.json')
+if ROTOR is None:
+    print(FACTORY.last_error_message)
+else:
+    print(ROTOR)
