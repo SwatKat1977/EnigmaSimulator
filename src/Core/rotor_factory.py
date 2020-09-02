@@ -15,7 +15,7 @@
 import json
 import jsonschema
 from Rotor import Rotor
-from RotorContact import RotorContact
+from rotor_contact import RotorContact
 
 
 class RotorFactory:
