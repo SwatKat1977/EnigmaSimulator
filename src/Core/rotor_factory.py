@@ -1,5 +1,5 @@
 '''
-    <one line to give the program's name and a brief idea of what it does.>
+    EnigmaSimulator - A software implementation of the Engima Machine.
     Copyright (C) 2015-2020 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
@@ -138,15 +138,16 @@ class RotorFactory:
                      turnover_notches)
 
 
-FACTORY = RotorFactory()
-ROTOR = FACTORY.build_from_json('../data/rotors/Enigma1_I.json')
-if ROTOR is None:
-    print(FACTORY.last_error_message)
-else:
-    ROTOR.position = 2
-    output = RotorContact(ROTOR.get_forward_circuit(RotorContact.Z))
-    print(f'Output is {output}')
+if __name__ == '__main__':
+    FACTORY = RotorFactory()
+    ROTOR = FACTORY.build_from_json('../data/rotors/Enigma1_I.json')
+    if ROTOR is None:
+        print(FACTORY.last_error_message)
+    else:
+        ROTOR.position = 2
+        OUTPUT = RotorContact(ROTOR.get_forward_circuit(RotorContact.Z))
+        print(f'Output is {OUTPUT}')
 
-    ROTOR.position = 1
-    reverse = RotorContact(ROTOR.get_return_circuit(RotorContact.A))
-    print(reverse)
+        ROTOR.position = 1
+        REVERSE = RotorContact(ROTOR.get_return_circuit(RotorContact.A))
+        print(REVERSE)
