@@ -1,5 +1,5 @@
 '''
-    <one line to give the program's name and a brief idea of what it does.>
+    EnigmaSimulator - A software implementation of the Engima Machine.
     Copyright (C) 2015-2020 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
@@ -13,51 +13,48 @@
     GNU General Public License for more details.
 '''
 
-# The number of pins or contacts on a reflector.
-NumberOfReflectorPins = 26
-
 
 # ***********************************************************************
 # Implementation of class representing an Enigma reflector.
 # ***********************************************************************
-class Reflector(object):
+class Reflector:
+    __slots__ = ['reflector_name', 'reflector_wiring']
 
-    ##
-    # Property getter 'Name' : Name of the rotor.
+    # The number of pins or contacts on a reflector.
+    NumberOfReflectorPins = 26
+
+    ## Property getter : Human readable ame of the reflector.
     @property
-    def Name(self):
-        return self._name
+    def name(self):
+        return self.reflector_name
 
-    ##
-    # Property getter 'Wiring' : How the rotor is wired.
+    ## Property getter 'Wiring' : How the reflector is wired.
     @property
-    def Wiring(self):
-        return self._wiring
+    def wiring(self):
+        return self.reflector_wiring
 
 
-    ##
-    # Constructor.. Wiring is from right => left
-    # @param name The human readable reflector name.
-    # @param wiring Wiring setting from right to left.
+    ## Constructor.. Wiring is from right => left
+    #  @param name The human readable reflector name.
+    #  @param wiring Wiring setting from right to left.
     def __init__(self, name, wiring):
-        self._name = name
+        self.reflector_name = name
 
         # Check to make sure wiring is a list.
         if not isinstance(wiring, (dict)):
             raise ValueError("Incompatible reflector wiring diagram")
 
-        if len(wiring) != NumberOfReflectorPins:
+        if len(wiring) != self.NumberOfReflectorPins:
             raise ValueError("Incomplete reflector wiring diagram")
 
         # define how the rotor is internally wired.
-        self._wiring = wiring
+        self.reflector_wiring = wiring
 
 
-    ##
-    # Get the output (circuit) using pins on the right-hand side of the
-    # reflector.
-    # @param pinNumber Reference pin to get circuit with.
-    # @return If successful a contact number is returned, on error a ValueError
-    # exception is raised.
-    def GetCircuit(self, pinNumber):
-        return self._wiring[pinNumber]
+    ## Get the output (circuit) using pins on the right-hand side of the
+    #  reflector.
+    #  @param pin_no Reference pin to get circuit with.
+    #  @return If successful a contact number is returned, on error a
+    #  ValueError exception is raised.
+    def get_circuit(self, pin_no):
+        return self.reflector_wiring[pin_no]

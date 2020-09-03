@@ -1,5 +1,5 @@
 '''
-    <one line to give the program's name and a brief idea of what it does.>
+    EnigmaSimulator - A software implementation of the Engima Machine.
     Copyright (C) 2015-2020 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
@@ -161,3 +161,5 @@ class ReflectorFactory(object):
 
 
 reflectorFactory = ReflectorFactory.Instance()
+
+# 164 lines : orig
