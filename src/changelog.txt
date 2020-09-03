@@ -1,6 +1,17 @@
 Electronic Enigma Machine Changelog
 ===================================
 
+Version 0.6.0-beta 3rd Sept 2020 [DEV]
+* [MOD] Module renamed to conform with PEP8 standard:
+  - Reflector.py => reflector.py
+  - ReflectorFactory.py => reflector_factory.py
+  - Version.py => version.py
+  - Plugboard.py => plugboard.py
+* [MOD] Changed reflector data format from XML to JSON.
+* [ADD] Created a JSON enabled class to reduce repetative json loading code.
+* [MOD] Cleaned up Plugboard class:
+
+
 Version 0.6.0-alpha 3rd Sept 2020 [DEV]
 First part of the major code refactoring, the code base is currently not in a
 usable state, these changes concentrated on the rotor code. 
