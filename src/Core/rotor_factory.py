@@ -81,7 +81,7 @@ class RotorFactory:
     #  along with lastErrorMessage being set.
     #  @param self The object pointer
     #  @param json_file JSON configuration filename
-    # @return Success: Rotor object, failure: None with LastErrorMessage set.
+    #  @return Success: Rotor object, failure: None with LastErrorMessage set.
     def build_from_json(self, json_file):
 
         try:
