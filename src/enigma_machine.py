@@ -13,54 +13,63 @@
     GNU General Public License for more details.
 '''
 import sys
-from Core.EnigmaMachine import *
+from Core.enigma_machine import *
 from Core.MachineSetup import *
-from Core.Version import *
-from Core.RotorFactory import RotorFactory
-from Core.ReflectorFactory import reflectorFactory
-from Core.RotorContact import RotorContact
+from Core.version import VERSION
+from Core.rotor_factory import RotorFactory
+from Core.reflector_factory import ReflectorFactory
+from Core.rotor_contact import RotorContact
 
 # https://cryptii.com/enigma-machine
 # AAAA with positions 2,3,21 should return MKIEY
 
 
-print("Electronic Enigma Core Version V{0}".format(ElectronicEnigmaVersion))
-print("Copyright (C) 2015-2018 Electronic Engima Development Team")
+def main():
+    print("Electronic Enigma Core Version V{0}".format(VERSION))
+    print("Copyright (C) 2015-2018 Electronic Engima Development Team")
 
-# Read rotors XML file.
-rotors, status = RotorFactory.Instance().CreateFromXML('../Data/rotors.xml')
-if rotors == None:
-    print("ERROR : Unable to read rotors XML file: {0}".format(status))
-    sys.exit()
+    rotor_factory = RotorFactory()
+    reflector_factory = ReflectorFactory()
 
-# Read reflectors XML file.
-reflectors, status = reflectorFactory.CreateFromXML('../Data/reflectors.xml')
-if reflectors == None:
-    print("ERROR : Unable to read reflectors XML file: {0}".format(status))
-    sys.exit()
+    # Read rotors XML file.
+    rotors, status = rotor_factory.CreateFromXML('../Data/rotors.xml')
+    if rotors == None:
+        print("ERROR : Unable to read rotors XML file: {0}".format(status))
+        sys.exit()
 
-# Create machine setup.
-setup = MachineSetup(EnigmaModel.Enigma1, ["Rotor I", "Rotor II", "Rotor III"])
+    # Read reflectors XML file.
+    reflectors, status = reflector_factory.CreateFromXML('../Data/reflectors.xml')
+    if reflectors == None:
+        print("ERROR : Unable to read reflectors XML file: {0}".format(status))
+        sys.exit()
 
-# Create Enigma machine.
-machine = EnigmaMachine(setup, rotors, reflectors['Wide Reflector B'], True)
+    # Create machine setup.
+    setup = MachineSetup(EnigmaModel.Enigma1, ["Rotor I", "Rotor II", "Rotor III"])
 
-# Set the rotor positions
-machine.SetRotorPosition(RotorPosition.One, 2)
-machine.SetRotorPosition(RotorPosition.Two, 3)
-machine.SetRotorPosition(RotorPosition.Three, 21)
+    # Create Enigma machine.
+    machine = EnigmaMachine(setup, rotors, reflectors['Wide Reflector B'], True)
 
-# machine.GetRotor(0).RingSetting = 2
-# machine.GetRotor(1).RingSetting = 2
-# machine.GetRotor(2).RingSetting = 2
+    # Set the rotor positions
+    machine.SetRotorPosition(RotorPosition.One, 2)
+    machine.SetRotorPosition(RotorPosition.Two, 3)
+    machine.SetRotorPosition(RotorPosition.Three, 21)
 
-strToEncode = "AAAAA"
-print("String to encode : {0}".format(strToEncode))
+    # machine.GetRotor(0).RingSetting = 2
+    # machine.GetRotor(1).RingSetting = 2
+    # machine.GetRotor(2).RingSetting = 2
 
-encrypted = ""
-for char in strToEncode.upper():
-    if char >= 'A' and char <= 'Z':
-        char = RotorContact.Instance().CharacterToContact(char)
-        encrypted += RotorContact.Instance().ContactToCharacter(machine.PressKey(char))
+    strToEncode = "AAAAA"
+    print("String to encode : {0}".format(strToEncode))
 
-print("Encrypted : {0}".format(encrypted))
+    encrypted = ""
+    for char in strToEncode.upper():
+        if char >= 'A' and char <= 'Z':
+            char = RotorContact.Instance().CharacterToContact(char)
+            encrypted += RotorContact.Instance().ContactToCharacter(machine.PressKey(char))
+
+    print("Encrypted : {0}".format(encrypted))
+
+
+
+if __name__ == '__main__':
+    main()

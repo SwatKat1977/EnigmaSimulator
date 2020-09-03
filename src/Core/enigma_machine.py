@@ -12,24 +12,21 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from Core.RotorContact import RotorContact
-from Core.ReflectorFactory import ReflectorFactory
+from enum import Enum
+from Core.rotor_contact import RotorContact
+from Core.reflector_factory import ReflectorFactory
 
 
-# ***********************************************************************
-# Enumeration referring to a rotor within the machine.  One is far left.
-# *********************************************************************** 
-class RotorPosition(object):
+## Enumeration referring to a rotor within the machine.  One is far left.
+class RotorPosition(Enum):
     One = 0
     Two = 1
     Three = 2
     Four = 3
 
 
-# ***********************************************************************
-# Implementation of Enigma machine.
-# *********************************************************************** 
-class EnigmaMachine(object):
+## Implementation of Enigma machine.
+class EnigmaMachine:
 
     ##
     # Get the instance of the plugboard, it can be None if a plugboard isn't
