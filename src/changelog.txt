@@ -1,0 +1,19 @@
+Electronic Enigma Machine Changelog
+===================================
+
+Version 0.6.0-alpha 3rd Sept 2020 [DEV]
+First part of the major code refactoring, the code base is currently not in a
+usable state, these changes concentrated on the rotor code. 
+* [MOD] Module renamed to conform with PEP8 standard:
+  - Rotor.py => rotor.py
+  - RotorFactory.py => rotor_factory.py
+  - RotorContact.py => rotor_contact.py  
+* [MOD] Changed RotorContact class to an enumeration, greatly simplifying it.
+* [MOD] Changes to RotorFactory class:
+  - All methods and attribute names comply with PEP8.
+  - Rotor wiring configuration files format changed to JSON.
+  - The factory now only builds one rotor at a time.
+* [MOD] Changes to Rotor class:
+  - All methods and attribute names comply with PEP8.
+  - Commented the code to make process of how getting the forward or backwards
+    circuit entry is done as I had to look it back up myself...
