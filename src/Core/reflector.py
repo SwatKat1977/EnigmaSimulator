@@ -23,12 +23,12 @@ class Reflector:
     # The number of pins or contacts on a reflector.
     NumberOfReflectorPins = 26
 
-    ## Property getter : Human readable ame of the reflector.
+    ## Property getter : Human readable name of the reflector.
     @property
     def name(self):
         return self.reflector_name
 
-    ## Property getter 'Wiring' : How the reflector is wired.
+    ## Property getter : How the reflector is wired.
     @property
     def wiring(self):
         return self.reflector_wiring
