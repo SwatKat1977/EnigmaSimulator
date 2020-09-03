@@ -13,4 +13,4 @@
     GNU General Public License for more details.
 '''
 
-ElectronicEnigmaVersion = "0.5.0-Alpha"
+ElectronicEnigmaVersion = "0.6.0-Alpha"
