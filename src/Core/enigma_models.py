@@ -37,7 +37,6 @@ ENIGMA_MODELS = {
     # are not known.
     'M3' :  EnigmaModel('Enigma Model M3', 'M3', RotorCount.ThreeRotors, True),
 
-
     ## On 1 February 1942, the Enigma messages to and from Atlantic U-boats,
     #  which Bletchley Park called '"Shark," became significantly different
     #  from the rest of the traffic, which they called "Dolphin.
