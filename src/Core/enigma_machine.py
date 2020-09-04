@@ -90,7 +90,7 @@ class EnigmaMachine:
         self._reflector = None
 
         # List of rotor instances.
-        self._rotors = {}
+        self._rotors = []
 
         self._reflector_factory = ReflectorFactory()
 
@@ -122,7 +122,7 @@ class EnigmaMachine:
                 self._last_error = self._rotor_factory.last_error_message
                 return False
 
-            self._rotors[rotor_no] = rotor
+            self._rotors.append(rotor)
 
             rotor_no += 1
 
@@ -139,7 +139,7 @@ class EnigmaMachine:
             return False
 
         self._is_configured = True
-        
+
         return True
 
 
@@ -163,30 +163,33 @@ class EnigmaMachine:
     # @param key Key to encode/decode
     # @return Encoded/decoded character.
     def PressKey(self, key):
-        currentLetter = key
-        self._write_debug_message('PressKey received : {0} ({1})'.format(key,
-            RotorContact.Instance().ContactToCharacter(key)))
+
+        self._write_debug_message(f"PressKey received : '{key.name}'")
 
         #  To encrypt/decrypt a message, we need to run through the circuit:
         # plug board => rotors => reflector => rotors => plugboard.
         #  The variable currentLetter will maintain the contact state.
 
-        self._write_debug_message("Rotors before stepping : {0} | {1} | {2}",
-                        RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
-                        RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
-                        RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
+        rotor_a_value = RotorContact(self._rotors[0].position).name
+        rotor_b_value = RotorContact(self._rotors[1].position).name
+        rotor_c_value = RotorContact(self._rotors[2].position).name
+        self._write_debug_message("Rotors before stepping : " + \
+                                  f"{rotor_a_value} | {rotor_b_value}" + \
+                                  f" | {rotor_c_value}")
 
         # Before any en/decoding can begin, rotor turnover should occur.
-        self._StepRotors()
+        self._step_rotors()
 
-        self._write_debug_message("Rotors after stepping : {0} | {1} | {2}",
-                        RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
-                        RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
-                        RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
+        rotor_a_value = RotorContact(self._rotors[0].position).name
+        rotor_b_value = RotorContact(self._rotors[1].position).name
+        rotor_c_value = RotorContact(self._rotors[2].position).name
+        self._write_debug_message("Rotors after stepping : " + \
+                                  f"{rotor_a_value} | {rotor_b_value}" + \
+                                  f" | {rotor_c_value}")
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard != None:
-            currentLetter = self._plugboard.GetPlug(key)
+            currentLetter = self._plugboard.get_plug(key)
 
         # Get the total number of rotors.
         noOfRotors = self._machineSetup.NumberOfRotors
@@ -247,7 +250,7 @@ class EnigmaMachine:
 
     ##  Rotor stepping occurs from the right to left whilst a stepping notch is
     #   encountered.
-    def _StepRotors(self):
+    def _step_rotors(self):
         # Step next rotor flag.
         willStepNextRotor = False
 
@@ -262,14 +265,14 @@ class EnigmaMachine:
         # Because the right-hand pawl has no rotor or ring to its right, rotor
         # stepping happens with every key depression.
         rotor = self._rotors[rotorPosition]
-        willStepNextRotor = rotor.WillStepNext()
-        rotor.Step()
+        willStepNextRotor = rotor.will_step_next()
+        rotor.step()
 
         # If there is a double-step then perform it and reset the flag.
-        if self._doubleStep == True:
+        if self._double_step == True:
             self._rotors[0].Step()
             self._rotors[1].Step()
-            self._doubleStep = False
+            self._double_step = False
         
         # Only continue if there is more If stepping to be done.
         if willStepNextRotor == False:
@@ -286,7 +289,7 @@ class EnigmaMachine:
         # needs to take place.  This is where the middle rotor will step again
         # next button press, along with the left one.
         if rotor.WillStepNext() == True:
-            self._doubleStep = True
+            self._double_step = True
 
 
     def SetRotorPosition(self, rotorNo, position):
