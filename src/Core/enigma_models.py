@@ -31,7 +31,6 @@ ENIGMA_MODELS = {
     'ModelAorB' : EnigmaModel('Enigma Model A or B', 'ModelAorB',
                               RotorCount.ThreeRotors, True),
 
-
     ## The M2 and M2a variants were followed in 1939/1940 by the M3, which was
     #  the last series of 3-wheel naval Enigma machines. Like with the other
     #  versions,  the exact differences between the M3 and the earlier ones
