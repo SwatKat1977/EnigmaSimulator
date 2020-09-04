@@ -13,4 +13,4 @@
     GNU General Public License for more details.
 '''
 
-VERSION = "0.6.0-Beta"
+VERSION = "0.6.0-Gamma"

@@ -1,6 +1,10 @@
 Electronic Enigma Machine Changelog
 ===================================
 
+Version 0.6.0-gamma 4th Sept 2020 [DEV]
+*
+
+
 Version 0.6.0-beta 4th Sept 2020 [DEV]
 * [MOD] Module renamed to conform with PEP8 standard:
   - Reflector.py => reflector.py
