@@ -23,13 +23,19 @@ class RotorCount(Enum):
 
 ## Implementation of Enigma model setup.
 class EnigmaModel:
-    __slots__ = ['has_plugboard', 'model_name', 'total_rotors']
+    __slots__ = ['has_plugboard', 'long_model_name', 'short_model_name', 'total_rotors']
 
     ## Get name of model for the Enigma machine.
     #  @param self The object pointer.
     @property
-    def name(self):
-        return self.model_name
+    def long_type(self):
+        return self.long_model_name
+
+    ## Get name of model for the Enigma machine.
+    #  @param self The object pointer.
+    @property
+    def short_name(self):
+        return self.short_model_name
 
     ## Get the total number of rotors for Enigma machine.
     #  @param self The object pointer.
@@ -48,12 +54,13 @@ class EnigmaModel:
     #  @param model Enigma machine mode.
     #  @param selectedRotors The name of rotors used by the Enigma machine.
     #  @param plugboard Enigma plugboard (None if machine doesn't use one).
-    def __init__(self, model_nwme, total_rotor, has_plugboard):
+    def __init__(self, long_name, short_name, total_rotor, has_plugboard):
 
         # Check to make sure total_rotors is enumeration from  is a PlugBoard or None.
         if not isinstance(total_rotor, (RotorCount)):
             raise ValueError("Invalid number of rotors")
 
-        self.model_name = model_nwme
-        self.total_rotors = total_rotor
         self.has_plugboard = has_plugboard
+        self.long_model_name = long_name
+        self.short_model_name = short_name
+        self.total_rotors = total_rotor
