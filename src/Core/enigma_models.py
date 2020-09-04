@@ -17,8 +17,15 @@ from enigma_model import EnigmaModel, RotorCount
 
 ENIGMA_MODEL_1 = EnigmaModel('Enigma Model 1', 'Enigma1', RotorCount.ThreeRotors, True)
 
+## Enigma A, also known as Die kleine Militärmaschine (the small military
+#  machine), was an electro­mechanical rotor-based cipher machine, introduced
+#  in 1924 by Chiffriermaschinen Aktien­gesell­schaft (ChiMaAG) in Berlin
+#  (Germany). It was the first Enigma that used light bulbs for its output.
 ENIGMA_MODEL_AORB = EnigmaModel('Enigma Model A or B', 'ModelAorB', RotorCount.ThreeRotors, True)
 
+## The M2 and M2a variants were followed in 1939/1940 by the M3, which was the
+#  last series of 3-wheel naval Enigma machines. Like with the other versions,
+#  the exact differences between the M3 and the earlier ones are not known.
 ENIGMA_MODEL_M3 = EnigmaModel('Enigma Model M3', 'M3', RotorCount.ThreeRotors, True)
 
 ## On 1 February 1942, the Enigma messages to and from Atlantic U-boats, which
