@@ -12,78 +12,135 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from enum import Enum
+import os
+from Core.enigma_models import ENIGMA_MODELS
+from Core.plugboard import Plugboard
 from Core.rotor_contact import RotorContact
 from Core.reflector_factory import ReflectorFactory
-
-
-## Enumeration referring to a rotor within the machine.  One is far left.
-class RotorPosition(Enum):
-    One = 0
-    Two = 1
-    Three = 2
-    Four = 3
+from Core.rotor_factory import RotorFactory
 
 
 ## Implementation of Enigma machine.
 class EnigmaMachine:
+    __slots__ = ['_double_step', '_is_configured', '_last_error',
+                 '_model_details', '_model_type', '_plugboard',
+                 '_reflector', '_rotor_factory', '_reflector_factory',
+                 '_rotors', '_trace_route']
 
-    ##
-    # Get the instance of the plugboard, it can be None if a plugboard isn't
-    # configured.
     @property
-    def Plugboard(self):
+    def configured(self):
+        return self._is_configured
+
+    ## Get the instance of the plugboard, it can be None if a plugboard isn't
+    #  configured.
+    @property
+    def last_error(self):
+        return self._last_error
+
+    ## Get the instance of the plugboard, it can be None if a plugboard isn't
+    #  configured.
+    @property
+    def plugboard(self):
         return self._plugboard
 
     ##
     # Get the instance of the reflector.
     @property
-    def Reflector(self):
+    def reflector(self):
         return self._reflector
 
     ##
     # Get the trace route flag.
     @property
-    def Trace(self):
-        return self._traceRoute
+    def trace(self):
+        return self._trace_route
 
-    @Trace.setter
-    def Trace(self, value):
-        self._traceRoute = value
+    @trace.setter
+    def trace(self, value):
+        self._trace_route = value
 
 
-    ##
-    # Constructor.
-    # plug board => rotors => reflector => rotors => plugboard.
-    # @param machineSetup Machine setup class
-    def __init__(self, machineSetup, rotors, reflector, trace = False):
+    ## Constructor.
+    #  plug board => rotors => reflector => rotors => plugboard.
+    #  @param self The object pointer.
+    #  @param machineSetup Machine setup class
+    def __init__(self, model, trace_route=False):
+
+        self._model_type = model
+
+        try:
+            self._model_details = ENIGMA_MODELS[model]
+
+        except NameError as err:
+            print(err)
+            raise ValueError('Enigma model is not valid')
+
+        # Double-step flag.
+        self._double_step = False
+
+        # Last error message.
+        self._last_error = None
+
+        # Plugboard object instance.
+        self._plugboard = None
+
+        # Reflector object instance.
+        self._reflector = None
+
+        # List of rotor instances.
+        self._rotors = {}
 
         # Flag to enable additional messages so you can see how the Enigma
         # machine should operate.
-        self._traceRoute = trace
+        self._trace_route = trace_route
 
-        # Machine setup instance.
-        self._machineSetup = machineSetup
+        self._reflector_factory = ReflectorFactory()
 
-        # Reflector object instance.
-        self._reflector = reflector
+        self._rotor_factory = RotorFactory()
 
-        # Plugboard object instance.
-        self._plugboard = machineSetup.Plugboard
+        self._is_configured = False
 
-        # List of rotor instances. 
-        self._rotors = []
 
-        # Double-step flag.
-        self._doubleStep = False
+    #  @param self The object pointer.
+    def configure_machine(self, rotors, reflector):
 
-        # Take the rotor name and convert it into a rotor instance.
-        for rotor in machineSetup.Rotors:
-            if rotor not in rotors:
-                raise ValueError("Invalid rotor name '{0}'!".format(rotor))
+        no_of_rotors_req = self._model_details.no_of_rotors.value
 
-            # Add the rotor to the list.
-            self._rotors.append(rotors[rotor])
+        if len(rotors) != no_of_rotors_req:
+            self._last_error = 'Invalid number of rotors specified, ' + \
+                f'requires {no_of_rotors_req} rotors'
+            return False
+
+        rotor_path = '../data/rotors'
+
+        rotor_no = 0
+        for r in rotors:
+            rotor_file = f'{self._model_details.short_name}_{r}.json'
+            rotor_file_path = os.path.join(rotor_path, rotor_file)
+
+            rotor = self._rotor_factory.build_from_json(rotor_file_path)
+
+            if rotor is None:
+                self._last_error = self._rotor_factory.last_error_message
+                return False
+
+            self._rotors[rotor_no] = rotor
+
+            rotor_no += 1
+
+        if self._model_details.has_plugboard:
+            self._plugboard = Plugboard()
+
+        reflector_path = '../data/reflectors'
+        reflector_full = f'{reflector}.json'
+        reflector_filename = os.path.join(reflector_path, reflector_full)
+        self._reflector = self._reflector_factory.build_from_json(reflector_filename)
+
+        if self._reflector is None:
+            self._last_error = self._reflector_factory.last_error_message
+            return False
+
+        self._is_configured = True
 
 
     ##
@@ -115,17 +172,17 @@ class EnigmaMachine:
         #  The variable currentLetter will maintain the contact state.
 
         self.Traceroute("Rotors before stepping : {0} | {1} | {2}",
-            RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
-            RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
-            RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
+                        RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
+                        RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
+                        RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
 
         # Before any en/decoding can begin, rotor turnover should occur.
         self._StepRotors()
 
         self.Traceroute("Rotors after stepping : {0} | {1} | {2}",
-            RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
-            RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
-            RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
+                        RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
+                        RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
+                        RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard != None:
@@ -188,13 +245,12 @@ class EnigmaMachine:
         return currentLetter
 
 
-    ##    
-    # Rotor stepping occurs from the right to left whilst a stepping notch is
-    # encountered.
+    ##  Rotor stepping occurs from the right to left whilst a stepping notch is
+    #   encountered.
     def _StepRotors(self):
         # Step next rotor flag.
         willStepNextRotor = False
-        
+
         ######################################
         ### Assume 3 rotor machine for now ###
         ######################################
