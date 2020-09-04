@@ -29,13 +29,13 @@ class JsonLoadingClass:
                 file_contents = file_handle.read()
 
         except IOError as excpt:
-            return (None, "Unable to read file, reason: {excpt.strerror}")
+            return (None, f"Unable to read file, reason: {excpt.strerror}")
 
         try:
             json_data = json.loads(file_contents)
 
         except json.JSONDecodeError as excpt:
-            return (None, "Unable to parse  json, reason: {excpt.strerror}")
+            return (None, f"Unable to parse  json, reason: {excpt.strerror}")
 
         try:
             jsonschema.validate(instance=json_data, schema=json_schema)

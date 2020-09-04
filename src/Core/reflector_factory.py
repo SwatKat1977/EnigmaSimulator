@@ -61,11 +61,11 @@ class ReflectorFactory(JsonLoadingClass):
     ## Property getter : The last reported error message, blank if none.
     @property
     def last_error_message(self):
-        return self.last_error_msg
+        return self._last_error
 
 
     def __init__(self):
-        self.last_error_msg = ''
+        self._last_error = ''
 
 
     ## Read a reflector JSON file.  If the file is incorrectly formatted or if
@@ -81,7 +81,7 @@ class ReflectorFactory(JsonLoadingClass):
                                                  show_validate_error=True)
 
         if json_data is None:
-            self.last_error_message = err_msg
+            self._last_error = err_msg
             return None
 
         wiring = {}
@@ -92,11 +92,11 @@ class ReflectorFactory(JsonLoadingClass):
             out_pin = RotorContact[pin[self.BodyElement_WiringOut]].value
 
             if in_pin in wiring:
-                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                self._last_error = f"Circuit {in_pin}:{out_pin}) " + \
                          "input pin is already defined"
 
             if out_pin in wiring_reverse:
-                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                self._last_error = f"Circuit {in_pin}:{out_pin}) " + \
                          "output pin is already defined"
 
             wiring[in_pin] = out_pin
