@@ -14,6 +14,7 @@
 '''
 from enigma_model import EnigmaModel, RotorCount
 
+
 ## Enigma machine G was modified to the Enigma I by June 1930.  Enigma I is
 #  also known as the Wehrmacht, or "Services" Enigma, and was used extensively
 #  by German military services and other government organisations (such as the
