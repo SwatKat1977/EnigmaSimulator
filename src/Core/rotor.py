@@ -185,8 +185,7 @@ class Rotor:
             else:
                 final_contact -= (self.rotor_position -1)
 
-        print(f'Final contact: {RotorContact(final_contact)}')
-        return final_contact
+        return RotorContact(final_contact)
 
 
     ##

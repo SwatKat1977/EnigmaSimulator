@@ -65,7 +65,7 @@ class Plugboard:
     #  @return Other end of plug.  For example if 'A' is wired to 'T' then 'A'
     #  becomes 'T', but if 'C' isn't wired then it will return 'C'.
     def get_plug(self, src):
-        if not (src >= 1) and (src <= NO_OF_ROTOR_CONTACTS):
+        if not (src.value >= 1) and (src.value <= NO_OF_ROTOR_CONTACTS):
             raise ValueError("Invalid source plug position")
 
         # The output of the plug, it will default to pass-through initially.
