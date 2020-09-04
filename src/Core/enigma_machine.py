@@ -15,7 +15,7 @@
 import os
 from Core.enigma_models import ENIGMA_MODELS
 from Core.plugboard import Plugboard
-from Core.rotor_contact import RotorContact
+from Core.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
 from Core.reflector_factory import ReflectorFactory
 from Core.rotor_factory import RotorFactory
 
@@ -25,7 +25,7 @@ class EnigmaMachine:
     __slots__ = ['_double_step', '_is_configured', '_last_error',
                  '_model_details', '_model_type', '_plugboard',
                  '_reflector', '_rotor_factory', '_reflector_factory',
-                 '_rotors', '_trace_route']
+                 '_rotors', '_display_debug_messages']
 
     @property
     def configured(self):
@@ -43,28 +43,26 @@ class EnigmaMachine:
     def plugboard(self):
         return self._plugboard
 
-    ##
-    # Get the instance of the reflector.
+    ## Get the instance of the reflector.
     @property
     def reflector(self):
         return self._reflector
 
-    ##
-    # Get the trace route flag.
+    ## Flag for displaying additional debug messages.
     @property
-    def trace(self):
-        return self._trace_route
+    def debug_messages(self):
+        return self._display_debug_messages
 
-    @trace.setter
-    def trace(self, value):
-        self._trace_route = value
+    @debug_messages.setter
+    def debug_messages(self, value):
+        self._display_debug_messages = value
 
 
     ## Constructor.
     #  plug board => rotors => reflector => rotors => plugboard.
     #  @param self The object pointer.
     #  @param machineSetup Machine setup class
-    def __init__(self, model, trace_route=False):
+    def __init__(self, model, enable_debugs=False):
 
         self._model_type = model
 
@@ -74,6 +72,10 @@ class EnigmaMachine:
         except NameError as err:
             print(err)
             raise ValueError('Enigma model is not valid')
+
+        # Flag to enable additional messages so you can see how the Enigma
+        # machine should operate.
+        self._display_debug_messages = enable_debugs
 
         # Double-step flag.
         self._double_step = False
@@ -89,10 +91,6 @@ class EnigmaMachine:
 
         # List of rotor instances.
         self._rotors = {}
-
-        # Flag to enable additional messages so you can see how the Enigma
-        # machine should operate.
-        self._trace_route = trace_route
 
         self._reflector_factory = ReflectorFactory()
 
@@ -114,8 +112,8 @@ class EnigmaMachine:
         rotor_path = '../data/rotors'
 
         rotor_no = 0
-        for r in rotors:
-            rotor_file = f'{self._model_details.short_name}_{r}.json'
+        for rotor_name in rotors:
+            rotor_file = f'{self._model_details.short_name}_{rotor_name}.json'
             rotor_file_path = os.path.join(rotor_path, rotor_file)
 
             rotor = self._rotor_factory.build_from_json(rotor_file_path)
@@ -141,6 +139,8 @@ class EnigmaMachine:
             return False
 
         self._is_configured = True
+        
+        return True
 
 
     ##
@@ -164,14 +164,14 @@ class EnigmaMachine:
     # @return Encoded/decoded character.
     def PressKey(self, key):
         currentLetter = key
-        self.Traceroute('PressKey received : {0} ({1})'.format(key,
+        self._write_debug_message('PressKey received : {0} ({1})'.format(key,
             RotorContact.Instance().ContactToCharacter(key)))
 
         #  To encrypt/decrypt a message, we need to run through the circuit:
         # plug board => rotors => reflector => rotors => plugboard.
         #  The variable currentLetter will maintain the contact state.
 
-        self.Traceroute("Rotors before stepping : {0} | {1} | {2}",
+        self._write_debug_message("Rotors before stepping : {0} | {1} | {2}",
                         RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
                         RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
                         RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
@@ -179,7 +179,7 @@ class EnigmaMachine:
         # Before any en/decoding can begin, rotor turnover should occur.
         self._StepRotors()
 
-        self.Traceroute("Rotors after stepping : {0} | {1} | {2}",
+        self._write_debug_message("Rotors after stepping : {0} | {1} | {2}",
                         RotorContact.Instance().ContactToCharacter(self._rotors[0].Position),
                         RotorContact.Instance().ContactToCharacter(self._rotors[1].Position),
                         RotorContact.Instance().ContactToCharacter(self._rotors[2].Position))
@@ -191,11 +191,11 @@ class EnigmaMachine:
         # Get the total number of rotors.
         noOfRotors = self._machineSetup.NumberOfRotors
 
-        self.Traceroute("Passing letter through rotors from right to left")
+        self._write_debug_message("Passing letter through rotors from right to left")
 
         # Pass the letter through the rotors from right to left.
         for rotor in reversed(self._rotors):
-            self.Traceroute("Passing '{0}' to {1}",
+            self._write_debug_message("Passing '{0}' to {1}",
             RotorContact.Instance().ContactToCharacter(currentLetter), rotor.Name)
 
             # Get substituted letter from the rotor.  There are two values that
@@ -203,42 +203,42 @@ class EnigmaMachine:
             # second that gives you next rotor position after taking the rotors
             # position into account.
             contactNo = rotor.ForwardCircuit(currentLetter)
-            self.Traceroute("'{0}' returned Actual letter of '{1}'",
+            self._write_debug_message("'{0}' returned Actual letter of '{1}'",
                 rotor.Name, RotorContact.Instance().ContactToCharacter(contactNo))
-            self.Traceroute("'{0}' returned next rotor position of '{1}'",
+            self._write_debug_message("'{0}' returned next rotor position of '{1}'",
                 rotor.Name, RotorContact.Instance().ContactToCharacter(contactNo))
             currentLetter = contactNo
 
-        self.Traceroute("Passed '{0}' to reflector",
+        self._write_debug_message("Passed '{0}' to reflector",
             RotorContact.Instance().ContactToCharacter(currentLetter))
 
         # Pass the letter through the reflector.
         currentLetter = self._reflector.GetCircuit(currentLetter)
-        self.Traceroute("Reflector returned '{0}'",
+        self._write_debug_message("Reflector returned '{0}'",
             RotorContact.Instance().ContactToCharacter(currentLetter))
 
-        self.Traceroute("Passing letter through rotors from left to right")
+        self._write_debug_message("Passing letter through rotors from left to right")
 
         # Pass the letter through the rotors from left to right.
         for rotor in self._rotors:
-            self.Traceroute("Passing '{0}' to {1}"
+            self._write_debug_message("Passing '{0}' to {1}"
                 .format(RotorContact.Instance().ContactToCharacter(currentLetter),
                 rotor.Name))
             outPin = rotor.ReturnCircuit(currentLetter)
-            self.Traceroute("'{0}' returned Actual letter of '{1}'",
-                rotor.Name, RotorContact.Instance().ContactToCharacter(outPin))
+            self._write_debug_message("'{0}' returned Actual letter of '{1}'",
+                                      rotor.Name, RotorContact.Instance().ContactToCharacter(outPin))
             currentLetter = outPin
 
-            self.Traceroute("'{0}' returned next rotor position of '{1}'",
+            self._write_debug_message("'{0}' returned next rotor position of '{1}'",
                 rotor.Name, RotorContact.Instance().ContactToCharacter(currentLetter))
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard != None:
             currentLetter = self._plugboard.GetPlug(currentLetter)
 
-        self.Traceroute("Output letter '{0}'",
-                        RotorContact.Instance().ContactToCharacter(currentLetter))
-        self.Traceroute(
+        self._write_debug_message("Output letter '{0}'",
+                                  RotorContact.Instance().ContactToCharacter(currentLetter))
+        self._write_debug_message(
             "***********************************************************************")
 
         # Return encoded character.
@@ -291,17 +291,17 @@ class EnigmaMachine:
 
     def SetRotorPosition(self, rotorNo, position):
         # Validate rotor positions.
-        if position < 1 or position > RotorContact.Instance().NUMBER_OF_CONTACTS:
+        if position < 1 or position > NO_OF_ROTOR_CONTACTS:
             raise ValueError("Invalid rotor positions")
 
         if rotorNo < 0 or rotorNo > (len(self._rotors) - 1):
             raise ValueError("Invalid rotor")
-            
+       
         # Set the new rotor position.
-        self._rotors[rotorNo].Position = position
+        self._rotors[rotorNo].position = position
 
 
-    def Traceroute(self, message, *args):
-        if self._traceRoute == True:
-            message = "[TRACE] {0}".format(message)
+    def _write_debug_message(self, message, *args):
+        if self._display_debug_messages is True:
+            message = f"[DEBUG] {message}"
             print(message.format(*args))
