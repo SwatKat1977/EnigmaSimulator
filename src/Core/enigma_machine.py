@@ -194,8 +194,6 @@ class EnigmaMachine:
 
         # Pass the letter through the rotors from right to left.
         for rotor in reversed(self._rotors):
-            self._write_debug_message(f"Passing '{RotorContact(currentLetter).name}' to " + \
-                                      f"{rotor.name}")
 
             # Get substituted letter from the rotor.  There are two values that
             # are returned.  First is what actual letter came out and then the
@@ -203,39 +201,36 @@ class EnigmaMachine:
             # position into account.
             contactNo = rotor.get_forward_circuit(currentLetter)
 
-            self._write_debug_message(f"'{rotor.name}' returned Actual  " + \
-                                      f"letter of '{RotorContact(contactNo).name}'")
-            self._write_debug_message(f"'{rotor.name}' returned next rotor" + \
-                                      f" position of " +\
-                                      f"'{RotorContact(contactNo).name}'")
-            currentLetter = contactNo
+            debug_msg = f"Passing '{RotorContact(currentLetter).name}' to " + \
+                        f"{rotor.name} => '{RotorContact(contactNo).name}'"
+            self._write_debug_message(debug_msg)
 
-        self._write_debug_message(f"Passed '{RotorContact(currentLetter).name}' to reflector")
+            currentLetter = contactNo
 
         # Pass the letter through the reflector.
         currentLetter = self._reflector.get_circuit(currentLetter)
-        self._write_debug_message(f"Reflector returned '{currentLetter.name}'")
+
+        debug_msg = f"Passed '{RotorContact(currentLetter).name}' to " + \
+                    f"reflector => {currentLetter.name}"
+        self._write_debug_message(debug_msg)
 
         self._write_debug_message("Passing letter through rotors from left to right")
 
         # Pass the letter through the rotors from left to right.
         for rotor in self._rotors:
-            self._write_debug_message(f"Passing '{currentLetter.name}' to {rotor.name}")
             outPin = rotor.get_return_circuit(currentLetter)
 
-            self._write_debug_message(f"'{rotor.name}' returned Actual letter of '{outPin.name}'")
-            currentLetter = outPin
+            debug_msg = f"Passing '{RotorContact(currentLetter).name}' to " + \
+                        f"{rotor.name} => '{RotorContact(outPin).name}'"
+            self._write_debug_message(debug_msg)
 
-            self._write_debug_message(f"'{rotor.name}' returned next rotor position of '{currentLetter.name}'")
+            currentLetter = outPin
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard != None:
             currentLetter = self._plugboard.get_plug(currentLetter)
 
-        print(f'currentLetter is type {type(currentLetter)}')
         self._write_debug_message(f"Output letter '{currentLetter.name}'")
-        #,
-        #                          RotorContact.Instance().ContactToCharacter(currentLetter))
         self._write_debug_message(
             "***********************************************************************")
 

@@ -48,9 +48,9 @@ def main():
     enigma_machine.debug_messages = True
 
     # Set the rotor positions
-    enigma_machine.SetRotorPosition(RotorPosition_One, 2)
-    enigma_machine.SetRotorPosition(RotorPosition_Two, 3)
-    enigma_machine.SetRotorPosition(RotorPosition_Three, 21)
+    enigma_machine.SetRotorPosition(RotorPosition_One, 1)
+    enigma_machine.SetRotorPosition(RotorPosition_Two, 1)
+    enigma_machine.SetRotorPosition(RotorPosition_Three, 1)
 
     # machine.GetRotor(0).RingSetting = 2
     # machine.GetRotor(1).RingSetting = 2

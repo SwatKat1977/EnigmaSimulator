@@ -197,7 +197,6 @@ class Rotor:
     def get_return_circuit(self, contact):
 
         contact_no = contact.value
-        print(f"::get_return_circuit() Contact : {RotorContact(contact).name}")
 
         # ===========================================================
         # STEP 1 : Determine the starting point for the input contact
