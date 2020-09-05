@@ -163,7 +163,6 @@ class EnigmaMachine:
     # @param key Key to encode/decode
     # @return Encoded/decoded character.
     def PressKey(self, key):
-
         self._write_debug_message(f"PressKey received : '{key.name}'")
 
         #  To encrypt/decrypt a message, we need to run through the circuit:
@@ -191,56 +190,52 @@ class EnigmaMachine:
         if self._plugboard != None:
             currentLetter = self._plugboard.get_plug(key)
 
-        # Get the total number of rotors.
-        noOfRotors = self._machineSetup.NumberOfRotors
-
         self._write_debug_message("Passing letter through rotors from right to left")
 
         # Pass the letter through the rotors from right to left.
         for rotor in reversed(self._rotors):
-            self._write_debug_message("Passing '{0}' to {1}",
-            RotorContact.Instance().ContactToCharacter(currentLetter), rotor.Name)
+            self._write_debug_message(f"Passing '{RotorContact(currentLetter).name}' to " + \
+                                      f"{rotor.name}")
 
             # Get substituted letter from the rotor.  There are two values that
             # are returned.  First is what actual letter came out and then the
             # second that gives you next rotor position after taking the rotors
             # position into account.
-            contactNo = rotor.ForwardCircuit(currentLetter)
-            self._write_debug_message("'{0}' returned Actual letter of '{1}'",
-                rotor.Name, RotorContact.Instance().ContactToCharacter(contactNo))
-            self._write_debug_message("'{0}' returned next rotor position of '{1}'",
-                rotor.Name, RotorContact.Instance().ContactToCharacter(contactNo))
+            contactNo = rotor.get_forward_circuit(currentLetter)
+
+            self._write_debug_message(f"'{rotor.name}' returned Actual  " + \
+                                      f"letter of '{RotorContact(contactNo).name}'")
+            self._write_debug_message(f"'{rotor.name}' returned next rotor" + \
+                                      f" position of " +\
+                                      f"'{RotorContact(contactNo).name}'")
             currentLetter = contactNo
 
-        self._write_debug_message("Passed '{0}' to reflector",
-            RotorContact.Instance().ContactToCharacter(currentLetter))
+        self._write_debug_message(f"Passed '{RotorContact(currentLetter).name}' to reflector")
 
         # Pass the letter through the reflector.
-        currentLetter = self._reflector.GetCircuit(currentLetter)
-        self._write_debug_message("Reflector returned '{0}'",
-            RotorContact.Instance().ContactToCharacter(currentLetter))
+        currentLetter = self._reflector.get_circuit(currentLetter)
+        self._write_debug_message(f"Reflector returned '{currentLetter.name}'")
 
         self._write_debug_message("Passing letter through rotors from left to right")
 
         # Pass the letter through the rotors from left to right.
         for rotor in self._rotors:
-            self._write_debug_message("Passing '{0}' to {1}"
-                .format(RotorContact.Instance().ContactToCharacter(currentLetter),
-                rotor.Name))
-            outPin = rotor.ReturnCircuit(currentLetter)
-            self._write_debug_message("'{0}' returned Actual letter of '{1}'",
-                                      rotor.Name, RotorContact.Instance().ContactToCharacter(outPin))
+            self._write_debug_message(f"Passing '{currentLetter.name}' to {rotor.name}")
+            outPin = rotor.get_return_circuit(currentLetter)
+
+            self._write_debug_message(f"'{rotor.name}' returned Actual letter of '{outPin.name}'")
             currentLetter = outPin
 
-            self._write_debug_message("'{0}' returned next rotor position of '{1}'",
-                rotor.Name, RotorContact.Instance().ContactToCharacter(currentLetter))
+            self._write_debug_message(f"'{rotor.name}' returned next rotor position of '{currentLetter.name}'")
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard != None:
-            currentLetter = self._plugboard.GetPlug(currentLetter)
+            currentLetter = self._plugboard.get_plug(currentLetter)
 
-        self._write_debug_message("Output letter '{0}'",
-                                  RotorContact.Instance().ContactToCharacter(currentLetter))
+        print(f'currentLetter is type {type(currentLetter)}')
+        self._write_debug_message(f"Output letter '{currentLetter.name}'")
+        #,
+        #                          RotorContact.Instance().ContactToCharacter(currentLetter))
         self._write_debug_message(
             "***********************************************************************")
 

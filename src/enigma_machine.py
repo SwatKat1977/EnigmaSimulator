@@ -45,6 +45,8 @@ def main():
         print(f'[ERROR] {enigma_machine.last_error}')
         return
 
+    enigma_machine.debug_messages = True
+
     # Set the rotor positions
     enigma_machine.SetRotorPosition(RotorPosition_One, 2)
     enigma_machine.SetRotorPosition(RotorPosition_Two, 3)
@@ -61,10 +63,11 @@ def main():
     for character in string_to_encode.upper():
         if character >= 'A' and character <= 'Z':
             character = RotorContact[character]
-            encrypted += RotorContact(enigma_machine.PressKey(character))
+            encrypted_letter = enigma_machine.PressKey(character)
+            print(f'Encrypted {character} as {encrypted_letter}')
+            encrypted += str(enigma_machine.PressKey(character).name)
 
     print("Encrypted : {0}".format(encrypted))
-
 
 
 if __name__ == '__main__':

@@ -218,7 +218,6 @@ class Rotor:
 
         # Get the outgoing contact number using the reverse wiriting dictionary.
         output_contact = self.reverse_rotor_wiring[input_contact]
-        print(f"::get_return_circuit() output_contact : {RotorContact(output_contact).name}")
 
         # ===========================================================
         # STEP 2 : Take ring settings into account
@@ -274,8 +273,7 @@ class Rotor:
             else:
                 final_contact -= (self.rotor_position -1)
 
-        print(f'Final contact: {RotorContact(final_contact)}')
-        return final_contact
+        return RotorContact(final_contact)
 
 
     ##
