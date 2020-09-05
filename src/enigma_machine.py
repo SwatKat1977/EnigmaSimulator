@@ -12,20 +12,17 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-import sys
-from Core.enigma_machine import *
+from Core.enigma_machine import EnigmaMachine
 from Core.version import VERSION
-from Core.rotor_factory import RotorFactory
-from Core.reflector_factory import ReflectorFactory
 from Core.rotor_contact import RotorContact
 
 # https://cryptii.com/enigma-machine
 # AAAA with positions 2,3,21 should return MKIEY
 
 
-RotorPosition_One = 0
-RotorPosition_Two = 1
-RotorPosition_Three = 2
+ROTORPOSITION_ONE = 0
+ROTORPOSITION_TWO = 1
+ROTORPOSITION_THREE = 2
 
 
 def main():
@@ -48,9 +45,9 @@ def main():
     enigma_machine.debug_messages = True
 
     # Set the rotor positions
-    enigma_machine.SetRotorPosition(RotorPosition_One, 1)
-    enigma_machine.SetRotorPosition(RotorPosition_Two, 1)
-    enigma_machine.SetRotorPosition(RotorPosition_Three, 1)
+    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
+    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 1)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 1)
 
     # machine.GetRotor(0).RingSetting = 2
     # machine.GetRotor(1).RingSetting = 2
@@ -65,9 +62,8 @@ def main():
             print(f"Character '{character}' is invalid!")
             return
 
-        print(f'Encrypting {character}...')
         character = RotorContact[character]
-        encrypted_letter = enigma_machine.PressKey(character)
+        encrypted_letter = enigma_machine.press_key(character)
         print(f'Encrypted {character} as {encrypted_letter}')
         encrypted.append(encrypted_letter.name)
         print(encrypted)
