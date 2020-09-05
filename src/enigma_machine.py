@@ -59,13 +59,18 @@ def main():
     string_to_encode = "AAAAA"
     print(f"String to encode : {string_to_encode}")
 
-    encrypted = ""
+    encrypted = []
     for character in string_to_encode.upper():
-        if character >= 'A' and character <= 'Z':
-            character = RotorContact[character]
-            encrypted_letter = enigma_machine.PressKey(character)
-            print(f'Encrypted {character} as {encrypted_letter}')
-            encrypted += str(enigma_machine.PressKey(character).name)
+        if character < 'A' or character > 'Z':
+            print(f"Character '{character}' is invalid!")
+            return
+
+        print(f'Encrypting {character}...')
+        character = RotorContact[character]
+        encrypted_letter = enigma_machine.PressKey(character)
+        print(f'Encrypted {character} as {encrypted_letter}')
+        encrypted.append(encrypted_letter.name)
+        print(encrypted)
 
     print("Encrypted : {0}".format(encrypted))
 

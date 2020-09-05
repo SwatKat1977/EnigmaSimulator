@@ -2,7 +2,10 @@ Electronic Enigma Machine Changelog
 ===================================
 
 Version 0.6.0-gamma 4th Sept 2020 [DEV]
-*
+* [BUG] Fixed error in Enigma1 rotor II
+* [BUG] Fixed bug in reflector.
+* [MOD] Refactoring done on both enigma_machine.py modules.
+* [MOD] Modified Enigma machine module to tidy up, whilst debugging.
 
 
 Version 0.6.0-beta 4th Sept 2020 [DEV]
