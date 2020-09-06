@@ -281,4 +281,5 @@ class Rotor:
     # @return True if when this steps it will cause the next to to, otherwise
     # False is returned.
     def will_step_next(self):
-        return self.rotor_position in self.notch_locations
+        curr_position = RotorContact(self.rotor_position).name
+        return curr_position in self.notch_locations

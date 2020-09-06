@@ -152,7 +152,7 @@ class EnigmaMachine:
     # @param key Key to encode/decode
     # @return Encoded/decoded character.
     def press_key(self, key):
-        self._write_debug_message(f"PressKey received : '{key.name}'")
+        self._write_debug_message(f"EnigmaMachine::press_key() received : '{key.name}'")
 
         #  To encrypt/decrypt a message, we need to run through the circuit:
         # plug board => rotors => reflector => rotors => plugboard.
@@ -238,11 +238,17 @@ class EnigmaMachine:
         self._rotors[rotor_no].position = position
 
 
+    def get_rotor_position(self, rotor_no):
+        return self._rotors[rotor_no].position
+
+
     ##  Rotor stepping occurs from the right to left whilst a stepping notch is
     #   encountered.
     def _step_rotors(self):
         # Step next rotor flag.
         will_step_next_rotor = False
+
+        print("[DEBUG] Stepping rotor ....")
 
         ######################################
         ### Assume 3 rotor machine for now ###
@@ -260,8 +266,9 @@ class EnigmaMachine:
 
         # If there is a double-step then perform it and reset the flag.
         if self._double_step:
-            self._rotors[0].Step()
-            self._rotors[1].Step()
+            print("[DEBUG] Doing a double step")
+            self._rotors[0].step()
+            self._rotors[1].step()
             self._double_step = False
 
         # Only continue if there is more If stepping to be done.
@@ -273,12 +280,12 @@ class EnigmaMachine:
         rotor = self._rotors[rotor_position]
 
         # Step the next rotor.
-        rotor.Step()
+        rotor.step()
 
         # If the 2nd rotor will step rotor 1 (left most one) then a double-step
         # needs to take place.  This is where the middle rotor will step again
         # next button press, along with the left one.
-        if rotor.WillStepNext():
+        if rotor.will_step_next():
             self._double_step = True
 
 

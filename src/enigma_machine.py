@@ -12,6 +12,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
+import sys
 from Core.enigma_machine import EnigmaMachine
 from Core.version import VERSION
 from Core.rotor_contact import RotorContact
@@ -23,6 +24,24 @@ from Core.rotor_contact import RotorContact
 ROTORPOSITION_ONE = 0
 ROTORPOSITION_TWO = 1
 ROTORPOSITION_THREE = 2
+
+def encode_message(original_message, machine):
+    print(f"Encoding message '{original_message}'")
+
+    encoded_message = []
+
+    for character in original_message.upper():
+        if character < 'A' or character > 'Z':
+            print(f"[ERROR] Character '{character}' is invalid!")
+            sys.exit()
+
+        character = RotorContact[character]
+        encoded_character = machine.press_key(character)
+        print(f'Encrypted {character} as {encoded_character}')
+        encoded_message.append(encoded_character.name)
+
+    encoded_str = "".join(encoded_message)
+    return encoded_str
 
 
 def main():
@@ -44,32 +63,49 @@ def main():
 
     enigma_machine.debug_messages = True
 
+    # # Set the rotor positions
+    # enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
+    # enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 1)
+    # enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 1)
+
+    # # machine.GetRotor(0).RingSetting = 2
+    # # machine.GetRotor(1).RingSetting = 2
+    # # machine.GetRotor(2).RingSetting = 2
+
+    # string_to_encode = "AAAAA"
+    # encoded = encode_message(string_to_encode, enigma_machine)
+    # print("+----------------------------------------------")
+    # print(f"Encoded string '{string_to_encode} as : {encoded}")
+    # print(f"=> Rotor 1 Position: {enigma_machine.get_rotor_position(0)}")
+    # print(f"=> Rotor 2 Position: {enigma_machine.get_rotor_position(1)}")
+    # print(f"=> Rotor 3 Position: {enigma_machine.get_rotor_position(2)}")
+    # print("+----------------------------------------------")
+
+    # AAAA with positions 2,3,21 should return MKIEY
+
     # Set the rotor positions
+    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 2)
+    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 3)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 21)
+
     enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
     enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 1)
-    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 1)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
 
-    # machine.GetRotor(0).RingSetting = 2
-    # machine.GetRotor(1).RingSetting = 2
-    # machine.GetRotor(2).RingSetting = 2
+    string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    string_to_encode = "AA"
+    encoded = encode_message(string_to_encode, enigma_machine)
+    print("+----------------------------------------------")
+    print(f"Encoded string '{string_to_encode} as : {encoded}")
+    print(f"=> Rotor 1 Position: {RotorContact(enigma_machine.get_rotor_position(0)).name}")
+    print(f"=> Rotor 2 Position: {RotorContact(enigma_machine.get_rotor_position(1)).name}")
+    print(f"=> Rotor 3 Position: {RotorContact(enigma_machine.get_rotor_position(2)).name}")
+    print("+----------------------------------------------")
 
-    string_to_encode = "AAAAA"
-    print(f"String to encode : {string_to_encode}")
 
-    encrypted = []
-    for character in string_to_encode.upper():
-        if character < 'A' or character > 'Z':
-            print(f"Character '{character}' is invalid!")
-            return
-
-        character = RotorContact[character]
-        encrypted_letter = enigma_machine.press_key(character)
-        print(f'Encrypted {character} as {encrypted_letter}')
-        encrypted.append(encrypted_letter.name)
-        print(encrypted)
-
-    print("Encrypted : {0}".format(encrypted))
-
+# AAAA with positions 2,3,21 should return MKIEY
+# 2 = B
+# 3 = C
 
 if __name__ == '__main__':
     main()
