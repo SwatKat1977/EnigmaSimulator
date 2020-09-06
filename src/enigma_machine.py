@@ -90,10 +90,11 @@ def main():
 
     enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
     enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 1)
-    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 1)
+    #enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
 
     string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-    string_to_encode = "AA"
+    #string_to_encode = "AA"
     encoded = encode_message(string_to_encode, enigma_machine)
     print("+----------------------------------------------")
     print(f"Encoded string '{string_to_encode} as : {encoded}")
