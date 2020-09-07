@@ -9,6 +9,15 @@ applied.
 * [MOD] Refactoring done on both enigma_machine.py modules.
 * [MOD] Modified Enigma machine module to tidy up, whilst debugging.
 * [BUG] Fixed rotor stepping not detecting correct position.
+Unit Test Coverage:
+- EnigmaMachine    0%
+- MachineSetup     0%
+- Plugboard        100%
+- Reflector        100%
+- ReflectorFactory 0%
+- Rotor            0%
+- RotorContact     100%
+- RotorFactory     0%
 
 
 Version 0.6.0-beta 4th Sept 2020
