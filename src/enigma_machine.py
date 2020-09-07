@@ -26,8 +26,6 @@ ROTORPOSITION_TWO = 1
 ROTORPOSITION_THREE = 2
 
 def encode_message(original_message, machine):
-    print(f"Encoding message '{original_message}'")
-
     encoded_message = []
 
     for character in original_message.upper():
@@ -37,7 +35,6 @@ def encode_message(original_message, machine):
 
         character = RotorContact[character]
         encoded_character = machine.press_key(character)
-        print(f'Encrypted {character} as {encoded_character}')
         encoded_message.append(encoded_character.name)
 
     encoded_str = "".join(encoded_message)
@@ -61,7 +58,7 @@ def main():
         print(f'[ERROR] {enigma_machine.last_error}')
         return
 
-    enigma_machine.debug_messages = True
+    #enigma_machine.debug_messages = True
 
     # # Set the rotor positions
     # enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
@@ -94,7 +91,6 @@ def main():
     #enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
 
     string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-    #string_to_encode = "AA"
     encoded = encode_message(string_to_encode, enigma_machine)
     print("+----------------------------------------------")
     print(f"Encoded string '{string_to_encode} as : {encoded}")
@@ -103,10 +99,14 @@ def main():
     print(f"=> Rotor 3 Position: {RotorContact(enigma_machine.get_rotor_position(2)).name}")
     print("+----------------------------------------------")
 
+    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, RotorContact(2).value)
+    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, RotorContact(3).value)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact(21).value)
 
-# AAAA with positions 2,3,21 should return MKIEY
-# 2 = B
-# 3 = C
+    string_to_encode = "AAAA"
+    encoded = encode_message(string_to_encode, enigma_machine)
+    print(f"Encoded string '{string_to_encode} as : {encoded}")
+
 
 if __name__ == '__main__':
     main()

@@ -248,8 +248,6 @@ class EnigmaMachine:
         # Step next rotor flag.
         will_step_next_rotor = False
 
-        print("[DEBUG] Stepping rotor ....")
-
         ######################################
         ### Assume 3 rotor machine for now ###
         ######################################

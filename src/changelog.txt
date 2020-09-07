@@ -1,7 +1,9 @@
 Electronic Enigma Machine Changelog
 ===================================
 
-Version 0.6.0-gamma 4th Sept 2020 [DEV]
+Version 0.7.0 7th Sept 2020 [DEV]
+First version that will give the correct answer when a simple configuration is
+applied.
 * [BUG] Fixed error in Enigma1 rotor II
 * [BUG] Fixed bug in reflector.
 * [MOD] Refactoring done on both enigma_machine.py modules.
@@ -9,7 +11,7 @@ Version 0.6.0-gamma 4th Sept 2020 [DEV]
 * [BUG] Fixed rotor stepping not detecting correct position.
 
 
-Version 0.6.0-beta 4th Sept 2020 [DEV]
+Version 0.6.0-beta 4th Sept 2020
 * [MOD] Module renamed to conform with PEP8 standard:
   - Reflector.py => reflector.py
   - ReflectorFactory.py => reflector_factory.py
