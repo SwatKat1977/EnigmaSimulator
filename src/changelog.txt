@@ -1,7 +1,7 @@
 Electronic Enigma Machine Changelog
 ===================================
 
-Version 0.7.0 7th Sept 2020 [DEV]
+Version 0.7.0 8th Sept 2020 [DEV]
 First version that will give the correct answer when a simple configuration is
 applied.
 * [BUG] Fixed error in Enigma1 rotor II
