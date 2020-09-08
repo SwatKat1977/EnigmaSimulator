@@ -19,7 +19,7 @@ from Core.unit_tests.reflector import UnitTest_Reflector
 from Core.unit_tests.plugboard import UnitTest_Plugboard
 #from UnitTest_ReflectorFactory import UnitTest_ReflectorFactory
 from Core.unit_tests.rotor import UnitTest_Rotor
-#from UnitTest_RotorFactory import UnitTest_RotorFactory
+from Core.unit_tests.rotor_factory import UnitTest_RotorFactory
 
 
 if __name__ == '__main__':
