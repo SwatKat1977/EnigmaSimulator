@@ -29,11 +29,15 @@ class Rotor:
     def name(self):
         return self.rotor_name
 
-    ##
-    # Property getter : How the rotor is wired.
+    ## Property getter : How the rotor is wired forwards.
     @property
     def wiring(self):
         return self.rotor_wiring
+
+    ## Property getter : How the rotor is wired forwards.
+    @property
+    def reverse_wiring(self):
+        return self.reverse_rotor_wiring
 
     ##
     # Property getter 'NotchLocations' : Location of the turnover notch(es).
@@ -98,7 +102,7 @@ class Rotor:
         # define how the rotor is internally wired.
         self.rotor_wiring = wiring
 
-        self.reverse_rotor_wiring = {v:k for k,v in wiring.items()} 
+        self.reverse_rotor_wiring = {v:k for k, v in wiring.items()} 
 
 
     ##
