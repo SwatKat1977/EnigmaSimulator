@@ -12,14 +12,20 @@ applied.
 * [BUG] Rotor factory wasn't returning None when it detected a duplicate input
         or output pin.
 Unit Test Coverage:
-- EnigmaMachine    0%
-- MachineSetup     0%
-- Plugboard        100%
-- Reflector        100%
-- ReflectorFactory 0%
-- Rotor            100%
-- RotorContact     100%
-- RotorFactory     100%
+- json_enabled_class 100$
+- enigma_machine     95%
+- enigma_model       92%
+- enigma_models      100%
+- plugboard          100%
+- reflector          100%
+- reflector_factory  100%
+- rotor              100%
+- rotor_contact      100%
+- rotor_factory      100%
+Code not working/unverified:
+- Double stepping
+- 4 Rotor configurations
+- Encoding using plugboards
 
 
 Version 0.6.0-beta 4th Sept 2020

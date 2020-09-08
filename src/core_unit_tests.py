@@ -13,7 +13,7 @@
     GNU General Public License for more details.
 '''
 import unittest
-#from UnitTest_EnigmaMachine import UnitTest_EnigmaMachine
+from Core.unit_tests.enigma_machine import UnitTest_EnigmaMachine
 #from UnitTest_MachineSetup import UnitTest_MachineSetup
 from Core.unit_tests.reflector import UnitTest_Reflector
 from Core.unit_tests.plugboard import UnitTest_Plugboard
