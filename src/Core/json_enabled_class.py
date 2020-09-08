@@ -35,7 +35,7 @@ class JsonLoadingClass:
             json_data = json.loads(file_contents)
 
         except json.JSONDecodeError as excpt:
-            return (None, f"Unable to parse  json, reason: {excpt.strerror}")
+            return (None, f"Unable to parse json, reason: {excpt.msg}")
 
         try:
             jsonschema.validate(instance=json_data, schema=json_schema)

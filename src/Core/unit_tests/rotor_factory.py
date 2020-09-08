@@ -76,7 +76,7 @@ class UnitTest_RotorFactory(unittest.TestCase):
     #  CreateFromXML should raise an error of 'missing root element' because
     #  the expected XML root cannot be found.
     #  @param self The object pointer.
-    def test_RotorFactory_build_from_json_InvalidRoot(self):
+    def test_RotorFactory_build_from_json_ValidationError(self):
         json_file = 'Core/unit_tests/test_data/Rotor_ValidationError.json'
 
         rotor = self._factory.build_from_json(json_file)
