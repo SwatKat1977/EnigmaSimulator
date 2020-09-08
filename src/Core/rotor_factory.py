@@ -97,7 +97,7 @@ class RotorFactory:
             rotor_json = json.loads(file_contents)
 
         except json.JSONDecodeError as excpt:
-            self.last_error_msg = "Unable to parse rotor file" + \
+            self.last_error_msg = "Unable to parse rotor file " + \
                 f"{json_file}, reason: {excpt}"
             return None
 
@@ -123,12 +123,14 @@ class RotorFactory:
             out_pin = RotorContact[pin[self._BodyElement_WiringOut]].value
 
             if in_pin in wiring:
-                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                self.last_error_msg = f"Circuit ({in_pin}:{out_pin}) " + \
                          "input pin is already defined"
+                return None
 
             if out_pin in wiring_reverse:
-                self.last_error_msg = f"Circuit {in_pin}:{out_pin}) " + \
+                self.last_error_msg = f"Circuit ({in_pin}:{out_pin}) " + \
                          "output pin is already defined"
+                return None
 
             wiring[in_pin] = out_pin
             wiring_reverse[out_pin] = in_pin
@@ -136,18 +138,3 @@ class RotorFactory:
         # Everything went through successfully, return rotor.
         return Rotor(rotor_json[self._BodyElement_Name], wiring,
                      turnover_notches)
-
-
-if __name__ == '__main__':
-    FACTORY = RotorFactory()
-    ROTOR = FACTORY.build_from_json('../data/rotors/Enigma1_I.json')
-    if ROTOR is None:
-        print(FACTORY.last_error_message)
-    else:
-        ROTOR.position = 2
-        OUTPUT = RotorContact(ROTOR.get_forward_circuit(RotorContact.Z))
-        print(f'Output is {OUTPUT}')
-
-        ROTOR.position = 1
-        REVERSE = RotorContact(ROTOR.get_return_circuit(RotorContact.A))
-        print(REVERSE)

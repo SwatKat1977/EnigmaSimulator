@@ -1,7 +1,34 @@
 Electronic Enigma Machine Changelog
 ===================================
 
-Version 0.6.0-beta 4th Sept 2020 [DEV]
+Version 0.7.0 8th Sept 2020 [DEV]
+First version that will give the correct answer when a simple configuration is
+applied.
+* [BUG] Fixed error in Enigma1 rotor II
+* [BUG] Fixed bug in reflector.
+* [MOD] Refactoring done on both enigma_machine.py modules.
+* [MOD] Modified Enigma machine module to tidy up, whilst debugging.
+* [BUG] Fixed rotor stepping not detecting correct position.
+* [BUG] Rotor factory wasn't returning None when it detected a duplicate input
+        or output pin.
+Unit Test Coverage:
+- json_enabled_class 100$
+- enigma_machine     95%
+- enigma_model       92%
+- enigma_models      100%
+- plugboard          100%
+- reflector          100%
+- reflector_factory  100%
+- rotor              100%
+- rotor_contact      100%
+- rotor_factory      100%
+Code not working/unverified:
+- Double stepping
+- 4 Rotor configurations
+- Encoding using plugboards
+
+
+Version 0.6.0-beta 4th Sept 2020
 * [MOD] Module renamed to conform with PEP8 standard:
   - Reflector.py => reflector.py
   - ReflectorFactory.py => reflector_factory.py

@@ -1,114 +1,114 @@
 {
-    "name": "Enigma 1 Rotor II",
+    "name": "Enigma 1 Rotor I",
     "notches":
     [
-        "E"
+        "Q"
     ],
     "wiring":
     [
         {
             "in": "A",
-            "out": "A"
+            "out": "E"
         },
         {
             "in": "B",
-            "out": "J"
-        },
-        {
-            "in": "C",
-            "out": "D"
-        },
-        {
-            "in": "D",
             "out": "K"
         },
         {
-            "in": "E",
-            "out": "S"
-        },
-        {
-            "in": "F",
-            "out": "I"
-        },
-        {
-            "in": "G",
-            "out": "R"
-        },
-        {
-            "in": "H",
-            "out": "U"
-        },
-        {
-            "in": "I",
-            "out": "X"
-        },
-        {
-            "in": "J",
-            "out": "B"
-        },
-        {
-            "in": "K",
-            "out": "L"
-        },
-        {
-            "in": "L",
-            "out": "H"
-        },
-        {
-            "in": "M",
-            "out": "W"
-        },
-        {
-            "in": "N",
-            "out": "T"
-        },
-        {
-            "in": "O",
+            "in": "C",
             "out": "M"
         },
         {
-            "in": "P",
-            "out": "C"
-        },
-        {
-            "in": "Q",
-            "out": "Q"
-        },
-        {
-            "in": "R",
-            "out": "G"
-        },
-        {
-            "in": "S",
-            "out": "Z"
-        },
-        {
-            "in": "T",
-            "out": "N"
-        },
-        {
-            "in": "U",
-            "out": "P"
-        },
-        {
-            "in": "V",
-            "out": "Y"
-        },
-        {
-            "in": "W",
+            "in": "D",
             "out": "F"
         },
         {
-            "in": "X",
+            "in": "E",
+            "out": "L"
+        },
+        {
+            "in": "F",
+            "out": "G"
+        },
+        {
+            "in": "G",
+            "out": "D"
+        },
+        {
+            "in": "H",
+            "out": "Q"
+        },
+        {
+            "in": "I",
             "out": "V"
         },
         {
-            "in": "Y",
+            "in": "J",
+            "out": "Z"
+        },
+        {
+            "in": "K",
+            "out": "N"
+        },
+        {
+            "in": "L",
+            "out": "T"
+        },
+        {
+            "in": "M",
             "out": "O"
         },
         {
+            "in": "N",
+            "out": "W"
+        },
+        {
+            "in": "O",
+            "out": "Y"
+        },
+        {
+            "in": "P",
+            "out": "H"
+        },
+        {
+            "in": "Q",
+            "out": "X"
+        },
+        {
+            "in": "R",
+            "out": "U"
+        },
+        {
+            "in": "S",
+            "out": "W"
+        },
+        {
+            "in": "T",
+            "out": "P"
+        },
+        {
+            "in": "U",
+            "out": "A"
+        },
+        {
+            "in": "V",
+            "out": "I"
+        },
+        {
+            "in": "W",
+            "out": "B"
+        },
+        {
+            "in": "X",
+            "out": "R"
+        },
+        {
+            "in": "Y",
+            "out": "C"
+        },
+        {
             "in": "Z",
-            "out": "E"
+            "out": "J"
         }
     ]
 }

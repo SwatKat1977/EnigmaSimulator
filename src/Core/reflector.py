@@ -12,6 +12,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
+from Core.rotor_contact import RotorContact
 
 
 # ***********************************************************************
@@ -56,5 +57,5 @@ class Reflector:
     #  @param pin_no Reference pin to get circuit with.
     #  @return If successful a contact number is returned, on error a
     #  ValueError exception is raised.
-    def get_circuit(self, pin_no):
-        return self.reflector_wiring[pin_no]
+    def get_circuit(self, pin):
+        return RotorContact(self.reflector_wiring[pin.value])

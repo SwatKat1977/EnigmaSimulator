@@ -92,12 +92,14 @@ class ReflectorFactory(JsonLoadingClass):
             out_pin = RotorContact[pin[self.BodyElement_WiringOut]].value
 
             if in_pin in wiring:
-                self._last_error = f"Circuit {in_pin}:{out_pin}) " + \
+                self._last_error = f"Circuit ({in_pin}:{out_pin}) " + \
                          "input pin is already defined"
+                return None
 
             if out_pin in wiring_reverse:
-                self._last_error = f"Circuit {in_pin}:{out_pin}) " + \
+                self._last_error = f"Circuit ({in_pin}:{out_pin}) " + \
                          "output pin is already defined"
+                return None
 
             wiring[in_pin] = out_pin
             wiring_reverse[out_pin] = in_pin

@@ -19,7 +19,7 @@ from Core.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
 # Class representing an Enigma rotor / wheel /drum / Walzen (German).
 # ***********************************************************************
 class Rotor:
-    __slots__ = ['notch_locations', 'reverse_rotor_wiring', 'rotor_name',
+    __slots__ = ['_notch_locations', '_reverse_wiring', 'rotor_name',
                  'rotor_position', 'rotor_ring_setting', 'rotor_wiring']
 
 
@@ -29,17 +29,21 @@ class Rotor:
     def name(self):
         return self.rotor_name
 
-    ##
-    # Property getter : How the rotor is wired.
+    ## Property getter : How the rotor is wired forwards.
     @property
     def wiring(self):
         return self.rotor_wiring
+
+    ## Property getter : How the rotor is wired forwards.
+    @property
+    def reverse_wiring(self):
+        return self._reverse_wiring
 
     ##
     # Property getter 'NotchLocations' : Location of the turnover notch(es).
     @property
     def notches(self):
-        return self.notch_locations
+        return self._notch_locations
 
     ##
     # Property getter : Position of the rotor.
@@ -80,7 +84,7 @@ class Rotor:
         self.rotor_name = name
 
         # Location of the turnover notch(es).
-        self.notch_locations = notchLocations
+        self._notch_locations = notchLocations
 
         # Current position of the rotor.
         self.rotor_position = 1
@@ -98,7 +102,7 @@ class Rotor:
         # define how the rotor is internally wired.
         self.rotor_wiring = wiring
 
-        self.reverse_rotor_wiring = {v:k for k,v in wiring.items()} 
+        self._reverse_wiring = {v:k for k, v in wiring.items()} 
 
 
     ##
@@ -185,8 +189,7 @@ class Rotor:
             else:
                 final_contact -= (self.rotor_position -1)
 
-        print(f'Final contact: {RotorContact(final_contact)}')
-        return final_contact
+        return RotorContact(final_contact)
 
 
     ##
@@ -198,7 +201,6 @@ class Rotor:
     def get_return_circuit(self, contact):
 
         contact_no = contact.value
-        print(f"::get_return_circuit() Contact : {RotorContact(contact).name}")
 
         # ===========================================================
         # STEP 1 : Determine the starting point for the input contact
@@ -218,8 +220,7 @@ class Rotor:
             input_contact = input_contact - NO_OF_ROTOR_CONTACTS
 
         # Get the outgoing contact number using the reverse wiriting dictionary.
-        output_contact = self.reverse_rotor_wiring[input_contact]
-        print(f"::get_return_circuit() output_contact : {RotorContact(output_contact).name}")
+        output_contact = self._reverse_wiring[input_contact]
 
         # ===========================================================
         # STEP 2 : Take ring settings into account
@@ -275,8 +276,7 @@ class Rotor:
             else:
                 final_contact -= (self.rotor_position -1)
 
-        print(f'Final contact: {RotorContact(final_contact)}')
-        return final_contact
+        return RotorContact(final_contact)
 
 
     ##
@@ -285,4 +285,5 @@ class Rotor:
     # @return True if when this steps it will cause the next to to, otherwise
     # False is returned.
     def will_step_next(self):
-        return self.rotor_position in self.notch_locations
+        curr_position = RotorContact(self.rotor_position).name
+        return curr_position in self._notch_locations
