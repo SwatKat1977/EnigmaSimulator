@@ -1,0 +1,32 @@
+<Rotors>
+<!-- Test Rotor - This is a straight-through rotor, no encryption -->
+<rotor name="TestRotor">
+	<notch>A</notch>
+	<circuit in='A' out='A'/>
+	<circuit in='B' out='B'/>
+	<circuit in='C' out='C'/>
+	<circuit in='D' out='D'/>
+	<circuit in='E' out='E'/>
+	<circuit in='F' out='F'/>
+	<circuit in='G' out='G'/>
+	<circuit in='H' out='H'/>
+	<circuit in='I' out='I'/>
+	<circuit in='J' out='J'/>
+	<circuit in='K' out='K'/>
+	<circuit in='L' out='L'/>
+	<circuit in='M' out='M'/>
+	<circuit in='N' out='N'/>
+	<circuit in='O' out='O'/>
+	<circuit in='P' out='P'/>
+	<circuit in='Q' out='Q'/>
+	<circuit in='R' out='R'/>
+	<circuit in='S' out='S'/>
+	<circuit in='T' out='T'/>
+	<circuit in='U' out='U'/>
+	<circuit in='V' out='V'/>
+	<circuit in='W' out='W'/>
+	<circuit in='X' out='X'/>
+	<circuit in='Y' out='Y'/>
+	<circuit in='Z' out='Z'/>
+</rotor>
+</Rotors>
