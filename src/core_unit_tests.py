@@ -17,7 +17,7 @@ import unittest
 #from UnitTest_MachineSetup import UnitTest_MachineSetup
 from Core.unit_tests.reflector import UnitTest_Reflector
 from Core.unit_tests.plugboard import UnitTest_Plugboard
-#from UnitTest_ReflectorFactory import UnitTest_ReflectorFactory
+from Core.unit_tests.reflector_factory import UnitTest_ReflectorFactory
 from Core.unit_tests.rotor import UnitTest_Rotor
 from Core.unit_tests.rotor_factory import UnitTest_RotorFactory
 
