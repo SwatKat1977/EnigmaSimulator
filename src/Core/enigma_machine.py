@@ -68,12 +68,10 @@ class EnigmaMachine:
 
         self._model_type = model
 
-        try:
-            self._model_details = ENIGMA_MODELS[model]
-
-        except NameError as err:
-            print(err)
+        if model not in ENIGMA_MODELS:
             raise ValueError('Enigma model is not valid')
+
+        self._model_details = ENIGMA_MODELS[model]
 
         # Flag to enable additional messages so you can see how the Enigma
         # machine should operate.
@@ -121,7 +119,8 @@ class EnigmaMachine:
             rotor = self._rotor_factory.build_from_json(rotor_file_path)
 
             if rotor is None:
-                self._last_error = self._rotor_factory.last_error_message
+                self._last_error = f"Rotor read failure | " + \
+                                   self._rotor_factory.last_error_message
                 return False
 
             self._rotors.append(rotor)
@@ -137,7 +136,8 @@ class EnigmaMachine:
         self._reflector = self._reflector_factory.build_from_json(reflector_filename)
 
         if self._reflector is None:
-            self._last_error = self._reflector_factory.last_error_message
+            self._last_error = f"Reflector read failure | " + \
+                               self._reflector_factory.last_error_message
             return False
 
         self._is_configured = True
