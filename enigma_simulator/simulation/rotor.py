@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -12,82 +12,79 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from Core.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
+#from simulation.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
+from rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
 
-
-# ***********************************************************************
-# Class representing an Enigma rotor / wheel /drum / Walzen (German).
-# ***********************************************************************
 class Rotor:
-    __slots__ = ['_notch_locations', '_reverse_wiring', 'rotor_name',
-                 'rotor_position', 'rotor_ring_setting', 'rotor_wiring']
+    ''' Class representing an Enigma rotor wheel / drum / Walzen (German). '''
+    __slots__ = ['_notch_locations', '_reverse_wiring', '_name',
+                 '_position', 'rotor_ring_setting', '_wiring']
 
-
-    ##
-    # Property getter : Name of the rotor.
     @property
-    def name(self):
-        return self.rotor_name
+    def name(self) -> str:
+        """ Property getter : Name of the rotor. """
+        return self._name
 
-    ## Property getter : How the rotor is wired forwards.
     @property
     def wiring(self):
-        return self.rotor_wiring
+        """ Property getter : How the rotor is wired forwards. """
+        return self._wiring
 
-    ## Property getter : How the rotor is wired forwards.
     @property
     def reverse_wiring(self):
+        """ Property getter : How the rotor is wired forwards. """
         return self._reverse_wiring
 
-    ##
-    # Property getter 'NotchLocations' : Location of the turnover notch(es).
     @property
     def notches(self):
+        ''' Property getter 'NotchLocations' : Location of the turnover
+            notch or notches. '''
         return self._notch_locations
 
-    ##
-    # Property getter : Position of the rotor.
     @property
-    def position(self):
-        return self.rotor_position
+    def position(self) -> int:
+        ''' Property getter : Position of the rotor. '''
+        return self._position
 
     @position.setter
     def position(self, value):
+        ''' Property setter : Position of the rotor. '''
+
         # Validate rotor positions.
         if value < 1 or value > NO_OF_ROTOR_CONTACTS:
             raise ValueError("Invalid rotor positions")
 
         # Set the position.
-        self.rotor_position = value
+        self._position = value
 
-    ##
-    # Property getter 'RingSetting' : Ring setting of the rotor.
     @property
     def ring_setting(self):
+        ''' Property getter 'RingSetting' : Ring setting of the rotor. '''
         return self.rotor_ring_setting
 
     @ring_setting.setter
-    def ring_setting(self, value):
+    def ring_setting(self, value) -> None:
+        ''' Property setter 'RingSetting' : Ring setting of the rotor. '''
+
         if value < 1 or value > NO_OF_ROTOR_CONTACTS:
             raise ValueError("Invalid ring positions")
 
         self.rotor_ring_setting = value
-
 
     ## Rotor constructor method, we wire a rotor from right => left.d.
     # @param self The object pointer.
     # @param name Human readable rotor name.
     # @param wiring Wiring setting from right to left.
     # @param notchLocations Location of the turnover notches.
-    def __init__(self, name, wiring, notchLocations):
+    def __init__(self, name, wiring, notch_locations):
         # Name of the rotor (e.g. Rotor I).
-        self.rotor_name = name
+        self._name = name
 
-        # Location of the turnover notch(es).
-        self._notch_locations = notchLocations
+        # Location of the turnover notch/notches.
+        self._notch_locations = notch_locations
 
         # Current position of the rotor.
-        self.rotor_position = 1
+        self._position = 1
 
         # Ring setting (Ringstellung) for the rotor
         self.rotor_ring_setting = 1
@@ -100,20 +97,18 @@ class Rotor:
             raise ValueError("Incomplete wiring diagram")
 
         # define how the rotor is internally wired.
-        self.rotor_wiring = wiring
+        self._wiring = wiring
 
-        self._reverse_wiring = {v:k for k, v in wiring.items()} 
-
+        self._reverse_wiring = {v:k for k, v in wiring.items()}
 
     ##
     # Step the rotor.
     # @param self The object pointer.
     def step(self):
-        if self.rotor_position == NO_OF_ROTOR_CONTACTS:
-            self.rotor_position = 1
+        if self._position == NO_OF_ROTOR_CONTACTS:
+            self._position = 1
         else:
-            self.rotor_position += 1
-
+            self._position += 1
 
     ## Get the output (circuit) using the contacts on the right-hand side
     #  contacts (forward) of the rotor.
@@ -137,11 +132,11 @@ class Rotor:
         #            output from 'B' ('A' has been moved on 1 as now rotor is
         #            in position 'B'), e.g. for Enigma Rotor 1 will return 'K'
         #            for a letter 'B'
-        input_contact = (contact_no + self.rotor_position)  -1
+        input_contact = (contact_no + self._position)  -1
         if input_contact > NO_OF_ROTOR_CONTACTS:
             input_contact = input_contact - NO_OF_ROTOR_CONTACTS
 
-        output_contact = self.rotor_wiring[input_contact]
+        output_contact = self._wiring[input_contact]
 
         # ===========================================================
         # STEP 2 : Take ring settings into account
@@ -181,16 +176,15 @@ class Rotor:
         #            will return 'E' for a letter 'A', but the rotor is in
         #            position 'B' (forward 1) so exit is off by 1, the output
         #            needs to account for this so 'J' is returned.
-        if self.rotor_position > 1:
-            if (output_contact - (self.rotor_position -1)) <= 0:
+        if self._position > 1:
+            if (output_contact - (self._position -1)) <= 0:
                 final_contact = NO_OF_ROTOR_CONTACTS \
-                    - ((self.rotor_position -1) - output_contact)
+                    - ((self._position -1) - output_contact)
 
             else:
-                final_contact -= (self.rotor_position -1)
+                final_contact -= (self._position -1)
 
         return RotorContact(final_contact)
-
 
     ##
     # Get the output (circuit) from the return route using the contacts as a
@@ -215,7 +209,7 @@ class Rotor:
         #            output from 'B' ('A' has been moved on 1 as now rotor is
         #            in position 'B'), e.g. for Enigma Rotor 1 will return 'K'
         #            for a letter 'B'
-        input_contact = contact_no + (self.rotor_position -1)
+        input_contact = contact_no + (self._position -1)
         if input_contact > NO_OF_ROTOR_CONTACTS:
             input_contact = input_contact - NO_OF_ROTOR_CONTACTS
 
@@ -268,16 +262,15 @@ class Rotor:
         #            will return 'E' for a letter 'A', but the rotor is in
         #            position 'B' (forward 1) so exit is off by 1, the output
         #            needs to account for this so 'J' is returned.
-        if self.rotor_position > 1:
-            if (output_contact - (self.rotor_position -1)) <= 0:
+        if self._position > 1:
+            if (output_contact - (self._position -1)) <= 0:
                 final_contact = NO_OF_ROTOR_CONTACTS \
-                    - ((self.rotor_position -1) - output_contact)
+                    - ((self._position -1) - output_contact)
 
             else:
-                final_contact -= (self.rotor_position -1)
+                final_contact -= (self._position -1)
 
         return RotorContact(final_contact)
-
 
     ##
     # Check to see if the rotor will cause the next one to also step.
@@ -285,5 +278,5 @@ class Rotor:
     # @return True if when this steps it will cause the next to to, otherwise
     # False is returned.
     def will_step_next(self):
-        curr_position = RotorContact(self.rotor_position).name
+        curr_position = RotorContact(self._position).name
         return curr_position in self._notch_locations

@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,10 +13,6 @@
     GNU General Public License for more details.
 '''
 from enum import Enum
-
-
-NO_OF_ROTOR_CONTACTS = 26
-
 
 ## Enumeration of a rotor contact character (A-Z).
 class RotorContact(Enum):
