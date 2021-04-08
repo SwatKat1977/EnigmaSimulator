@@ -13,12 +13,14 @@
     GNU General Public License for more details.
 '''
 #from simulation.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
-from rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
+from rotor_contact import RotorContact
 
 class Rotor:
     ''' Class representing an Enigma rotor wheel / drum / Walzen (German). '''
-    __slots__ = ['_notch_locations', '_reverse_wiring', '_name',
+    __slots__ = ['_notch_locations', '_name',
                  '_position', 'rotor_ring_setting', '_wiring']
+
+    MAX_CONTACT_NO = 26
 
     @property
     def name(self) -> str:
@@ -51,7 +53,7 @@ class Rotor:
         ''' Property setter : Position of the rotor. '''
 
         # Validate rotor positions.
-        if value < 1 or value > NO_OF_ROTOR_CONTACTS:
+        if value < 1 or value > self.MAX_CONTACT_NO:
             raise ValueError("Invalid rotor positions")
 
         # Set the position.
@@ -76,7 +78,7 @@ class Rotor:
     # @param name Human readable rotor name.
     # @param wiring Wiring setting from right to left.
     # @param notchLocations Location of the turnover notches.
-    def __init__(self, name, wiring, notch_locations):
+    def __init__(self, name, wiring : str, notch_locations):
         # Name of the rotor (e.g. Rotor I).
         self._name = name
 
@@ -89,17 +91,15 @@ class Rotor:
         # Ring setting (Ringstellung) for the rotor
         self.rotor_ring_setting = 1
 
-        # Check to make sure wiring is a list.
-        if not isinstance(wiring, (dict)):
-            raise ValueError("Incompatible rotor wiring diagram")
+        if not isinstance(wiring, (str)):
+            raise ValueError("Rotor wiring is not a string")
 
-        if len(wiring) != NO_OF_ROTOR_CONTACTS:
-            raise ValueError("Incomplete wiring diagram")
+        # Check to make sure wiring is correct.
+        if len(wiring) != self.MAX_CONTACT_NO:
+            raise ValueError("Rotor wiring incorrect length")
 
         # define how the rotor is internally wired.
         self._wiring = wiring
-
-        self._reverse_wiring = {v:k for k, v in wiring.items()}
 
     ##
     # Step the rotor.
@@ -109,6 +109,84 @@ class Rotor:
             self._position = 1
         else:
             self._position += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def encrypt(self, contact : RotorContact, forward = True):
+        '''
+        STEP 1: Correct the input contact entrypoint for position:
+        Take into account the current position of the rotor and determine if it
+        has wrapped past the letter 'Z' (contact number 26).
+        Example 1
+        'A' is pressed with the rotor in position 1 ('A'), it will returns the 
+        output from 'A'. E.g. Enigma Rotor 1 will return 'E' for letter 'A'.
+        Example 2
+        'A' is pressed with the rotor in position 2 ('B'), it will return the
+        output from 'B' ('A' has been moved on 1 as rotor is in position 'B').
+        E.g. Enigma Rotor 1 will return 'K' for a letter 'B'
+
+        STEP 2: Take ring settings into account:
+        CURRENTLY NOT IMPLEMENTED
+
+        STEP 3: Take rotor offset into account
+        When a rotor has stepped, the offset must be taken into account when it
+        comes to the output and the entrypoint of the next rotor.
+        Example 1
+        'A' is pressed with the rotor in 'B' (1) position, it will return the
+        output from 'B' as rotor is in position 'B', e.g. Enigma Rotor 1 will
+        return 'K' for 'B', but as the rotor is in position 'B' (forward 1) the
+        exit position is offset by 1 which means 'J' is returned.
+        Example 2
+        'Z' is pressed with the rotor in 'B' (1) position, it will return the
+        output from 'A' as rotor is in position 'B' and this then wraps ('Z'
+        forward 1 = 'A'), e.g. Enigma Rotor 1 will return 'E' for a letter 'A',
+        but the rotor is in position 'B' (forward 1) so 'J' is returned.
+
+        @param contact Reference contact to get circuit with.
+        @return A contact number.
+        '''
+
+        # STEP 1: Correct the input contact entrypoint for position
+        contact_position = (contact.value + self._position)  - 1
+        contact_position = contact_position % self.MAX_CONTACT_NO
+        output_contact = RotorContact[self._wiring[contact_position]]
+        print(f'output : {output_contact} | {output_contact.value}')
+
+        # STEP 2: Take ring settings into account
+        # Ring settings are not implemented - untested code
+        # if self.__ringSetting > 1:
+        #     #outputPin = outputPin + (self.__ringSetting -1)
+        #
+        #     if (outputPin - (self.__ringSetting -1)) <= 0:
+        #         outputPin = NumberOfRotorPins - ((self.__ringSetting -1) \
+        #          - outputPin)
+        #     else:
+        #         outputPin -= (self.__ringSetting -1)
+        #
+        #     #if outputPin > NumberOfRotorPins:
+        #     #    outputPin = outputPin - NumberOfRotorPins;
+        final_contact = output_contact
+
+        # STEP 3: Take rotor offset into account
+        new_position = output_contact.value - (self._position - 1)
+        output_contact = new_position if new_position else (26 - new_position)
+        print(f'OUT: {output_contact}')
+
+        return RotorContact(output_contact)
+
+
 
     ## Get the output (circuit) using the contacts on the right-hand side
     #  contacts (forward) of the rotor.
@@ -280,3 +358,8 @@ class Rotor:
     def will_step_next(self):
         curr_position = RotorContact(self._position).name
         return curr_position in self._notch_locations
+
+r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
+r.position = 2
+r.encrypt(RotorContact.A)
+#RotorContact
