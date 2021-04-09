@@ -85,9 +85,9 @@ def main():
     enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 3)
     enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 21)
 
-    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 1)
-    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 1)
-    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 1)
+    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 0)
+    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 0)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 0)
     #enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
 
     string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"

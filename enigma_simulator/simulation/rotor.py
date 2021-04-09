@@ -12,7 +12,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from simulation.logger import Logger
 from simulation.rotor_contact import RotorContact
 
 class Rotor:
@@ -48,7 +47,7 @@ class Rotor:
         ''' Property setter : Position of the rotor. '''
 
         # Validate rotor positions.
-        if value < 1 or value > self.MAX_CONTACT_NO:
+        if value < 0 or value >= self.MAX_CONTACT_NO:
             raise ValueError("Invalid rotor positions")
 
         # Set the position.
@@ -68,7 +67,8 @@ class Rotor:
 
         self._ring_setting = value
 
-    def __init__(self, name : str, wiring : str, notch_locations : list):
+    def __init__(self, name : str, wiring : str, notch_locations : list,
+                 logger):
         '''
         Rotor constructor method, a rotor is wired from right to left.
         # @param name Human readable rotor name.
@@ -88,7 +88,7 @@ class Rotor:
         # Ring setting (Ringstellung) for the rotor
         self._ring_setting = 1
 
-        self._logger = Logger(__name__, write_to_console = True)
+        self._logger = logger
 
         if not isinstance(wiring, (str)):
             raise ValueError("Rotor wiring is not a string")
