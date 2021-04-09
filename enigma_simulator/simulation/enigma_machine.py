@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,12 +13,11 @@
     GNU General Public License for more details.
 '''
 import os
-from Core.enigma_models import ENIGMA_MODELS
-from Core.plugboard import Plugboard
-from Core.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
-from Core.reflector_factory import ReflectorFactory
-from Core.rotor_factory import RotorFactory
-
+from simulation.enigma_models import ENIGMA_MODELS
+from simulation.plugboard import Plugboard
+from simulation.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
+from simulation.reflector_factory import ReflectorFactory
+from simulation.rotor_factory import RotorFactory
 
 ## Implementation of Enigma machine.
 class EnigmaMachine:

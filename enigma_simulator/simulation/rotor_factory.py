@@ -14,8 +14,8 @@
 '''
 import json
 import jsonschema
-from Core.rotor import Rotor
-from Core.rotor_contact import RotorContact
+from simulation.rotor import Rotor
+from simulation.rotor_contact import RotorContact
 
 
 class RotorFactory:

@@ -13,9 +13,9 @@
     GNU General Public License for more details.
 '''
 import sys
-from Core.enigma_machine import EnigmaMachine
-from Core.version import VERSION
-from Core.rotor_contact import RotorContact
+from simulation.enigma_machine import EnigmaMachine
+from simulation.version import VERSION
+from simulation.rotor_contact import RotorContact
 
 # https://cryptii.com/enigma-machine
 # AAAA with positions 2,3,21 should return MKIEY

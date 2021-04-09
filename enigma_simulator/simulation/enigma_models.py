@@ -12,7 +12,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from Core.enigma_model import EnigmaModel, RotorCount
+from simulation.enigma_model import EnigmaModel, RotorCount
 
 
 ENIGMA_MODELS = {
