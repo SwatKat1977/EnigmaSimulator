@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,53 +14,58 @@
 '''
 from enum import Enum
 
-
-## Enumeration for total number of rotors.
 class RotorCount(Enum):
-    ThreeRotors = 3
-    FourRotors = 4
+    ''' Enumeration for total number of rotors. '''
 
+    THREE = 3
+    FOUR = 4
 
-## Implementation of Enigma model setup.
 class EnigmaModel:
-    __slots__ = ['_has_plugboard', '_long_name', '_short_name', '_total_rotors']
+    ''' Definition of an Enigma model. '''
+    __slots__ = ['_has_plugboard', '_long_name', '_rotors', '_reflectors',
+                 '_short_name', '_total_rotors']
+    # pylint: disable=too-many-arguments
 
-    ## Get name of model for the Enigma machine.
-    #  @param self The object pointer.
     @property
-    def long_name(self):
+    def long_name(self) -> str:
+        ''' Get name of model for the Enigma machine. '''
         return self._long_name
 
-    ## Get name of model for the Enigma machine.
-    #  @param self The object pointer.
     @property
-    def short_name(self):
+    def short_name(self) -> str:
+        ''' Get name of model for the Enigma machine. '''
         return self._short_name
 
-    ## Get the total number of rotors for Enigma machine.
-    #  @param self The object pointer.
     @property
-    def no_of_rotors(self):
+    def no_of_rotors(self) -> RotorCount:
+        ''' Get the total number of rotors for Enigma machine. '''
         return self._total_rotors
 
-    ## Get flag to say if the Enigma machine has a plugboard.
-    #  @param model Enigma machine mode.
     @property
-    def has_plugboard(self):
+    def has_plugboard(self) -> bool:
+        ''' Get the Enigma machine has a plugboard flag. '''
         return self._has_plugboard
 
+    @property
+    def rotors(self) -> bool:
+        ''' Get the list of available rotors for the machine. '''
+        return self._rotors
 
-    ## Constructor, create a machine setup.
-    #  @param model Enigma machine mode.
-    #  @param selectedRotors The name of rotors used by the Enigma machine.
-    #  @param plugboard Enigma plugboard (None if machine doesn't use one).
-    def __init__(self, long_name, short_name, total_rotor, has_plugboard):
+    @property
+    def reflectors(self) -> bool:
+        ''' Get the list of available reflectors for the machine. '''
+        return self._reflectors
 
-        # Check to make sure total_rotors is enumeration from  is a PlugBoard or None.
+    def __init__(self, long_name : str, short_name : str,
+                 total_rotor : RotorCount, has_plugboard : bool,
+                 rotors : list, reflectors : list):
+
         if not isinstance(total_rotor, (RotorCount)):
             raise ValueError("Invalid number of rotors")
 
         self._has_plugboard = has_plugboard
         self._long_name = long_name
+        self._rotors = rotors
+        self._reflectors = reflectors
         self._short_name = short_name
         self._total_rotors = total_rotor
