@@ -13,12 +13,36 @@
     GNU General Public License for more details.
 '''
 from enum import Enum
+from typing import List
 
 class RotorCount(Enum):
     ''' Enumeration for total number of rotors. '''
 
     THREE = 3
     FOUR = 4
+
+class RotorDefintion:
+    __slots__ = ['_name', '_notches', '_wiring']
+
+    @property
+    def name(self) -> str:
+        ''' Get name of rotor. '''
+        return self._name
+
+    @property
+    def notches(self) -> str:
+        ''' Get a list of turnover notches. '''
+        return self._notches
+
+    @property
+    def wiring(self) -> str:
+        ''' Get the rotor wiring. '''
+        return self._wiring
+
+    def __init__(self, name: str, wiring : str, notches : list) -> None:
+        self._name = name
+        self._notches = notches
+        self._wiring = wiring
 
 class EnigmaModel:
     ''' Definition of an Enigma model. '''
@@ -58,7 +82,7 @@ class EnigmaModel:
 
     def __init__(self, long_name : str, short_name : str,
                  total_rotor : RotorCount, has_plugboard : bool,
-                 rotors : list, reflectors : list):
+                 rotors : List[RotorDefintion], reflectors : list):
 
         if not isinstance(total_rotor, (RotorCount)):
             raise ValueError("Invalid number of rotors")
