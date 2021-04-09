@@ -13,7 +13,7 @@
     GNU General Public License for more details.
 '''
 #from simulation.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
-from logger import Logger, LogType
+from logger import Logger
 from rotor_contact import RotorContact
 
 class Rotor:
@@ -67,7 +67,7 @@ class Rotor:
         if value < 1 or value > self.MAX_CONTACT_NO:
             raise ValueError("Invalid ring positions")
 
-        self.rotor_ring_setting = value
+        self._ring_setting = value
 
     def __init__(self, name : str, wiring : str, notch_locations : list):
         '''
@@ -102,7 +102,7 @@ class Rotor:
 
     def step(self):
         ''' Step the rotor. '''
-        if self._position == NO_OF_ROTOR_CONTACTS:
+        if self._position == self.MAX_CONTACT_NO:
             self._position = 1
         else:
             self._position += 1
@@ -113,7 +113,7 @@ class Rotor:
         Take into account the current position of the rotor and determine if it
         has wrapped past the letter 'Z' (contact number 26).
         Example 1
-        'A' is pressed with the rotor in position 1 ('A'), it will returns the 
+        'A' is pressed with the rotor in position 1 ('A'), it will returns the
         output from 'A'. E.g. Enigma Rotor 1 will return 'E' for letter 'A'.
         Example 2
         'A' is pressed with the rotor in position 2 ('B'), it will return the
@@ -147,7 +147,7 @@ class Rotor:
 
         # STEP 1: Correct the input contact entrypoint for position
         contact_position = (contact.value + self._position - 1)
-        self._logger.log_debug(f"=> Compensating rotor entry. Originally " + \
+        self._logger.log_debug("=> Compensating rotor entry. Originally " + \
             f"'{contact.name}', now '{RotorContact(contact_position).name}'")
         contact_position = contact_position % self.MAX_CONTACT_NO
 
@@ -175,7 +175,7 @@ class Rotor:
         #
         #     #if outputPin > NumberOfRotorPins:
         #     #    outputPin = outputPin - NumberOfRotorPins;
-        final_contact = output_contact
+        # final_contact = output_contact
 
         # STEP 3: Take rotor offset into account
         new_position = output_contact.value - (self._position - 1)
