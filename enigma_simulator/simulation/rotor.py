@@ -163,24 +163,20 @@ class Rotor:
 
         self._logger.log_debug(
             f"Encrypting '{contact} on rotor {self._name}, foward = {forward}")
-
-        # STEP 1: Correct the input contact entrypoint for position
-        contact_position = (contact.value + self._position)  - 1
-        contact_position = contact_position % self.MAX_CONTACT_NO
-
         self._logger.log_debug(f"=> Rotor position = {self._position}")
 
+        # STEP 1: Correct the input contact entrypoint for position
+        contact_position = (contact.value + self._position - 1)
+        self._logger.log_debug(f"=> Compensating rotor entry. Originally " + \
+            f"'{contact.name}', now '{RotorContact(contact_position).name}'")
+        contact_position = contact_position % self.MAX_CONTACT_NO
+
         if forward:
-            output_contact = RotorContact[self._wiring[contact_position]]
-            self._logger.log_debug(f"=> New Rotor position = {output_contact}")
+            output_contact = RotorContact[self._wiring[contact_position - 1]]
+            self._logger.log_debug(
+                f"=> Foward Rotor position = '{output_contact.name}'")
 
         else:
-            # r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
-            # r.position = 2
-            # r.encrypt(RotorContact.A, forward=False)
-            # #RotorContact
-
-            print(f'input {contact_position}')
             '''
             A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
             0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
@@ -188,10 +184,12 @@ class Rotor:
             E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
             '''
             letter = RotorContact(contact_position).name
+            print(letter)
+            print(self._wiring.index(letter))
             output_contact = RotorContact(self._wiring.index(letter))
-            print('possi: ', output_contact)
 
-        print(f'output : {output_contact} | {output_contact.value}')
+            self._logger.log_debug(
+                f"=> Backwards Rotor position = '{output_contact.name}'")
 
         # STEP 2: Take ring settings into account
         # Ring settings are not implemented - untested code
@@ -210,10 +208,14 @@ class Rotor:
 
         # STEP 3: Take rotor offset into account
         new_position = output_contact.value - (self._position - 1)
+        self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
+            f"'{output_contact.name}'")
         output_contact = new_position if new_position else (26 - new_position)
-        print(f'OUT: {output_contact}')
 
+        self._logger.log_debug(
+            f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
         return RotorContact(output_contact)
+
 
 
 
@@ -390,13 +392,5 @@ class Rotor:
 
 r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
 r.position = 1
-r.encrypt(RotorContact.A)
+# r.encrypt(RotorContact.A)
 r.encrypt(RotorContact.A, forward=False)
-
-#RotorContact
-'''
-A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
-0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
-E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
-'''
