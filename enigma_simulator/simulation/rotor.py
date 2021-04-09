@@ -195,8 +195,3 @@ class Rotor:
         '''
         curr_position = RotorContact(self._position).name
         return curr_position in self._notch_locations
-
-r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
-r.position = 2
-r.encrypt(RotorContact.A)
-r.encrypt(RotorContact.A, forward=False)
