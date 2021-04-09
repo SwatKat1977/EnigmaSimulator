@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from Core.json_enabled_class import JsonLoadingClass
-from Core.reflector import Reflector
-from Core.rotor_contact import RotorContact
+from simulation.json_enabled_class import JsonLoadingClass
+from simulation.reflector import Reflector
+from simulation.rotor_contact import RotorContact
 
 
 # ***********************************************************************

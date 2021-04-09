@@ -15,7 +15,7 @@
 import os
 from simulation.enigma_models import ENIGMA_MODELS
 from simulation.plugboard import Plugboard
-from simulation.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
+from simulation.rotor_contact import RotorContact
 from simulation.reflector_factory import ReflectorFactory
 from simulation.rotor_factory import RotorFactory
 
@@ -227,7 +227,7 @@ class EnigmaMachine:
 
     def set_rotor_position(self, rotor_no, position):
         # Validate rotor positions.
-        if position < 1 or position > NO_OF_ROTOR_CONTACTS:
+        if position < 1 or position > 26:
             raise ValueError("Invalid rotor positions")
 
         if rotor_no < 0 or rotor_no > (len(self._rotors) - 1):

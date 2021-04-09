@@ -12,9 +12,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-#from simulation.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
-from logger import Logger
-from rotor_contact import RotorContact
+from simulation.logger import Logger
+from simulation.rotor_contact import RotorContact
 
 class Rotor:
     ''' Class representing an Enigma rotor wheel / drum / Walzen (German). '''
