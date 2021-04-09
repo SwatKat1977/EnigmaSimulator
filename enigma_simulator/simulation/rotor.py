@@ -13,11 +13,12 @@
     GNU General Public License for more details.
 '''
 #from simulation.rotor_contact import NO_OF_ROTOR_CONTACTS, RotorContact
+from logger import Logger, LogType
 from rotor_contact import RotorContact
 
 class Rotor:
     ''' Class representing an Enigma rotor wheel / drum / Walzen (German). '''
-    __slots__ = ['_notch_locations', '_name',
+    __slots__ = ['_notch_locations', '_name', '_logger',
                  '_position', 'rotor_ring_setting', '_wiring']
 
     MAX_CONTACT_NO = 26
@@ -91,6 +92,8 @@ class Rotor:
         # Ring setting (Ringstellung) for the rotor
         self.rotor_ring_setting = 1
 
+        self._logger = Logger(__name__, write_to_console = True)
+
         if not isinstance(wiring, (str)):
             raise ValueError("Rotor wiring is not a string")
 
@@ -158,10 +161,36 @@ class Rotor:
         @return A contact number.
         '''
 
+        self._logger.log_debug(
+            f"Encrypting '{contact} on rotor {self._name}, foward = {forward}")
+
         # STEP 1: Correct the input contact entrypoint for position
         contact_position = (contact.value + self._position)  - 1
         contact_position = contact_position % self.MAX_CONTACT_NO
-        output_contact = RotorContact[self._wiring[contact_position]]
+
+        self._logger.log_debug(f"=> Rotor position = {self._position}")
+
+        if forward:
+            output_contact = RotorContact[self._wiring[contact_position]]
+            self._logger.log_debug(f"=> New Rotor position = {output_contact}")
+
+        else:
+            # r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
+            # r.position = 2
+            # r.encrypt(RotorContact.A, forward=False)
+            # #RotorContact
+
+            print(f'input {contact_position}')
+            '''
+            A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+            0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+            0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+            E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
+            '''
+            letter = RotorContact(contact_position).name
+            output_contact = RotorContact(self._wiring.index(letter))
+            print('possi: ', output_contact)
+
         print(f'output : {output_contact} | {output_contact.value}')
 
         # STEP 2: Take ring settings into account
@@ -360,6 +389,14 @@ class Rotor:
         return curr_position in self._notch_locations
 
 r = Rotor('y', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 't')
-r.position = 2
+r.position = 1
 r.encrypt(RotorContact.A)
+r.encrypt(RotorContact.A, forward=False)
+
 #RotorContact
+'''
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
+'''
