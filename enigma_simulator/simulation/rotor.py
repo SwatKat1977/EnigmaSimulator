@@ -19,7 +19,8 @@ class Rotor:
     __slots__ = ['_logger', '_notch_locations', '_name',  '_position',
                  '_ring_setting', '_wiring']
 
-    MAX_CONTACT_NO = 26
+    MAX_CONTACT_NO = 25
+    WIRING_LENGTH = 26
 
     @property
     def name(self) -> str:
@@ -47,11 +48,11 @@ class Rotor:
         ''' Property setter : Position of the rotor. '''
 
         # Validate rotor positions.
-        if value < 0 or value >= self.MAX_CONTACT_NO:
-            raise ValueError("Invalid rotor positions")
+        if value >= 0 and value <= self.MAX_CONTACT_NO:
+            self._position = value
+            return
 
-        # Set the position.
-        self._position = value
+        raise ValueError("Invalid rotor positions")
 
     @property
     def ring_setting(self):
@@ -93,7 +94,7 @@ class Rotor:
         if not isinstance(wiring, (str)):
             raise ValueError("Rotor wiring is not a string")
 
-        if len(wiring) != self.MAX_CONTACT_NO:
+        if len(wiring) != self.WIRING_LENGTH:
             raise ValueError("Rotor wiring incorrect length")
 
         # define how the rotor is internally wired.
@@ -101,10 +102,7 @@ class Rotor:
 
     def step(self):
         ''' Step the rotor. '''
-        if self._position == self.MAX_CONTACT_NO:
-            self._position = 1
-        else:
-            self._position += 1
+        self._position = (self._position + 1) % self.MAX_CONTACT_NO
 
     def encrypt(self, contact : RotorContact, forward = True):
         '''
