@@ -194,3 +194,13 @@ class Rotor:
         '''
         curr_position = RotorContact(self._position).name
         return curr_position in self._notch_locations
+
+    def _determine_next_position(self, contact : int) -> int:
+        if contact > 0:
+            new_position = contact % self.MAX_CONTACT_NO
+            new_position = new_position if new_position > 0 else 1
+
+        else:
+            new_position = self.MAX_CONTACT_NO + contact
+
+        return new_position
