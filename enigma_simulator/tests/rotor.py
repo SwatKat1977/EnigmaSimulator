@@ -95,13 +95,6 @@ class UnitTest_Rotor(unittest.TestCase):
         self.assertEqual(rotor.encrypt(RotorContact.Y), RotorContact.C)
         self.assertEqual(rotor.encrypt(RotorContact.Z), RotorContact.J)
 
-        '''
-        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-        0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
-        E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
-        '''
-
     def test_encrypt_forward_offset_no_ring_setting_nowrap(self):
         ''' The most basic of forward encrypts where the rotor is in position A
             and the letter A is pressed. '''
@@ -137,6 +130,30 @@ class UnitTest_Rotor(unittest.TestCase):
                                                                 forward=False),
                          RotorContact.F)
 
+    def test_encrypt_backwards_with_offset_or_ring_setting_nowrap(self):
+        '''
+        Verify that on pressing 'I' (9) we get the encoded value of 'S' (18).
+
+        Explanation:
+        'I' (9) is pressed with a rotor position of 3, the encoded letter that
+        is returned is 'S' (18) because the input is advanced 2 to 'K', which
+        will return the letter 'U'.  Because off the 2 position offset we then
+        need to adjust the result down 2 to return 'S'.
+        '''
+
+        rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
+        rotor.position = 3
+
+        '''
+        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+        0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+        B D F H J L C P R T X V Z N Y E I W G A K M U S Q O
+        '''
+
+        self.assertEqual(rotor.encrypt(RotorContact.I, forward=False),
+                         RotorContact.S)
+
     def test_will_step_next(self):
         # Test will not step.
         self.assertEqual(self._valid_pass_through_rotor.will_step_next(), False)
@@ -146,42 +163,15 @@ class UnitTest_Rotor(unittest.TestCase):
         self.assertEqual(self._valid_pass_through_rotor.will_step_next(), True)
 
     def test_step(self):
-        # Simple step test from 1 to 2.
+        # Simple step test from positioh 1 to 2.
         self.assertEqual(self._valid_pass_through_rotor.position, 1)
         self._valid_pass_through_rotor.step()
         self.assertEqual(self._valid_pass_through_rotor.position, 2)
 
+        # Step test from position 25 (Z) to 1 (A).
         self._valid_pass_through_rotor.position = 25
         self._valid_pass_through_rotor.step()
         self.assertEqual(self._valid_pass_through_rotor.position, 1)
-
-
-    # ##
-    # # Test ReturnCircuit : Initial position not wrapping and no ring setting.
-    # # The rotor is in a position other than 1, but it's not enough for the
-    # # position to wrap to the beginning of the rotor.  For this test no ring
-    # # setting has been set.
-    # # @param self The object pointer.
-    # def test_ReturnCircuit_NoneStartWrappingOffsetNoRingSetting(self):
-
-    #     # Default position is 1, but make 100% sure do it again!
-    #     self._valid_rotor.position = 1
-
-    #     # Verify a couple of different values: Contact 1 ('A')
-    #     pressed_key = RotorContact.A
-    #     contact = pressed_key.value + (self._valid_rotor.position -1)
-    #     out_contact = self._valid_rotor.reverse_wiring[contact]
-    #     self.assertEqual(self._valid_rotor.get_return_circuit(pressed_key),
-    #                      RotorContact(out_contact))
-
-    #     # Verify a couple of different values: Contact 13 ('M')
-    #     pressed_key = RotorContact.M
-    #     contact = pressed_key.value + (self._valid_rotor.position -1)
-    #     out_contact = self._valid_rotor.reverse_wiring[contact]
-    #     # (wiring.keys()[wiring.values().index(contact)]
-    #     #             - (self._valid_rotor.position -1))
-    #     self.assertEqual(self._valid_rotor.get_return_circuit(pressed_key),
-    #                      RotorContact(out_contact))
 
 
     # ##
