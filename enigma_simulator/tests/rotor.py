@@ -73,7 +73,6 @@ class UnitTest_Rotor(unittest.TestCase):
         else:
             self.fail('ValueError not raised')
 
-
     def test_wiring_incorrect_length(self):
         try:
             Rotor('Test rotor', 'ABC', ["Q"], self._logger)
@@ -90,14 +89,15 @@ class UnitTest_Rotor(unittest.TestCase):
             and the letter A is pressed. '''
 
         rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
-        self.assertEqual(rotor.encrypt(RotorContact.A), RotorContact.A)
+        self.assertEqual(rotor.encrypt(RotorContact.A), RotorContact.E)
 
     def test_encrypt_backwards_simple(self):
         ''' The most basic of backwards encrypts where the rotor is in position
             A and the letter F is pressed. '''
 
-        rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
-        self.assertEqual(rotor.encrypt(RotorContact.F, forward=False), RotorContact.A)
+        self.assertEqual(self._valid_pass_through_rotor.encrypt(RotorContact.F,
+                                                                forward=False),
+                         RotorContact.F)
 
     def test_will_step_next(self):
         # Test will not step.

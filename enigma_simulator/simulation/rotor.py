@@ -178,7 +178,8 @@ class Rotor:
         new_position = output_contact.value - (self._position - 1)
         self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
             f"'{output_contact.name}'")
-        output_contact = new_position if new_position else (26 - new_position)
+        output_contact = new_position if new_position else \
+                         (self.MAX_CONTACT_NO - new_position)
 
         self._logger.log_debug(
             f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
