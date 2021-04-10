@@ -36,7 +36,7 @@ class RotorContact(Enum):
     Q = 16
     R = 17
     S = 18
-    T = 29
+    T = 19
     U = 20
     V = 21
     W = 22
