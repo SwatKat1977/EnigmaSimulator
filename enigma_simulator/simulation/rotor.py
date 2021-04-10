@@ -144,9 +144,10 @@ class Rotor:
 
         # STEP 1: Correct the input contact entrypoint for position
         contact_position = (contact.value + self._position - 1)
+
+        contact_position = contact_position % self.MAX_CONTACT_NO
         self._logger.log_debug("=> Compensating rotor entry. Originally " + \
             f"'{contact.name}', now '{RotorContact(contact_position).name}'")
-        contact_position = contact_position % self.MAX_CONTACT_NO
 
         if forward:
             output_contact = RotorContact[self._wiring[contact_position]]
@@ -178,8 +179,8 @@ class Rotor:
         new_position = output_contact.value - (self._position - 1)
         self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
             f"'{output_contact.name}'")
-        output_contact = new_position if new_position else \
-                         (self.MAX_CONTACT_NO - new_position)
+        output_contact = (new_position % self.MAX_CONTACT_NO) \
+            if new_position > 0 else (self.MAX_CONTACT_NO + new_position)
 
         self._logger.log_debug(
             f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
