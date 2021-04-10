@@ -1,7 +1,11 @@
 Electronic Enigma Machine Changelog
 ===================================
 
-Version 0.7.0 8th Sept 2020 [DEV]
+Version 0.8.0 9th April 2021 [DEV]
+* [MOD] Heavyily refactored rotor class to reduce it's complexity.
+* [MOD] Renamed directory of core to simulation.
+
+Version 0.7.0 8th Sept 2020
 First version that will give the correct answer when a simple configuration is
 applied.
 * [BUG] Fixed error in Enigma1 rotor II
