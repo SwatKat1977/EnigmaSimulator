@@ -143,9 +143,8 @@ class Rotor:
         self._logger.log_debug(f"=> Rotor position = {self._position}")
 
         # STEP 1: Correct the input contact entrypoint for position
-        contact_position = (contact.value + self._position - 1)
-
-        contact_position = contact_position % self.MAX_CONTACT_NO
+        contact_position = self._determine_next_position(contact.value + 
+                                                       (self._position - 1))
         self._logger.log_debug("=> Compensating rotor entry. Originally " + \
             f"'{contact.name}', now '{RotorContact(contact_position).name}'")
 
@@ -176,12 +175,10 @@ class Rotor:
         # final_contact = output_contact
 
         # STEP 3: Take rotor offset into account
-        new_position = output_contact.value - (self._position - 1)
         self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
             f"'{output_contact.name}'")
-        output_contact = (new_position % self.MAX_CONTACT_NO) \
-            if new_position > 0 else (self.MAX_CONTACT_NO + new_position)
-
+        output_contact = self._determine_next_position(output_contact.value - 
+                                                       (self._position - 1))
         self._logger.log_debug(
             f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
         return RotorContact(output_contact)
@@ -196,11 +193,13 @@ class Rotor:
         return curr_position in self._notch_locations
 
     def _determine_next_position(self, contact : int) -> int:
-        if contact > 0:
-            new_position = contact % self.MAX_CONTACT_NO
-            new_position = new_position if new_position > 0 else 1
+        if contact in [0, 25]:
+            new_pos = contact
+
+        elif contact >= 1:
+            new_pos = contact % self.MAX_CONTACT_NO
 
         else:
-            new_position = self.MAX_CONTACT_NO + contact
+            new_pos = self.MAX_CONTACT_NO + contact
 
-        return new_position
+        return new_pos
