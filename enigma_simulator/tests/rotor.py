@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,63 +13,135 @@
     GNU General Public License for more details.
 '''
 import unittest
-from Core.rotor_contact import RotorContact
-from Core.rotor import Rotor
+from simulation.logger import Logger
+from simulation.rotor_contact import RotorContact
+from simulation.rotor import Rotor
 
-
-# ******************************
-# Unit tests for the Rotor class
-# ******************************
 class UnitTest_Rotor(unittest.TestCase):
+    ''' Unit tests for the Rotor class '''
 
-    # Rotors XML file
-    VALID_ROTOR_FILENAME = '../Data/rotors/Enigma1_I.json'
+    PASS_THROUGH_ROTOR_WIRING = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-    valid_rotor_wiring = {
-        1: 5,
-        2: 11,
-        3: 13,
-        4: 6,
-        5: 12,
-        6: 7,
-        7: 4,
-        8: 17,
-        9: 22,
-        10: 26,
-        11: 14,
-        12: 20,
-        13: 15,
-        14: 23,
-        15: 25,
-        16: 8,
-        17: 24,
-        18: 21,
-        19: 19,
-        20: 16,
-        21: 1,
-        22: 9,
-        23: 2,
-        24: 18,
-        25: 3,
-        26: 10}
-
-    ##
-    # Python unittest setup fixture.
-    # Read test rotors so we have wiring and rotors for use in the tests.
-    # @param self The object pointer.
     def setUp(self):
-        self._valid_rotor = Rotor('Enigma 1 Rotor I', self.valid_rotor_wiring,
-                                  ["Q"])
+        self._logger = Logger(__name__, write_to_console=False)
+        self._valid_pass_through_rotor = Rotor('Pass Through Rotor',
+                                               self.PASS_THROUGH_ROTOR_WIRING,
+                                               ["Q"],
+                                               self._logger)
+
+    def test_validte_property_values(self):
+        ''' Validate the rotor properties. '''
+        self.assertEqual(self._valid_pass_through_rotor.name, 'Pass Through Rotor')
+        self.assertEqual(self._valid_pass_through_rotor.wiring, self.PASS_THROUGH_ROTOR_WIRING)
+        self.assertEqual(self._valid_pass_through_rotor.notches, ['Q'])
+
+        self._valid_pass_through_rotor.position = 10
+        self.assertEqual(self._valid_pass_through_rotor.position, 10)
+
+        # Test Rotor position setter and getter.
+        try:
+            self._valid_pass_through_rotor.position = 26
+
+        except ValueError as ex:
+            self.assertEqual(str(ex), "Invalid rotor positions")
+
+        else:
+            self.fail('ValueError not raised')
+
+        # Test Ring Setting setter and getter.
+        self._valid_pass_through_rotor.ring_setting = 10
+        self.assertEqual(self._valid_pass_through_rotor.ring_setting, 10)
+
+        try:
+            self._valid_pass_through_rotor.ring_setting = 30
+
+        except ValueError as ex:
+            self.assertEqual(str(ex), "Invalid ring positions")
+
+        else:
+            self.fail('ValueError not raised')
+
+    def test_wiring_not_string(self):
+        ''' Test type check for wiring in constructor. '''
+
+        try:
+            Rotor('Test rotor', ['self.valid_rotor_wiring'], ["Q"], self._logger)
+
+        except ValueError as ex:
+            self.assertEqual(str(ex), "Rotor wiring is not a string")
+
+        else:
+            self.fail('ValueError not raised')
 
 
-    ##
-    # Python unittest tearDown fixture.
-    # Teardown code will go here...
-    # @param self The object pointer.
-    def tearDown(self):
-        pass
+    def test_wiring_incorrect_length(self):
+        try:
+            Rotor('Test rotor', 'ABC', ["Q"], self._logger)
+
+        except ValueError as ex:
+            self.assertEqual(str(ex), "Rotor wiring incorrect length")
+
+        else:
+            self.fail('ValueError not raised')
 
 
+    def test_encrypt_forward_simple_at_start(self):
+        ''' The most basic of forward encrypts where the rotor is in position A
+            and the letter A is pressed. '''
+
+        rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
+        self.assertEqual(rotor.encrypt(RotorContact.A), RotorContact.A)
+
+    def test_encrypt_backwards_simple(self):
+        ''' The most basic of backwards encrypts where the rotor is in position
+            A and the letter F is pressed. '''
+
+        rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
+        self.assertEqual(rotor.encrypt(RotorContact.F, forward=False), RotorContact.A)
+
+    # def encrypt(self, contact : RotorContact, forward = True):
+
+
+    #     self._logger.log_debug(
+    #         f"Encrypting '{contact} on rotor {self._name}, foward = {forward}")
+    #     self._logger.log_debug(f"=> Rotor position = {self._position}")
+
+    #     # STEP 1: Correct the input contact entrypoint for position
+    #     contact_position = (contact.value + self._position - 1)
+    #     self._logger.log_debug("=> Compensating rotor entry. Originally " + \
+    #         f"'{contact.name}', now '{RotorContact(contact_position).name}'")
+    #     contact_position = contact_position % self.MAX_CONTACT_NO
+
+    #     if forward:
+    #         output_contact = RotorContact[self._wiring[contact_position]]
+    #         self._logger.log_debug(
+    #             f"=> Foward Rotor position = '{output_contact.name}'")
+
+    #     else:
+    #         letter = RotorContact(contact_position).name
+    #         output_contact = RotorContact(self._wiring.index(letter))
+    #         self._logger.log_debug(
+    #             f"=> Backwards Rotor position = '{output_contact.name}'")
+
+    #     # STEP 3: Take rotor offset into account
+    #     new_position = output_contact.value - (self._position - 1)
+    #     self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
+    #         f"'{output_contact.name}'")
+    #     output_contact = new_position if new_position else (26 - new_position)
+    #     print('new position is:::', new_position, type(new_position))
+
+    #     self._logger.log_debug(
+    #         f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
+    #     return RotorContact(output_contact)
+
+
+
+
+
+
+
+
+    '''
     ##
     # Test Constructor : Wiring matrix too small.
     # The constructor should raise the exception 'Incomplete wiring diagram'
@@ -88,7 +160,7 @@ class UnitTest_Rotor(unittest.TestCase):
         # Attempt to create a rotor, it should raise a ValueError exception.
         with self.assertRaises(ValueError) as context:
             rotor = Rotor('wiringMatrixTooSmall', invalidWiring,
-                          [RotorContact.G])
+                          [RotorContact.G], self._logger)
 
         # Verify that the the exception was caught.
         if 'Incomplete wiring diagram' not in str(context.exception):
@@ -362,7 +434,7 @@ class UnitTest_Rotor(unittest.TestCase):
         # which wraps to contact no. of 10.
         self.assertEqual(self._valid_rotor.get_return_circuit(RotorContact.T),
                          RotorContact.J)
-
+    '''
 
 if __name__ == '__main__':
     unittest.main()
