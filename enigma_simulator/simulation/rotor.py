@@ -208,7 +208,8 @@ class Rotor:
                 f"{debug_prefix}Contact {contact} is positive")
 
             if contact > self.MAX_CONTACT_NO:
-                new_pos = (contact % self.MAX_CONTACT_NO)
+                new_pos = (contact % self.MAX_CONTACT_NO) -1
+                self._logger.log_debug(f"{debug_prefix} ==| {contact} modulo {self.MAX_CONTACT_NO}")
 
             else:
                 new_pos = contact

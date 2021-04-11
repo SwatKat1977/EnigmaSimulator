@@ -29,7 +29,7 @@ class UnitTest_Rotor(unittest.TestCase):
                                                ["Q"],
                                                self._logger)
 
-    def test_validte_property_values(self):
+    def test_validate_property_values(self):
         ''' Validate the rotor properties. '''
         self.assertEqual(self._valid_pass_through_rotor.name, 'Pass Through Rotor')
         self.assertEqual(self._valid_pass_through_rotor.wiring, self.PASS_THROUGH_ROTOR_WIRING)
@@ -99,7 +99,7 @@ class UnitTest_Rotor(unittest.TestCase):
             and the letter A is pressed. '''
 
         rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
-        rotor.position = 3
+        rotor.position = RotorContact.C.value
         self.assertEqual(rotor.encrypt(RotorContact.A), RotorContact.K)
 
     def test_encrypt_forward_offset_no_ring_setting_wrap(self):
@@ -115,7 +115,7 @@ class UnitTest_Rotor(unittest.TestCase):
         of 2, therefore 'Y' is returned.
         '''
         rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
-        rotor.position = 3
+        rotor.position = RotorContact.C.value
         self.assertEqual(rotor.encrypt(RotorContact.S), RotorContact.Y)
 
     def test_encrypt_backwards_no_offset_or_ring_setting_nowrap(self):
@@ -141,7 +141,7 @@ class UnitTest_Rotor(unittest.TestCase):
         '''
 
         rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
-        rotor.position = 3
+        rotor.position = RotorContact.C.value
         self.assertEqual(rotor.encrypt(RotorContact.I, forward=False),
                          RotorContact.S)
 
@@ -155,7 +155,7 @@ class UnitTest_Rotor(unittest.TestCase):
         position offset the result is adjusted down 4 to return 'X'.
         '''
         rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
-        rotor.position = 5
+        rotor.position = RotorContact.E.value
         self.assertEqual(rotor.encrypt(RotorContact.Z, forward=False),
                          RotorContact.X)
 
