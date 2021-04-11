@@ -83,7 +83,6 @@ class UnitTest_Rotor(unittest.TestCase):
         else:
             self.fail('ValueError not raised')
 
-
     def test_encrypt_forward_no_offset_or_ring_setting_nowrap(self):
         ''' The most basic of forward encrypts where the rotor is in position A
             and the letter A is pressed. '''
@@ -113,15 +112,15 @@ class UnitTest_Rotor(unittest.TestCase):
         Key 'S' (18) is pressed, as the rotor is in position 3 (C) this means
         it goes the wiring circuit of 'U' resulting in an encoded value of 'A'.
         As the rotor is in position 3 we need to adjust the output by a value
-        of 2, therefore 'X' is returned.
+        of 2, therefore 'Y' is returned.
         '''
         rotor = Rotor('Test', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ["Q"], self._logger)
         rotor.position = 3
-        self.assertEqual(rotor.encrypt(RotorContact.S), RotorContact.X)
+        self.assertEqual(rotor.encrypt(RotorContact.S), RotorContact.Y)
 
     def test_encrypt_backwards_no_offset_or_ring_setting_nowrap(self):
-        ''' 
-        The rotor is in a position other than 1, but it is not enough for the 
+        '''
+        The rotor is in a position other than 1, but it is not enough for the
         position to wrap to the beginning of the rotor. For this test no ring
         setting has been set.
         '''
@@ -130,7 +129,7 @@ class UnitTest_Rotor(unittest.TestCase):
                                                                 forward=False),
                          RotorContact.F)
 
-    def test_encrypt_backwards_with_offset_or_ring_setting_nowrap(self):
+    def test_encrypt_backwards_with_offset_no_ring_setting_nowrap(self):
         '''
         Verify that on pressing 'I' (9) we get the encoded value of 'S' (18).
 
@@ -143,16 +142,22 @@ class UnitTest_Rotor(unittest.TestCase):
 
         rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
         rotor.position = 3
-
-        '''
-        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-        0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
-        B D F H J L C P R T X V Z N Y E I W G A K M U S Q O
-        '''
-
         self.assertEqual(rotor.encrypt(RotorContact.I, forward=False),
                          RotorContact.S)
+
+    def test_encrypt_backwards_with_offset_no_ring_setting_wrap(self):
+        '''
+        Verify that on pressing 'Z' (25) we get the encoded value of 'X' (23).
+
+        Explanation:
+        'Z' (25) is pressed with a rotor position of 5. The original input is
+        advanced 4 to 'D' which will return the letter 'B'.  Because of the
+        position offset the result is adjusted down 4 to return 'X'.
+        '''
+        rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
+        rotor.position = 5
+        self.assertEqual(rotor.encrypt(RotorContact.Z, forward=False),
+                         'RotorContact.X')
 
     def test_will_step_next(self):
         # Test will not step.
@@ -172,41 +177,6 @@ class UnitTest_Rotor(unittest.TestCase):
         self._valid_pass_through_rotor.position = 25
         self._valid_pass_through_rotor.step()
         self.assertEqual(self._valid_pass_through_rotor.position, 1)
-
-
-    # ##
-    # # Test ReturnCircuit : Initial position not wrapping and no ring setting.
-    # # The rotor is in a position other than 1, but it's not enough for the
-    # # position to wrap to the beginning of the rotor.  For this test no ring
-    # # setting has been set.
-    # # @param self The object pointer.
-    # def test_ReturnCircuit_HasStartWrappingOffsetNoRingSetting(self):
-
-    #     # Default position is 1, but make 100% sure do it again!
-    #     # Set position to 20 'T'
-    #     self._valid_rotor.position = RotorContact.T.value
-
-    #     # Verify that on pressing contact 9 'I' we get the encoded contact of
-    #     # 4 'D' out taking into account the position of the rotor.
-    #     # Explanation:
-    #     # Contact 9 pressed with position of 20 gives us 28 (-1 as 1 is 'none')
-    #     # Since we can't have that position we wrap it around to 2 (28 - 26).
-    #     # Contact 2 is wired to 23, but then reversing the position to get back
-    #     # to the right contact gives you -4 (again -1 as 1 is 'no postion).
-    #     self.assertEqual(self._valid_rotor.get_return_circuit(RotorContact.I), 
-    #                      RotorContact.D)
-
-    #     # Verify that on pressing contact 20 'T' we get the encoded contact of
-    #     # 10 'J' out taking into account the position of the rotor.
-    #     # Explanation:
-    #     # Contact 20 pressed with position of 20 gives us 39 (-1 as 1 is 'none')
-    #     # Since we can't have that position we wrap it around to 13 (39 - 26).
-    #     # Contact 13 is wired to 3, but then reversing the position to get back
-    #     # to the right contact gives you -16  (again -1 as 1 is 'no postion),
-    #     # which wraps to contact no. of 10.
-    #     self.assertEqual(self._valid_rotor.get_return_circuit(RotorContact.T),
-    #                      RotorContact.J)
-    # '''
 
 if __name__ == '__main__':
     unittest.main()

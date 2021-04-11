@@ -177,6 +177,7 @@ class Rotor:
         # STEP 3: Take rotor offset into account
         self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
             f"'{output_contact.name}'")
+
         output_contact = self._determine_next_position(output_contact.value - 
                                                        (self._position - 1))
         self._logger.log_debug(
@@ -197,9 +198,13 @@ class Rotor:
             new_pos = contact
 
         elif contact >= 1:
-            new_pos = contact % self.MAX_CONTACT_NO
+            if contact > self.MAX_CONTACT_NO:
+                new_pos = (contact % self.MAX_CONTACT_NO) - 1
+
+            else:
+                new_pos = contact
 
         else:
-            new_pos = self.MAX_CONTACT_NO + contact
+            new_pos = (self.MAX_CONTACT_NO + 1) + contact
 
         return new_pos
