@@ -157,7 +157,7 @@ class UnitTest_Rotor(unittest.TestCase):
         rotor = Rotor('Test', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ["Q"], self._logger)
         rotor.position = 5
         self.assertEqual(rotor.encrypt(RotorContact.Z, forward=False),
-                         'RotorContact.X')
+                         RotorContact.X)
 
     def test_will_step_next(self):
         # Test will not step.
