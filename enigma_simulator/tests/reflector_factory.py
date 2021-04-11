@@ -5,7 +5,7 @@
 #  http://www.apache.org/licenses/LICENSE-2.0
 #  //////////////////////////////////////////////////////////////////////////
 import unittest
-from Core.reflector_factory import ReflectorFactory
+from simulation.reflector_factory import ReflectorFactory
 
 
 # ******************************

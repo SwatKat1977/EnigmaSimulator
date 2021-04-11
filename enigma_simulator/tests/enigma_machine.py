@@ -6,7 +6,7 @@
 #  //////////////////////////////////////////////////////////////////////////
 import unittest
 from simulation.enigma_machine import EnigmaMachine
-from simulation.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
+from simulation.rotor_contact import RotorContact
 #from Core.MachineSetup import *
 from simulation.reflector_factory import ReflectorFactory
 from simulation.plugboard import Plugboard

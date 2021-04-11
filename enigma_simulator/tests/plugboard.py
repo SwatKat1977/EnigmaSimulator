@@ -13,8 +13,8 @@
     GNU General Public License for more details.
 '''
 import unittest
-from Core.plugboard import Plugboard
-from Core.rotor_contact import RotorContact
+from simulation.plugboard import Plugboard
+from simulation.rotor_contact import RotorContact
 
 
 # ******************************

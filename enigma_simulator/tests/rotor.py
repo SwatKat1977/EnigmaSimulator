@@ -23,7 +23,7 @@ class UnitTest_Rotor(unittest.TestCase):
     PASS_THROUGH_ROTOR_WIRING = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def setUp(self):
-        self._logger = Logger(__name__, write_to_console=True)
+        self._logger = Logger(__name__, write_to_console=False)
         self._valid_pass_through_rotor = Rotor('Pass Through Rotor',
                                                self.PASS_THROUGH_ROTOR_WIRING,
                                                ["Q"],

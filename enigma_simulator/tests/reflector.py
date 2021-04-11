@@ -13,8 +13,8 @@
     GNU General Public License for more details.
 '''
 import unittest
-from Core.reflector import Reflector
-from Core.rotor_contact import RotorContact
+from simulation.reflector import Reflector
+from simulation.rotor_contact import RotorContact
 
 
 # ******************************
