@@ -23,7 +23,7 @@ class UnitTest_Rotor(unittest.TestCase):
     PASS_THROUGH_ROTOR_WIRING = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def setUp(self):
-        self._logger = Logger(__name__, write_to_console=False)
+        self._logger = Logger(__name__, write_to_console=True)
         self._valid_pass_through_rotor = Rotor('Pass Through Rotor',
                                                self.PASS_THROUGH_ROTOR_WIRING,
                                                ["Q"],
@@ -169,9 +169,9 @@ class UnitTest_Rotor(unittest.TestCase):
 
     def test_step(self):
         # Simple step test from positioh 1 to 2.
-        self.assertEqual(self._valid_pass_through_rotor.position, 1)
+        self.assertEqual(self._valid_pass_through_rotor.position, 0)
         self._valid_pass_through_rotor.step()
-        self.assertEqual(self._valid_pass_through_rotor.position, 2)
+        self.assertEqual(self._valid_pass_through_rotor.position, 1)
 
         # Step test from position 25 (Z) to 1 (A).
         self._valid_pass_through_rotor.position = 25
