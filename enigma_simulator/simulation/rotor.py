@@ -84,10 +84,10 @@ class Rotor:
         self._notch_locations = notch_locations
 
         # Current position of the rotor.
-        self._position = 1
+        self._position = 0
 
         # Ring setting (Ringstellung) for the rotor
-        self._ring_setting = 1
+        self._ring_setting = 0
 
         self._logger = logger
 
@@ -143,8 +143,8 @@ class Rotor:
         self._logger.log_debug(f"=> Rotor position = {self._position}")
 
         # STEP 1: Correct the input contact entrypoint for position
-        contact_position = self._determine_next_position(contact.value + 
-                                                       (self._position - 1))
+        contact_position = self._determine_next_position(contact.value +
+                                                         self._position)
         self._logger.log_debug("=> Compensating rotor entry. Originally " + \
             f"'{contact.name}', now '{RotorContact(contact_position).name}'")
 
@@ -178,8 +178,8 @@ class Rotor:
         self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
             f"'{output_contact.name}'")
 
-        output_contact = self._determine_next_position(output_contact.value - 
-                                                       (self._position - 1))
+        output_contact = self._determine_next_position(output_contact.value -
+                                                       self._position)
         self._logger.log_debug(
             f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
         return RotorContact(output_contact)
@@ -194,12 +194,21 @@ class Rotor:
         return curr_position in self._notch_locations
 
     def _determine_next_position(self, contact : int) -> int:
+        debug_prefix = "rotor::_determine_next_position() | "
+
+        self._logger.log_debug(f"{debug_prefix}contact = {contact}")
+
         if contact in [0, 25]:
+            self._logger.log_debug(
+                f"{debug_prefix}passing '{contact}' straight through ")
             new_pos = contact
 
         elif contact >= 1:
+            self._logger.log_debug(
+                f"{debug_prefix}Contact {contact} is positive")
+
             if contact > self.MAX_CONTACT_NO:
-                new_pos = (contact % self.MAX_CONTACT_NO) - 1
+                new_pos = (contact % self.MAX_CONTACT_NO)
 
             else:
                 new_pos = contact
