@@ -21,13 +21,15 @@ from simulation.rotor_contact import RotorContact
 # AAAA with positions 2,3,21 should return MKIEY
 
 
-ROTORPOSITION_ONE = 0
-ROTORPOSITION_TWO = 1
-ROTORPOSITION_THREE = 2
+ROTORPOSITION_ONE = 0   # 0
+ROTORPOSITION_TWO = 0   # 1
+ROTORPOSITION_THREE = 0 # 2
 
 def encode_message(original_message, machine):
     encoded_message = []
 
+    #print(machine.get_rotor('x'))
+    #return ''
     for character in original_message.upper():
         if character < 'A' or character > 'Z':
             print(f"[ERROR] Character '{character}' is invalid!")
@@ -81,29 +83,30 @@ def main():
     # AAAA with positions 2,3,21 should return MKIEY
 
     # Set the rotor positions
-    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 2)
-    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 3)
-    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 21)
-
     enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 0)
     enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 0)
     enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 0)
     #enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact.U.value)
 
-    string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-    encoded = encode_message(string_to_encode, enigma_machine)
-    print("+----------------------------------------------")
-    print(f"Encoded string '{string_to_encode} as : {encoded}")
-    print(f"=> Rotor 1 Position: {RotorContact(enigma_machine.get_rotor_position(0)).name}")
-    print(f"=> Rotor 2 Position: {RotorContact(enigma_machine.get_rotor_position(1)).name}")
-    print(f"=> Rotor 3 Position: {RotorContact(enigma_machine.get_rotor_position(2)).name}")
-    print("+----------------------------------------------")
+    # string_to_encode = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    # encoded = encode_message(string_to_encode, enigma_machine)
+    # print("+----------------------------------------------")
+    # print(f"Encoded string '{string_to_encode} as : {encoded}")
+    # print(f"=> Rotor 1 Position: {RotorContact(enigma_machine.get_rotor_position(0)).name}")
+    # print(f"=> Rotor 2 Position: {RotorContact(enigma_machine.get_rotor_position(1)).name}")
+    # print(f"=> Rotor 3 Position: {RotorContact(enigma_machine.get_rotor_position(2)).name}")
+    # print("+----------------------------------------------")
 
-    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, RotorContact(2).value)
-    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, RotorContact(3).value)
-    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact(21).value)
+    # enigma_machine.set_rotor_position(ROTORPOSITION_ONE, RotorContact(2).value)
+    # enigma_machine.set_rotor_position(ROTORPOSITION_TWO, RotorContact(3).value)
+    # enigma_machine.set_rotor_position(ROTORPOSITION_THREE, RotorContact(21).value)
 
-    string_to_encode = "AAAA"
+    enigma_machine.set_rotor_position(ROTORPOSITION_ONE, 0)
+    enigma_machine.set_rotor_position(ROTORPOSITION_TWO, 0)
+    enigma_machine.set_rotor_position(ROTORPOSITION_THREE, 0)
+
+    string_to_encode = "AAAAA"
+
     encoded = encode_message(string_to_encode, enigma_machine)
     print(f"Encoded string '{string_to_encode} as : {encoded}")
 

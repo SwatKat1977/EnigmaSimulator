@@ -5,12 +5,11 @@
 #  http://www.apache.org/licenses/LICENSE-2.0
 #  //////////////////////////////////////////////////////////////////////////
 import unittest
-from Core.enigma_machine import EnigmaMachine
-from Core.rotor_factory import RotorFactory
-from Core.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
+from simulation.enigma_machine import EnigmaMachine
+from simulation.rotor_contact import RotorContact, NO_OF_ROTOR_CONTACTS
 #from Core.MachineSetup import *
-from Core.reflector_factory import ReflectorFactory
-from Core.plugboard import Plugboard
+from simulation.reflector_factory import ReflectorFactory
+from simulation.plugboard import Plugboard
 
 
 # ******************************
