@@ -17,7 +17,7 @@ from simulation.logger import Logger
 from simulation.rotor_contact import RotorContact
 from simulation.rotor import Rotor
 
-class UnitTest_Rotor(unittest.TestCase):
+class UnitTestRotor(unittest.TestCase):
     ''' Unit tests for the Rotor class '''
 
     PASS_THROUGH_ROTOR_WIRING = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
