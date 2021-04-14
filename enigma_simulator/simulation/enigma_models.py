@@ -12,7 +12,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-from simulation.enigma_model import EnigmaModel, RotorCount, RotorDefintion
+from simulation.enigma_model import EnigmaModel, ReflectorDefinition, \
+                                    RotorCount, RotorDefintion
 
 '''
 Source for Engima machine types:
@@ -39,7 +40,11 @@ ENIGMA_MODELS = {
             RotorDefintion('IV',  'ESOVPZJAYQUIRHXLNFTGKDCMWB', ['J']),
             RotorDefintion('V',   'VZBRGITYUPSDNHLXAWMJQOFECK', ['Z'])
         ],
-        []
+        [
+            ReflectorDefinition('UKW-A', 'EJMZALYXVBWFCRQUONTSPIKHGD'),
+            ReflectorDefinition('UKW-B', 'YRUHQSLDPXNGOKMIEBFZCWVJAT'),
+            ReflectorDefinition('UKW-C', 'FVPJIAOYEDRZXWGCTKUQSBNMHL')
+        ]
     ),
 
     # The Enigma M1, M2 and M3 machines were used by the German Navy
@@ -65,7 +70,10 @@ ENIGMA_MODELS = {
             RotorDefintion('VII',  'NZJHGRCXMYSWBOUFAIVLPEKQDT', ['Z', 'M']),
             RotorDefintion('VIII', 'FKQHTLXOCBJSPDZRAMEWNIUYGV', ['Z', 'M'])
         ],
-        []
+        [
+            ReflectorDefinition('UKW-B', 'YRUHQSLDPXNGOKMIEBFZCWVJAT'),
+            ReflectorDefinition('UKW-C', 'FVPJIAOYEDRZXWGCTKUQSBNMHL')
+        ]
     ),
 
     # The Enigma M4 was a further development of the M3 and was used
@@ -93,6 +101,9 @@ ENIGMA_MODELS = {
             RotorDefintion('VII',  'NZJHGRCXMYSWBOUFAIVLPEKQDT', ['Z', 'M']),
             RotorDefintion('VIII', 'FKQHTLXOCBJSPDZRAMEWNIUYGV', ['Z', 'M'])
         ],
-        []
+        [
+            ReflectorDefinition('UKW-B', 'ENKQAUYWJICOPBLMDXZVFTHRGS'),
+            ReflectorDefinition('UKW-C', 'RDOBJNTKVEHMLFCWZAXGYIPSUQ')
+        ]
     )
 }

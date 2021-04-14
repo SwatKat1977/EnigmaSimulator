@@ -44,6 +44,23 @@ class RotorDefintion:
         self._notches = notches
         self._wiring = wiring
 
+class ReflectorDefinition:
+    __slots__ = ['_name', '_wiring']
+
+    @property
+    def name(self) -> str:
+        ''' Get name of reflector. '''
+        return self._name
+
+    @property
+    def wiring(self) -> str:
+        ''' Get the reflector wiring. '''
+        return self._wiring
+
+    def __init__(self, name: str, wiring : str) -> None:
+        self._name = name
+        self._wiring = wiring
+
 class EnigmaModel:
     ''' Definition of an Enigma model. '''
     __slots__ = ['_has_plugboard', '_long_name', '_rotors', '_reflectors',
