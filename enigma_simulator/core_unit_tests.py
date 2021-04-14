@@ -13,11 +13,11 @@
     GNU General Public License for more details.
 '''
 import unittest
-#from tests.enigma_machine import UnitTest_EnigmaMachine
-#from UnitTest_MachineSetup import UnitTest_MachineSetup
+from tests.unittest_enigma_model import UnitTestEnigmaModel
+from tests.unittest_machine import UnitTestMachine
+from tests.unittest_logger import UnitTestLogger
 from tests.unittest_reflector import UnitTestReflector
 from tests.unittest_plugboard import UnitTestPlugboard
-#from tests.reflector_factory import UnitTest_ReflectorFactory
 from tests.unittest_rotor import UnitTestRotor
 
 if __name__ == '__main__':
