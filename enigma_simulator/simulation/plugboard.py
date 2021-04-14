@@ -44,7 +44,7 @@ class Plugboard:
 
         if self._wiring[dest] != dest:
             raise ValueError(f'Plugboard destination ({src.name}:' + \
-                '{dest.name}) is already in use')
+                f'{dest.name}) is already in use')
 
         self._wiring[src] = dest
         self._wiring[dest] = src
