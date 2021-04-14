@@ -1,6 +1,6 @@
 '''
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    EnigmaSimulator - A software implementation of the Engima Machine.
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
     GNU General Public License for more details.
 '''
 import sys
-from simulation.enigma_machine import EnigmaMachine
+from simulation.enigma_machine import Machine
 from simulation.version import VERSION
 from simulation.rotor_contact import RotorContact
 
@@ -48,13 +48,12 @@ def main():
     print("Copyright (C) 2015-2018 Electronic Engima Development Team")
 
     try:
-        enigma_machine = EnigmaMachine('Enigma1')
+        enigma_machine = Machine()
+        config_return = enigma_machine.configure_machine('Enigma1', ['I', 'II', 'III'], 'UKW-B')
 
     except ValueError as err:
         print(f'[ERROR] {err}')
         return
-
-    config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_B')
 
     if not config_return:
         print(f'[ERROR] {enigma_machine.last_error}')

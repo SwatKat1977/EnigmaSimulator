@@ -16,75 +16,60 @@ import os
 from simulation.enigma_models import ENIGMA_MODELS
 from simulation.logger import Logger
 from simulation.plugboard import Plugboard
+from simulation.reflector import Reflector
 from simulation.rotor import Rotor
 from simulation.rotor_contact import RotorContact
-from simulation.reflector_factory import ReflectorFactory
 
-class EnigmaMachine:
-    ''' Implementation of Enigma machine. '''
+class Machine:
+    ''' Implementation of the Enigma machine mechanics. '''
     # pylint: disable=too-many-instance-attributes
 
-    __slots__ = ['_double_step', '_is_configured', '_last_error',
-                 '_logger', '_model_details', '_model_type', '_plugboard',
-                 '_reflector', '_reflector_factory', '_rotors']
+    __slots__ = ['_double_step', '_is_configured', '_last_error', '_logger',
+                 '_model_details', '_plugboard', '_reflector', '_rotors']
 
     @property
     def configured(self):
         return self._is_configured
 
-    ## Get the instance of the plugboard, it can be None if a plugboard isn't
-    #  configured.
     @property
     def last_error(self):
+        ''' Get the last reported error in human-readable form. '''
         return self._last_error
 
-    ## Get the instance of the plugboard, it can be None if a plugboard isn't
-    #  configured.
     @property
     def plugboard(self):
+        '''
+        Get the instance of the plugboard, it can be None if a plugboard
+        isn't configured.
+        '''
         return self._plugboard
 
-    ## Get the instance of the reflector.
     @property
     def reflector(self):
+        ''' Get the instance of the reflector. '''
         return self._reflector
 
-    ## Constructor.
-    #  plug board => rotors => reflector => rotors => plugboard.
-    #  @param self The object pointer.
-    #  @param machineSetup Machine setup class
-    def __init__(self, model, message_handler=None):
-
-        self._model_type = model
-
-        if model not in ENIGMA_MODELS:
-            raise ValueError('Enigma model is not valid')
-
-        self._model_details = ENIGMA_MODELS[model]
-
-        # Double-step flag.
+    def __init__(self):
+        self._model_details = None
         self._double_step = False
-
-        # Last error message.
         self._last_error = None
-
-        # Plugboard object instance.
         self._plugboard = None
-
-        # Reflector object instance.
         self._reflector = None
-
-        # List of rotor instances.
         self._rotors = []
-
-        self._reflector_factory = ReflectorFactory()
 
         self._is_configured = False
 
         self._logger = Logger(__name__, write_to_console = True)
 
     #  @param self The object pointer.
-    def configure_machine(self, rotors, reflector):
+    def configure_machine(self, model, rotors, reflector):
+
+        if model not in ENIGMA_MODELS:
+            raise ValueError('Enigma model is not valid')
+
+        self._model_details = ENIGMA_MODELS[model]
+
+        self._logger.log_debug(f"Configuring machine as '{model}'")
 
         no_of_rotors_req = self._model_details.no_of_rotors.value
 
@@ -97,7 +82,7 @@ class EnigmaMachine:
             details = [r for r in self._model_details.rotors if r.name == rotor]
 
             if not details:
-                self._last_error = f'Rotor {rotor} is invalid, aborting!'
+                self._last_error = f"Rotor '{rotor}' is invalid, aborting!"
                 return False
 
             details = details[0]
@@ -105,54 +90,46 @@ class EnigmaMachine:
                           self._logger)
             self._rotors.append(entry)
 
+            self._logger.log_debug(f"Added rotor '{rotor}'")
+
         if self._model_details.has_plugboard:
+            self._logger.log_debug("Machine is using a plugboard")
             self._plugboard = Plugboard()
 
-        reflector_path = '../data/reflectors'
-        reflector_full = f'{reflector}.json'
-        reflector_filename = os.path.join(reflector_path, reflector_full)
-        self._reflector = self._reflector_factory.build_from_json(reflector_filename)
+        details = [r for r in self._model_details.reflectors 
+                   if r.name == reflector]
 
-        if self._reflector is None:
-            self._last_error = f"Reflector read failure | " + \
-                               self._reflector_factory.last_error_message
+        if not details:
+            self._last_error = f"Reflector '{reflector}' is invalid, aborting!"
             return False
+
+        self._logger.log_debug(f"Added reflector '{reflector}'")
+        self._reflector = Reflector(details[0].name, details[0].wiring)
 
         self._is_configured = True
 
         return True
 
+    def press_key(self, key : RotorContact) -> RotorContact:
+        '''
+        To encrypt/decrypt a message, we need to run the key through the enigma
+        machine in the following order (for some models plugboard is optional):
+        plug board => rotors => reflector => rotors => plugboard.
+        @param key Key to encode.
+        @return Encoded character.
+        '''
+        self._logger.log_debug(f"Machine::press_key() received : '{key.name}'")
 
-    ##
-    # To encrypt/decrypt a message, we need to run the key through the enigma
-    # machine (plug board is optional):
-    # plug board => rotors => reflector => rotors => plugboard.
-    # @param key Key to encode/decode
-    # @return Encoded/decoded character.
-    def press_key(self, key):
-        self._logger.log_debug(
-            f"EnigmaMachine::press_key() received : '{key.name}'")
-
-        #  To encrypt/decrypt a message, we need to run through the circuit:
+        # To encrypt a key entry it needs to run through the circuit:
         # plug board => rotors => reflector => rotors => plugboard.
         #  The variable currentLetter will maintain the contact state.
 
-        rotor_a_value = RotorContact(self._rotors[0].position).name
-        rotor_b_value = RotorContact(self._rotors[1].position).name
-        rotor_c_value = RotorContact(self._rotors[2].position).name
+        self._log_rotor_states('Rotors before stepping :')
 
-        self._logger.log_debug("Rotors before stepping : " + \
-            f"{rotor_a_value} | {rotor_b_value} | {rotor_c_value}")
-
-        # Before any en/decoding can begin, rotor turnover should occur.
+        # Before any encrypting can begin step the rotor.
         self._step_rotors()
 
-        rotor_a_value = RotorContact(self._rotors[0].position).name
-        rotor_b_value = RotorContact(self._rotors[1].position).name
-        rotor_c_value = RotorContact(self._rotors[2].position).name
-
-        self._logger.log_debug("Rotors after stepping : " + \
-            f"{rotor_a_value} | {rotor_b_value} | {rotor_c_value}")
+        self._log_rotor_states('Rotors after stepping :')
 
         # If a plugboard exists for machine then encode through it.
         if self._plugboard is not None:
@@ -178,7 +155,7 @@ class EnigmaMachine:
 
         # Pass the letter through the reflector.
         old_letter = RotorContact(current_letter).name
-        current_letter = self._reflector.get_circuit(current_letter)
+        current_letter = self._reflector.encrypt(current_letter)
 
         debug_msg = f"Passed '{old_letter}' to reflector => " + \
                     f"{current_letter.name}"
@@ -205,7 +182,6 @@ class EnigmaMachine:
         # Return encoded character.
         return current_letter
 
-
     def set_rotor_position(self, rotor_no, position):
         # Validate rotor positions.
         if position < 0 or position > 25:
@@ -217,10 +193,8 @@ class EnigmaMachine:
         # Set the new rotor position.
         self._rotors[rotor_no].position = position
 
-
     def get_rotor_position(self, rotor_no):
         return self._rotors[rotor_no].position
-
 
     ##  Rotor stepping occurs from the right to left whilst a stepping notch is
     #   encountered.
@@ -266,8 +240,15 @@ class EnigmaMachine:
         if rotor.will_step_next():
             self._double_step = True
 
+    def _log_rotor_states(self, prefix_str : str) -> None:
+        rotor_0 = RotorContact(self._rotors[0].position).name
+        rotor_1 = RotorContact(self._rotors[1].position).name
+        rotor_2 = RotorContact(self._rotors[2].position).name
+        self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
+                               f"{rotor_2}")
 
     def _write_debug_message(self, message, *args):
         if self._display_debug_messages is True:
             message = f"[DEBUG] {message}"
             print(message.format(*args))
+# 274 #
