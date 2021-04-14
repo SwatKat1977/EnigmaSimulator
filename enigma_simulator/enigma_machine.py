@@ -49,7 +49,7 @@ def main():
 
     try:
         enigma_machine = Machine()
-        config_return = enigma_machine.configure_machine('Enigma1', ['I', 'II', 'III'], 'UKW-B')
+        config_return = enigma_machine.configure('Enigma1', ['I', 'II', 'III'], 'UKW-B')
 
     except ValueError as err:
         print(f'[ERROR] {err}')
