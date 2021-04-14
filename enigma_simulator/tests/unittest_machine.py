@@ -131,7 +131,7 @@ class UnitTestMachine(unittest.TestCase):
 
         self.assertEqual(encoded, expected_encoded_string)
 
-    def test_machine_3_Rotor_Encoding_Right_Rotor_Turnover(self):
+    def test_machine_3_rotor_encrypt_right_rotor_turnover(self):
         machine = Machine()
         self.assertIsNot(machine, None)
         machine._logger._write_to_console = False
@@ -216,124 +216,39 @@ class UnitTestMachine(unittest.TestCase):
                 self.fail(err_msg)
 
 
-        '''
-    def set_rotor_position(self, rotor_no, position):
-        # Validate rotor positions.
-        if position < 1 or position > NO_OF_ROTOR_CONTACTS:
-            raise ValueError("Invalid rotor positions")
 
-        if rotor_no < 0 or rotor_no > (len(self._rotors) - 1):
-            raise ValueError("Invalid rotor")
-        '''
+    def test_machine_3_rotor_encrypt_double_step(self):
 
-    '''
-    def test_3RotorEncryptString_DoubleStep(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
+        machine = Machine()
         self.assertIsNot(machine, None)
+        machine._logger._write_to_console = False
 
-        # Initially the rotors A | D | T.
-        machine.SetRotorPosition(RotorPosition.One, 1)
-        machine.SetRotorPosition(RotorPosition.Two, 4)
-        machine.SetRotorPosition(RotorPosition.Three, 20)
+        status = machine.configure('Enigma1', ['I', 'II', 'III'], 'UKW-B')
+        if not status:
+            self.fail(machine.last_error)
 
-        ContactToCharacter = RotorContact.Instance().ContactToCharacter
+        # Set the rotors A | D | U.
+        machine.set_rotor_position(0, RotorContact.A.value)
+        machine.set_rotor_position(1, RotorContact.D.value)
+        machine.set_rotor_position(2, RotorContact.U.value)
 
-        stringToEncode = 'AAAAA'
-        expectedEncodedString = 'EEQIB'
+        string_to_encrypt = 'AAAA'
+        expected_encrypted_string = 'EQIB'
 
         encrypted = ""
-        for char in stringToEncode.upper():
-            if char >= 'A' and char <= 'Z':
-                char = RotorContact.Instance().CharacterToContact(char)
-                encrypted += ContactToCharacter(machine.PressKey(char))
+        for char in string_to_encrypt.upper():
+            char = RotorContact[char]
+            encrypted += machine.press_key(char).name
 
-        # Initially the rotors A | D | T.  On the fourth letter there is a
+        # The rotors start at A | D | U.  On the fourth letter there is a
         # double step so should end B | F | Y.
-        self.assertEqual(ContactToCharacter(machine.GetRotor(0).Position), 'B')
-        self.assertEqual(ContactToCharacter(machine.GetRotor(1).Position), 'F')
-        self.assertEqual(ContactToCharacter(machine.GetRotor(2).Position), 'Y')
+        self.assertEqual(machine.get_rotor_position(0), RotorContact.B.value)
+        self.assertEqual(machine.get_rotor_position(1), RotorContact.F.value)
+        self.assertEqual(machine.get_rotor_position(2), RotorContact.Y.value)
 
         # AAAAA should be encrypted into BMUQO.
-        self.assertEqual(encrypted, expectedEncodedString)
+        self.assertEqual(encrypted, expected_encrypted_string)
 
-
-    def test_SetRotorPosition_InvalidPosition(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
-        self.assertIsNot(machine, None)
-
-        # Attempt to set an invalid rotor position, it should raise a
-        # ValueError.
-        with self.assertRaises(ValueError) as context:
-            machine.SetRotorPosition(0, 0)
-
-        # Verify that the the exception was caught.
-        if "Invalid rotor positions" not in context.exception:
-            self.fail("Did not detect 'Invalid rotor positions'")
-
-
-    def test_SetRotorPosition_InvalidRotor(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
-        self.assertIsNot(machine, None)
-
-        # Attempt to set an invalid rotor position, it should raise a
-        # ValueError.
-        with self.assertRaises(ValueError) as context:
-            machine.SetRotorPosition(4, 10)
-
-        # Verify that the the exception was caught.
-        if "Invalid rotor" not in context.exception:
-            self.fail("Did not detect 'Invalid rotor'")
-
-
-    def test_SetRotorPosition_Valid(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
-        self.assertIsNot(machine, None)
-
-        # Attempt to set an valid rotor position.
-        machine.SetRotorPosition(2, 10)
-
-
-    def test_GetRotor_InvalidRotor(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
-        self.assertIsNot(machine, None)
-
-        # Attempt to set an invalid rotor position, it should raise a
-        # ValueError.
-        with self.assertRaises(ValueError) as context:
-            machine.GetRotor(4)
-
-        # Verify that the the exception was caught.
-        if "Incorrect rotor number." not in context.exception:
-            self.fail("Did not detect 'Incorrect rotor number.'")
-
-
-    def test_Verify_GettersSetters(self):
-        # Create (valid) Enigma machine.
-        machine = EnigmaMachine(self.__setup, self.__rotors, self.__reflector,
-            True)
-        self.assertIsNot(machine, None)
-
-        # Plugboard - check is set.
-        self.assertEqual(machine.Plugboard, self.__plugboard)
-
-        # Reflector - check name is 'test'.
-        self.assertEqual(machine.Reflector.Name, 'Wide Reflector B')
-
-        # Reflector - check it is 'True', then set to 'False' and recheck.
-        self.assertEqual(machine.Trace, True)
-        machine.Trace = False
-        self.assertEqual(machine.Trace, False)
-    '''
 
 if __name__ == '__main__':
     unittest.main()

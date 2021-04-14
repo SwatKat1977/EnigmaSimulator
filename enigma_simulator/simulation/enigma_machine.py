@@ -179,7 +179,7 @@ class Machine:
         # Return encoded character.
         return current_letter
 
-    def set_rotor_position(self, rotor_no, position):
+    def set_rotor_position(self, rotor_no : int, position : int) -> None:
         ''' Set the position of the rotor. '''
 
         # Validate rotor positions.
