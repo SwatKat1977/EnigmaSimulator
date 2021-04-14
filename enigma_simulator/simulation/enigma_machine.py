@@ -180,6 +180,8 @@ class Machine:
         return current_letter
 
     def set_rotor_position(self, rotor_no, position):
+        ''' Set the position of the rotor. '''
+
         # Validate rotor positions.
         if position < 0 or position > 25:
             raise ValueError("Invalid rotor positions")
@@ -193,9 +195,13 @@ class Machine:
     def get_rotor_position(self, rotor_no):
         return self._rotors[rotor_no].position
 
-    ##  Rotor stepping occurs from the right to left whilst a stepping notch is
-    #   encountered.
+
     def _step_rotors(self):
+        '''
+        Rotor stepping occurs from the right to left whilst a stepping
+        notch is encountered.
+        '''
+
         # Step next rotor flag.
         will_step_next_rotor = False
 
@@ -244,8 +250,4 @@ class Machine:
         self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
                                f"{rotor_2}")
 
-    def _write_debug_message(self, message, *args):
-        if self._display_debug_messages is True:
-            message = f"[DEBUG] {message}"
-            print(message.format(*args))
 # 274 #
