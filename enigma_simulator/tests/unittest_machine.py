@@ -13,92 +13,44 @@
     GNU General Public License for more details.
 '''
 import unittest
-from simulation.enigma_machine import EnigmaMachine
+from simulation.enigma_machine import Machine
 from simulation.rotor_contact import RotorContact
-#from Core.MachineSetup import *
-from simulation.reflector_factory import ReflectorFactory
 from simulation.plugboard import Plugboard
 
-class UnitTest_EnigmaMachine(unittest.TestCase):
+class UnitTestMachine(unittest.TestCase):
     ''' Unit tests for the Enigma Machine class. '''
 
-    # Rotors XML file
-    Rotor_enigma1_I_file = '../data/rotors/Enigma1_I.json'
-    Rotor_enigma1_II_file = '../data/rotors/Enigma1_II.json'
-    Rotor_enigma1_III_file = '../data/rotors/Enigma1_III.json'
-    REFLECTORS_FILE = '../../Data/reflectors.xml'
-
-    '''
-    ##
-    # Python unittest setup fixture.
-    # Read test rotors so we have wiring and rotors for use in the tests.
-    # @param self The object pointer.
     def setUp(self):
-        self._rotor_factory = RotorFactory()
-        self._reflector_factory = ReflectorFactory()
+        self._plugboard = Plugboard()
 
-        self._rotor_enigma1_i = self._rotor_factory.build_from_json(self.Rotor_enigma1_I_file)
-        if not self._rotor_enigma1_i:
-            err = f'Unable to create rotors from XML: {self._rotor_factory.last_error_message}'
-            raise RuntimeError(err)
+    def test_configure_OK(self):
+        ''' Machine::configure() | Happy path '''
 
-        self._rotor_enigma1_ii = self._rotor_factory.build_from_json(self.Rotor_enigma1_II_file)
-        if not self._rotor_enigma1_ii:
-            err = f'Unable to create rotors from XML: {self._rotor_factory.last_error_message}'
-            raise RuntimeError(err)
-
-        self._rotor_enigma1_iii = self._rotor_factory.build_from_json(self.Rotor_enigma1_III_file)
-        if not self._rotor_enigma1_iii:
-            err = f'Unable to create rotors from XML: {self._rotor_factory.last_error_message}'
-            raise RuntimeError(err)
-
-        self.__plugboard = Plugboard()
-
-
-        # Create machine setup.
-        self.__setup = MachineSetup(EnigmaModel.Enigma1, 
-                                    ["Rotor I", "Rotor II","Rotor III"],
-                                    self.__plugboard)
-        
-        # Read reflectors XML file.
-        reflectors, status = self._reflector_factory.CreateFromXML(
-            self.REFLECTORS_FILE)
-        if reflectors == None:
-            errStatus = "Unable to read reflectors XML file: {0}".format(status)
-            raise RuntimeError(errStatus)
-        
-        self.__reflector = reflectors['Wide Reflector B']
-    '''
-
-    def test_EnigmaMachine_configure_machine_OK(self):
+        machine = Machine()
+        machine._logger._write_to_console = False
+        self.assertIsNot(machine, None)
+ 
         try:
-            enigma_machine = EnigmaMachine('Enigma1')
+            status = machine.configure('Enigma1',  ['I', 'II', 'III'], 'UKW-B')
 
         except ValueError as err:
             err = f'ValueError exception unexpectedly raised: {err}'
             self.fail(err)
 
-        self.assertIsNot(enigma_machine, None)
- 
-        config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_B')
+        if not status:
+            self.fail(machine.last_error)
 
-        if not config_return:
-            self.fail(enigma_machine.last_error)
+        self.assertIsNot(machine.plugboard, None)
+        self.assertIsNot(machine.reflector, None)
+        self.assertIs(machine.configured, True)
 
-        self.assertIsNot(enigma_machine.plugboard, None)
-        self.assertIsNot(enigma_machine.reflector, None)
-        self.assertIs(enigma_machine.debug_messages, False)
+    def test_configure_invalid_machine_type(self):
+        ''' Machine::configure() | Invalid machine type. '''
 
-        enigma_machine.debug_messages = True
-        self.assertIs(enigma_machine.debug_messages, True)
-        enigma_machine.debug_messages = False
-
-        self.assertIs(enigma_machine.configured, True)
-
-
-    def test_EnigmaMachine_configure_machine_InvalidMachineType(self):
         try:
-            enigma_machine = EnigmaMachine('Invalid macgine')
+            machine = Machine()
+            machine._logger._write_to_console = False
+            machine.configure('Unknown',  ['I', 'II', 'III'], 'UKW-B')
             self.fail('Incorrectly constructed Enigma machine')
 
         except ValueError as err:
@@ -108,97 +60,80 @@ class UnitTest_EnigmaMachine(unittest.TestCase):
                 err_msg = f"Did not detect '{expected}'"
                 self.fail(err_msg)
 
+    def test_configure_invalid_rotor(self):
+        ''' Machine::configure() | Invalid rotor specified '''
 
-    def test_EnigmaMachine_configure_machine_InvalidRotor(self):
-        try:
-            enigma_machine = EnigmaMachine('Enigma1')
+        machine = Machine()
+        machine._logger._write_to_console = False
+        status = machine.configure('Enigma1',  ['Ix', 'II', 'III'], 'UKW-B')
+        self.assertIs(status, False)
+        self.assertIs(machine.configured, False)
 
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
-            self.fail(err)
-
-        self.assertIsNot(enigma_machine, None)
-
-        config_return = enigma_machine.configure_machine(['Ia', 'II', 'III'], 'Wide_B')
-        self.assertIs(config_return, False)
-        self.assertIs(enigma_machine.configured, False)
-
-        expected = 'Rotor read failure | Unable to open rotor file'
-        if expected not in enigma_machine.last_error:
+        expected = "Rotor 'Ix' is invalid, aborting!"
+        if expected not in machine.last_error:
             err = f"Did not detect '{expected}'"
             self.fail(err)
 
+    def test_configure_invalid_no_of_rotors(self):
+        ''' Machine::configure() | Invalid no of rotors '''
 
-    def test_EnigmaMachine_configure_machine_InvalidNoOfRotors(self):
-        try:
-            enigma_machine = EnigmaMachine('Enigma1')
+        machine = Machine()
+        self.assertIsNot(machine, None)
+        machine._logger._write_to_console = False
 
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
-            self.fail(err)
-
-        self.assertIsNot(enigma_machine, None)
-
-        config_return = enigma_machine.configure_machine(['I', 'II'], 'Wide_B')
-        self.assertIs(config_return, False)
-        self.assertIs(enigma_machine.configured, False)
+        status = machine.configure('Enigma1', ['I', 'II'], 'Wide_B')
+        self.assertIs(status, False)
+        self.assertIs(machine.configured, False)
 
         expected = 'Invalid number of rotors specified, requires 3 rotors'
-        if expected not in enigma_machine.last_error:
+        if expected not in machine.last_error:
             err = f"Did not detect '{expected}'"
             self.fail(err)
 
+    def test_configure_machine_invalid_reflector(self):
+        ''' Machine::configure() | Invalid reflector '''
 
-    def test_EnigmaMachine_configure_machine_InvalidReflector(self):
-        try:
-            enigma_machine = EnigmaMachine('Enigma1')
+        machine = Machine()
+        self.assertIsNot(machine, None)
+        machine._logger._write_to_console = False
 
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
+        status = machine.configure('Enigma1', ['I', 'II', 'III'], 'Wide_Ba')
+        self.assertIs(status, False)
+        self.assertIs(machine.configured, False)
+
+        expected = "Reflector 'Wide_Ba' is invalid, aborting!"
+        if expected not in machine.last_error:
+            err = f"Did not detect '{expected}' | Last error : '{machine.last_error}'"
             self.fail(err)
 
-        self.assertIsNot(enigma_machine, None)
+    def test_3_rotor_encrypt_no_turnover(self):
+        ''' Test 3 rotor Enigma 1 encrypt with no turnover '''
 
-        config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_Ba')
-        self.assertIs(config_return, False)
-        self.assertIs(enigma_machine.configured, False)
+        machine = Machine()
+        self.assertIsNot(machine, None)
+        machine._logger._write_to_console = False
 
-        expected = 'Reflector read failure | Unable to read file, reason:'
-        if expected not in enigma_machine.last_error:
-            err = f"Did not detect '{expected}'"
-            self.fail(err)
+        status = machine.configure('Enigma1', ['I', 'II', 'III'], 'UKW-B')
+        self.assertIs(status, True)
+        self.assertIs(machine.configured, True)
 
+        if not status:
+            self.fail(machine.last_error)
 
-    def test_EnigmaMachine_3_Rotor_Encoding_No_Turnover(self):
-        try:
-            enigma_machine = EnigmaMachine('Enigma1')
-
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
-            self.fail(err)
-
-        self.assertIsNot(enigma_machine, None)
-
-        config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_B')
-
-        if not config_return:
-            self.fail(enigma_machine.last_error)
-
-        self.assertIs(enigma_machine.configured, True)
+        self.assertIs(machine.configured, True)
 
         string_to_encode = 'AAAAA'
         expected_encoded_string = 'BDZGO'
 
         encoded = ''
         for char in string_to_encode.upper():
-            encoded += enigma_machine.press_key(RotorContact[char]).name
+            encoded += machine.press_key(RotorContact[char]).name
 
         self.assertEqual(encoded, expected_encoded_string)
 
-
-    def test_EnigmaMachine_3_Rotor_Encoding_Right_Rotor_Turnover(self):
+    def test_machine_3_Rotor_Encoding_Right_Rotor_Turnover(self):
         try:
-            enigma_machine = EnigmaMachine('Enigma1')
+            enigma_machine = Machine('Enigma1')
 
         except ValueError as err:
             err = f'ValueError exception unexpectedly raised: {err}'
@@ -233,86 +168,85 @@ class UnitTest_EnigmaMachine(unittest.TestCase):
         self.assertEqual(enigma_machine.get_rotor_position(1), RotorContact.B.value)
         self.assertEqual(enigma_machine.get_rotor_position(2), RotorContact.Y.value)
 
+    # def test_EnigmaMachine_set_rotor_position_ErrorChecking(self):
+    #     try:
+    #         enigma_machine = Machine('Enigma1')
 
-    def test_EnigmaMachine_set_rotor_position_ErrorChecking(self):
-        try:
-            enigma_machine = EnigmaMachine('Enigma1')
+    #     except ValueError as err:
+    #         err = f'ValueError exception unexpectedly raised: {err}'
+    #         self.fail(err)
 
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
-            self.fail(err)
+    #     self.assertIsNot(enigma_machine, None)
 
-        self.assertIsNot(enigma_machine, None)
+    #     config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_B')
 
-        config_return = enigma_machine.configure_machine(['I', 'II', 'III'], 'Wide_B')
+    #     if not config_return:
+    #         self.fail(enigma_machine.last_error)
+    #         return
 
-        if not config_return:
-            self.fail(enigma_machine.last_error)
-            return
+    #     test_passed = False
+    #     err_msg = 'set_rotor_position() rotor position was unexpectedly set'
 
-        test_passed = False
-        err_msg = 'set_rotor_position() rotor position was unexpectedly set'
+    #     try:
+    #         enigma_machine.set_rotor_position(1, 0)
 
-        try:
-            enigma_machine.set_rotor_position(1, 0)
+    #     except ValueError as excpt:
+    #         expected = 'Invalid rotor positions'
+    #         if expected not in str(excpt):
+    #             err_msg = f"Did not detect '{expected}, got: {excpt}'"
+    #         else:
+    #             test_passed = True
 
-        except ValueError as excpt:
-            expected = 'Invalid rotor positions'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-            else:
-                test_passed = True
+    #     if not test_passed:
+    #         self.fail(err_msg)
 
-        if not test_passed:
-            self.fail(err_msg)
+    #     test_passed = False
+    #     err_msg = 'set_rotor_position() rotor position was unexpectedly set'
 
-        test_passed = False
-        err_msg = 'set_rotor_position() rotor position was unexpectedly set'
+    #     try:
+    #         enigma_machine.set_rotor_position(1, 27)
 
-        try:
-            enigma_machine.set_rotor_position(1, 27)
+    #     except ValueError as excpt:
+    #         expected = 'Invalid rotor positions'
+    #         if expected not in str(excpt):
+    #             err_msg = f"Did not detect '{expected}, got: {excpt}'"
+    #         else:
+    #             test_passed = True
 
-        except ValueError as excpt:
-            expected = 'Invalid rotor positions'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-            else:
-                test_passed = True
+    #     if not test_passed:
+    #         self.fail(err_msg)
 
-        if not test_passed:
-            self.fail(err_msg)
+    #     test_passed = False
+    #     err_msg = 'set_rotor_position() Invalid rotor was unexpectedly used'
 
-        test_passed = False
-        err_msg = 'set_rotor_position() Invalid rotor was unexpectedly used'
+    #     try:
+    #         enigma_machine.set_rotor_position(-1, 10)
 
-        try:
-            enigma_machine.set_rotor_position(-1, 10)
+    #     except ValueError as excpt:
+    #         expected = 'Invalid rotor'
+    #         if expected not in str(excpt):
+    #             err_msg = f"Did not detect '{expected}, got: {excpt}'"
+    #         else:
+    #             test_passed = True
 
-        except ValueError as excpt:
-            expected = 'Invalid rotor'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-            else:
-                test_passed = True
+    #     if not test_passed:
+    #         self.fail(err_msg)
 
-        if not test_passed:
-            self.fail(err_msg)
+    #     test_passed = False
+    #     err_msg = 'set_rotor_position() Invalid rotor was unexpectedly used'
 
-        test_passed = False
-        err_msg = 'set_rotor_position() Invalid rotor was unexpectedly used'
+    #     try:
+    #         enigma_machine.set_rotor_position(3, 10)
 
-        try:
-            enigma_machine.set_rotor_position(3, 10)
+    #     except ValueError as excpt:
+    #         expected = 'Invalid rotor'
+    #         if expected not in str(excpt):
+    #             err_msg = f"Did not detect '{expected}, got: {excpt}'"
+    #         else:
+    #             test_passed = True
 
-        except ValueError as excpt:
-            expected = 'Invalid rotor'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-            else:
-                test_passed = True
-
-        if not test_passed:
-            self.fail(err_msg)
+    #     if not test_passed:
+    #         self.fail(err_msg)
 
 
 

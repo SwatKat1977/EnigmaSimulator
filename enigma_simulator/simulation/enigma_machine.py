@@ -12,7 +12,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 '''
-import os
 from simulation.enigma_models import ENIGMA_MODELS
 from simulation.logger import Logger
 from simulation.plugboard import Plugboard
@@ -52,17 +51,14 @@ class Machine:
     def __init__(self):
         self._model_details = None
         self._double_step = False
-        self._last_error = None
+        self._last_error = ''
         self._plugboard = None
         self._reflector = None
         self._rotors = []
-
         self._is_configured = False
-
         self._logger = Logger(__name__, write_to_console = True)
 
-    #  @param self The object pointer.
-    def configure_machine(self, model, rotors, reflector):
+    def configure(self, model : str, rotors, reflector):
 
         if model not in ENIGMA_MODELS:
             raise ValueError('Enigma model is not valid')
@@ -134,6 +130,8 @@ class Machine:
         # If a plugboard exists for machine then encode through it.
         if self._plugboard is not None:
             current_letter = self._plugboard.get_plug(key)
+            self._logger.log_debug(f"Plugboard | Passed '{key.name}' in " + \
+                                   f"and received '{current_letter.name}'")
 
         self._logger.log_debug("Passing letter through rotors from right to left")
 
@@ -141,7 +139,6 @@ class Machine:
         for rotor in reversed(self._rotors):
             old_letter = RotorContact(current_letter).name
 
-            print(rotor.name)
             # Get substituted letter from the rotor.  There are two values that
             # are returned.  First is what actual letter came out and then the
             # second that gives you next rotor position after taking the rotors
@@ -149,8 +146,8 @@ class Machine:
             #current_letter = rotor.get_forward_circuit(current_letter)
             current_letter = rotor.encrypt(current_letter)
 
-            debug_msg = f"Passing '{old_letter}' to {rotor.name} returns " + \
-                        f"=> '{RotorContact(current_letter).name}'"
+            debug_msg = f"Rotor | Passing '{old_letter}' to {rotor.name} " + \
+                        f"returned '{RotorContact(current_letter).name}'"
             self._logger.log_debug(debug_msg)
 
         # Pass the letter through the reflector.
