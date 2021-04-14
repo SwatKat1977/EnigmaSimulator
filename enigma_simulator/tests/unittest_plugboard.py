@@ -73,7 +73,7 @@ class UnitTestPlugboard(unittest.TestCase):
         # SetPlug should raise an exception if the destination of plug is  in use.
         # @param self The object pointer.
         '''
-        
+
         plug_1_src = RotorContact.Y
         plug_1_dst = RotorContact.B
         plug_2_src = RotorContact.N
