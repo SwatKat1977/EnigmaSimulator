@@ -1,9 +1,17 @@
-#  Copyright (C) 2015-2018 Electronic Engima Development Team
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#  http://www.apache.org/licenses/LICENSE-2.0
-#  //////////////////////////////////////////////////////////////////////////
+'''
+    EnigmaSimulator - A software implementation of the Engima Machine.
+    Copyright (C) 2015-2021 Engima Simulator Development Team
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+'''
 import unittest
 from simulation.enigma_machine import EnigmaMachine
 from simulation.rotor_contact import RotorContact
@@ -11,11 +19,8 @@ from simulation.rotor_contact import RotorContact
 from simulation.reflector_factory import ReflectorFactory
 from simulation.plugboard import Plugboard
 
-
-# ******************************
-# Unit tests for the Enigma Machine class
-# ******************************
 class UnitTest_EnigmaMachine(unittest.TestCase):
+    ''' Unit tests for the Enigma Machine class. '''
 
     # Rotors XML file
     Rotor_enigma1_I_file = '../data/rotors/Enigma1_I.json'
@@ -432,3 +437,5 @@ class UnitTest_EnigmaMachine(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+# 435 lines
