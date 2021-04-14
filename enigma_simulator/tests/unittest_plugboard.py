@@ -1,6 +1,6 @@
 '''
     EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2020 Engima Simulator Development Team
+    Copyright (C) 2015-2021 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,89 +16,70 @@ import unittest
 from simulation.plugboard import Plugboard
 from simulation.rotor_contact import RotorContact
 
+class UnitTestPlugboard(unittest.TestCase):
+    ''' Unit tests for the Rotor class '''
 
-# ******************************
-# Unit tests for the Rotor class
-# ******************************
-class UnitTest_Plugboard(unittest.TestCase):
-
-    ##
-    # Python unittest setup fixture.
-    # Pre-create plugboard for each test.
-    # @param self The object pointer.
     def setUp(self):
         self.__plugboard = Plugboard()
 
-
-    ##
-    # Test SetPlug : Invalid source plug ID.
-    # SetPlug should raise the exception 'Invalid source plug position'
-    # when the plug ID is outside 1 -> 26 (A to Z).
-    # @param self The object pointer.
     def test_SetPlug_InvalidPlugSrc(self):
+        '''
+        Test Invalid source plug ID. SetPlug() should raise the
+        exception 'Source plug position not valid' when a plug is not a
+        RotorContact.
+        '''
 
-        # Attempt to set a plug with invalid source, it should raise a 
-        # ValueError exception.
         with self.assertRaises(ValueError) as context:
-            self.__plugboard.set_plug(0, 12)
+            self.__plugboard.set_plug('a rotor', 12)
 
-        # Verify that the the exception was caught.
         if 'Source plug position not valid' not in str(context.exception):
             self.fail("Did not detect 'Source plug position not valid'")
 
-
-    ## Test SetPlug : Invalid destination plug ID.
-    #  SetPlug should raise the exception 'Invalid destination plug position'
-    #  when the plug ID is outside 1 -> 26 (A to Z).
-    #  @param self The object pointer.
     def test_SetPlug_InvalidPlugDest(self):
+        '''
+        Test Invalid destination plug ID. SetPlug() should raise the exception
+        'Invalid destination plug position' when a plug is not a RotorContact.
+        '''
 
-        # Attempt to set a plug with invalid source, it should raise a 
-        # ValueError exception.
         with self.assertRaises(ValueError) as context:
             self.__plugboard.set_plug(RotorContact.B, 27)
 
-        # Verify that the the exception was caught.
         if 'Destination plug position not valid' not in str(context.exception):
             self.fail("Did not detect 'Destination plug position not valid'")
 
-
-    ##
-    # Test SetPlug :  Plug source already in use.
-    # SetPlug should raise an exception if the source of plug is  in use.
-    # @param self The object pointer.
     def test_SetPlug_PlugSourceInUse(self):
-
-        plugSrc = RotorContact.A
-        plugDest = RotorContact.J
-        exceptMsg = f'Plugboard source ({plugSrc.name}:{plugDest.name}) is already in use'
+        '''
+        Test that plug source already in use. SetPlug should raise an exception
+        if the source of plug is  in use.
+        '''
+        plug_src = RotorContact.A
+        plug_dest = RotorContact.J
+        except_msg = f'Plugboard source ({plug_src.name}:{plug_dest.name}) is already used'
 
         # Set plug to translate 'A' into 'K'.
         self.__plugboard.set_plug(RotorContact.A, RotorContact.K)
 
-        # Attempt to set a plug with an already used source plug, it should
-        # raise a ValueError exception.
         with self.assertRaises(ValueError) as context:
-            self.__plugboard.set_plug(plugSrc, plugDest)
+            self.__plugboard.set_plug(plug_src, plug_dest)
 
-        # Verify that the the exception was caught.
-        if exceptMsg not in str(context.exception):
-            err = f"Did not detect '{exceptMsg}'"
+        if except_msg not in str(context.exception):
+            err = f"Did not detect '{except_msg}'"
+            print(context.exception)
             self.fail(err)
 
-
-    ##
-    # Test SetPlug :  Plug destination already in use.
-    # SetPlug should raise an exception if the destination of plug is  in use.
-    # @param self The object pointer.
     def test_SetPlug_PlugDestinationInUse(self):
-
+        '''
+        # Test SetPlug :  Plug destination already in use.
+        # SetPlug should raise an exception if the destination of plug is  in use.
+        # @param self The object pointer.
+        '''
+        
         plug_1_src = RotorContact.Y
         plug_1_dst = RotorContact.B
         plug_2_src = RotorContact.N
         plug_2_dst = RotorContact.B
-        exceptMsg = f"Plugboard destination ({plug_2_src.name}:" + \
-                    f"{plug_2_dst.name}) is already in use"
+        except_msg = f"Plugboard destination ({plug_2_src.name}:" + \
+                     f"{plug_2_dst.name}) is already in use"
 
         # Set plug to translate 'B' into 'N'.
         self.__plugboard.set_plug(plug_1_src, plug_1_dst)
@@ -109,77 +90,51 @@ class UnitTest_Plugboard(unittest.TestCase):
             self.__plugboard.set_plug(plug_2_src, plug_2_dst)
 
         # Verify that the the exception was caught.
-        if exceptMsg not in str(context.exception):
-            self.fail("Did not detect '{0} | {1}'".format(exceptMsg, context.exception))
+        if except_msg not in str(context.exception):
+            self.fail(f"Did not detect '{except_msg} | {context.exception}'")
 
+    def test_get_plug_invalid_plug_source(self):
+        '''
+        Test GetPlug() Invalid source plug ID. The exception 'Invalid source
+        # be raised if the parameter is not of type RotorPosition.
+        '''
 
-    ##
-    # Test SetPlug :  Everything OK.
-    # SetPlug completed successfully.
-    # @param self The object pointer.
-    def test_SetPlug_OK(self):
-
-        plugSrc = RotorContact.T
-        plugDest = RotorContact.U
-
-        # Set plug to translate 'T' into 'U'.
-        self.__plugboard.set_plug(plugSrc, plugDest)
-
-
-    ##
-    # Test GetPlug : Invalid source plug ID.
-    # GetPlug should raise the exception 'Invalid source plug position'
-    # when the plug ID is outside 1 -> 26 (A to Z).
-    # @param self The object pointer.
-    def test_GetPlug_InvalidPlugSrc(self):
-
-        # Attempt to set a plug with invalid source, it should raise a 
-        # ValueError exception.
         with self.assertRaises(ValueError) as context:
             self.__plugboard.get_plug(0)
 
-        # Verify that the the exception was caught.
         if 'Invalid plug position' not in str(context.exception):
             self.fail("Did not detect 'Invalid source plug position")
 
-
-    ##
-    # Test GetPlug : Source exists in plugs dictionary keys.
-    # GetPlug should return valid value as it's been found in the dictionary
-    # keys.
-    # @param self The object pointer.
-    def test_GetPlug_ExistsInDictionaryKeys(self):
-        plugSrc = RotorContact.Q
-        plugDest = RotorContact.R
+    def test_get_plug_source_plug_has_been_set(self):
+        '''
+        Test GetPlug() : Source plug has been set, which is what is returned.
+        '''
+        plug_src = RotorContact.Q
+        plug_dest = RotorContact.R
 
         # Set plug to translate 'Q' into 'R'.
-        self.__plugboard.set_plug(plugSrc, plugDest)
-        self.assertEqual(self.__plugboard.get_plug(plugSrc), plugDest)
+        self.__plugboard.set_plug(plug_src, plug_dest)
+        self.assertEqual(self.__plugboard.get_plug(plug_src), plug_dest)
 
-
-    ##
-    # Test GetPlug : Source exists in plugs dictionary values.
-    # GetPlug should return valid value as it's been found in the dictionary
-    # keys.
-    # @param self The object pointer.
-    def test_GetPlug_ExistsInDictionaryValues(self):
-        plugSrc = RotorContact.G
-        plugDest = RotorContact.M
+    def test_get_plug_destination_plug_has_been_set(self):
+        '''
+        Test GetPlug() : Destination plug has been set, which is returned.
+        '''
+        plug_src = RotorContact.G
+        plug_dest = RotorContact.M
 
         # Set plug to translate 'O' into 'P'.
-        self.__plugboard.set_plug(plugSrc, plugDest)
-        self.assertEqual(self.__plugboard.get_plug(plugDest), plugSrc)
+        self.__plugboard.set_plug(plug_src, plug_dest)
+        self.assertEqual(self.__plugboard.get_plug(plug_dest), plug_src)
 
-
-    ##
-    # Test GetPlug : No plug set - pass through.
-    # GetPlug should return same as parameter as no plug was inserted.
-    # @param self The object pointer.
     def test_GetPlug_Passthrough(self):
-        plugSrc = RotorContact.H
+        '''
+        Test GetPlug() when no plug set pass through is used. GetPlug() should
+        return the same contact as the parameter as no plug was inserted.
+        '''
+        plug_src = RotorContact.H
 
-        self.assertEqual(self.__plugboard.get_plug(plugSrc), plugSrc)
-
+        self.assertEqual(self.__plugboard.get_plug(plug_src), plug_src)
 
 if __name__ == '__main__':
     unittest.main()
