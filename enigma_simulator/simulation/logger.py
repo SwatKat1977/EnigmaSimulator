@@ -32,7 +32,7 @@ class LogType(enum.Enum):
     ## Anything that can potentially cause application oddities, but for which
     #  I am automatically recovering. (Such as switching from a primary to
     #  backup server, retrying an operation, missing secondary data, etc.)
-    WARN = 'warn'
+    WARN = 'warning'
 
     ## Any error which is fatal to the operation, but not the service or
     #  application (can't open a required file, missing data, etc.). These
@@ -69,10 +69,11 @@ class Logger:
         log_format= logging.Formatter("%(asctime)s [%(levelname)s] %(message)s",
                                       "%Y-%m-%d %H:%M:%S")
 
-        console_stream = logging.StreamHandler()
-        console_stream.setFormatter(log_format)
-        self._logger_instance.setLevel(logging.DEBUG)
-        self._logger_instance.addHandler(console_stream)
+        if write_to_console:
+            console_stream = logging.StreamHandler()
+            console_stream.setFormatter(log_format)
+            self._logger_instance.setLevel(logging.DEBUG)
+            self._logger_instance.addHandler(console_stream)
 
         if log_file:
             file_handler = logging.FileHandler(log_file)
@@ -133,13 +134,11 @@ class Logger:
         @return None
         """
 
-        if self._write_to_console:
-            compiled_msg = msg % args
-            method_to_call = getattr(self._logger_instance, log_level.value)
-            method_to_call(compiled_msg)
+        compiled_msg = msg % args
+        method_to_call = getattr(self._logger_instance, log_level.value)
+        method_to_call(compiled_msg)
 
         if self._external_logger:
             current_time = time.time()
             compiled_msg = msg % args
-            self._external_logger.add_log_event(current_time, log_level,
-                                                compiled_msg)
+            self._external_logger(current_time, log_level, compiled_msg)
