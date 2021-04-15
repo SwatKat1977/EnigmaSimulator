@@ -1,7 +1,7 @@
 Electronic Enigma Machine Changelog
 ===================================
 
-Version 0.8.0 14th April 2021 [DEV]
+Version 0.8.0 15th April 2021 [DEV]
 * [MOD] Heavyily refactored:
         - rotor class to reduce it's complexity.
         - Machine (previously EnigmaMachine) to remove rotor and reflector
@@ -15,11 +15,14 @@ Name                           Stmts   Miss  Cover
 simulation/enigma_machine.py     119      0   100%
 simulation/enigma_model.py        60      3    95%
 simulation/enigma_models.py        2      0   100%
-simulation/logger.py              45     13    71%
+simulation/logger.py              45      0   100%
 simulation/plugboard.py           22      0   100%
 simulation/reflector.py           19      0   100%
 simulation/rotor.py               71      0   100%
 simulation/rotor_contact.py       28      0   100%
+------------------------------------------------------------
+TOTAL                            366      0   100%
+
 
 Version 0.7.0 8th Sept 2020
 First version that will give the correct answer when a simple configuration is
