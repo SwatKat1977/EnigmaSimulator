@@ -16,3 +16,8 @@ The project is designed to be educational and released in the hope it will be us
 | N       | Swiss-K  | 3           | settable, not rotating | No | All Enigma K machines were delivered by the Germans with the standard commercial wheel wiring, also known from the Enigma D |
 | N       |	Enigma KD | 3          | settable, not rotating | No | A standard commercial Enigma K machine with a rewirable reflector (UKW-D). |
 | N       |	Railway | 3            | settable, not rotating | No | During WWII, the Germans used a special Enigma machine for the German Railway (Reichsbahn). |
+
+| N       |	Tirpitz | 3            | settable, not rotating | No |  The Enigma T (Tirpitz) was a special version of the Enigma K that was made for the Japanese Army during WWII. |
+
+
+| T |Turpitz	| K	|3 rotors with 1 to 9 notches, no plugboard, settable reflectors but not rotating|
