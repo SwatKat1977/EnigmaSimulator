@@ -2,6 +2,11 @@ Electronic Enigma Machine Changelog
 ===================================
 
 Version 0.8.0 15th April 2021 [DEV]
+* [DEL] Remove src directory.
+* [DEL] Remove data directory.
+
+
+Version 0.8.0 15th April 2021
 * [MOD] Heavyily refactored:
         - rotor class to reduce it's complexity.
         - Machine (previously EnigmaMachine) to remove rotor and reflector
