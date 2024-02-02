@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 #include "RotorContact.h"
+#include "RotorWiringLayout.h"
 
 namespace enigmaSimualator {
 
@@ -31,6 +32,8 @@ namespace enigmaSimualator {
             std::string rotor_name,
             std::string wiring_name,
             std::vector<RotorContact> notch_locations);
+
+        ~Rotor () = default;
 
         // Property getter : Name of the rotor.
         inline std::string RotorName () { return rotor_name_; }
@@ -51,7 +54,7 @@ namespace enigmaSimualator {
 
         bool WillStepNext ();
 
-        int DetermineNextPosition (int contact);
+        RotorContact DetermineNextPosition (int contact);
 
     protected:
         std::string rotor_name_;

@@ -1,6 +1,6 @@
-'''
-    EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2021 Engima Simulator Development Team
+/*
+    Engima Machine Simulator
+    Copyright (C) 2015-2024 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -11,179 +11,120 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-'''
-from simulation.rotor_contact import RotorContact
+*/
+#include "Rotor.h"
 
-class Rotor:
-    ''' Class representing an Enigma rotor wheel / drum / Walzen (German). '''
-    __slots__ = ['_logger', '_notch_locations', '_name',  '_position',
-                 '_ring_setting', '_wiring']
+namespace enigmaSimualator {
 
-    MAX_CONTACT_NO = 25
-    WIRING_LENGTH = 26
+    Rotor::Rotor (std::string rotor_name,
+        std::string wiring_name,
+        std::vector<RotorContact> notch_locations)
+        : rotor_name_ (rotor_name), wiring_name_ (wiring_name),
+        notch_locations_ (notch_locations)
+    {
+    }
 
-    @property
-    def name(self) -> str:
-        """ Property getter : Name of the rotor. """
-        return self._name
+    void Rotor::RotorPosition (RotorContact position)
+    {
+        rotor_position_ = position;
+    }
 
-    @property
-    def wiring(self):
-        """ Property getter : How the rotor is wired forwards. """
-        return self._wiring
+    void Rotor::Step ()
+    {
+        rotor_position_ = RotorContact((rotor_position_ + 1) % MAX_CONTACT_NO);
+    }
+ 
+    void Rotor::Encrypt (RotorContact contact, bool forward)
+    {
+        /*
+        Encrpyting a character is done in three stages:
 
-    @property
-    def notches(self):
-        ''' Property getter 'NotchLocations' : Location of the turnover
-            notch or notches. '''
-        return self._notch_locations
-
-    @property
-    def position(self) -> int:
-        ''' Property getter : Position of the rotor. '''
-        return self._position
-
-    @position.setter
-    def position(self, value):
-        ''' Property setter : Position of the rotor. '''
-
-        # Validate rotor positions.
-        if value >= 0 and value <= self.MAX_CONTACT_NO:
-            self._position = value
-            return
-
-        raise ValueError("Invalid rotor positions")
-
-    @property
-    def ring_setting(self):
-        ''' Property getter 'RingSetting' : Ring setting of the rotor. '''
-        return self._ring_setting
-
-    @ring_setting.setter
-    def ring_setting(self, value) -> None:
-        ''' Property setter 'RingSetting' : Ring setting of the rotor. '''
-
-        if value < 1 or value > self.MAX_CONTACT_NO:
-            raise ValueError("Invalid ring positions")
-
-        self._ring_setting = value
-
-    def __init__(self, name : str, wiring : str, notch_locations : list,
-                 logger):
-        '''
-        Rotor constructor method, a rotor is wired from right to left.
-        # @param name Human readable rotor name.
-        # @param wiring Wiring setting from right to left.
-        # @param notch_locations Location of the turnover notches.
-        '''
-
-        # Name of the rotor (e.g. Rotor I).
-        self._name = name
-
-        # Location of the turnover notch/notches.
-        self._notch_locations = notch_locations
-
-        # Current position of the rotor.
-        self._position = 0
-
-        # Ring setting (Ringstellung) for the rotor
-        self._ring_setting = 0
-
-        self._logger = logger
-
-        if not isinstance(wiring, (str)):
-            raise ValueError("Rotor wiring is not a string")
-
-        if len(wiring) != self.WIRING_LENGTH:
-            raise ValueError("Rotor wiring incorrect length")
-
-        # define how the rotor is internally wired.
-        self._wiring = wiring
-
-    def step(self):
-        ''' Step the rotor. '''
-        self._position = (self._position + 1) % self.MAX_CONTACT_NO
-
-    def encrypt(self, contact : RotorContact, forward = True):
-        '''
-        STEP 1: Correct the input contact entrypoint for position:
+        === STEP 1 ===
+        Correct the input contact entrypoint for position :
         Take into account the current position of the rotor and determine if it
-        has wrapped past the letter 'Z' (contact number 26).
+        has wrapped past the letter 'Z'.
+
         Example 1
         'A' is pressed with the rotor in position 1 ('A'), it will returns the
-        output from 'A'. E.g. Enigma Rotor 1 will return 'E' for letter 'A'.
+        output from 'A'. Enigma Rotor 1 will return 'E' for letter 'A'.
+
         Example 2
         'A' is pressed with the rotor in position 2 ('B'), it will return the
         output from 'B' ('A' has been moved on 1 as rotor is in position 'B').
-        E.g. Enigma Rotor 1 will return 'K' for a letter 'B'
+        Enigma Rotor 1 will return 'K' for a letter 'B'
 
-        STEP 2: Take ring settings into account:
-        CURRENTLY NOT IMPLEMENTED
+        === STEP 2 ===
+        Take ring settings into account : CURRENTLY NOT IMPLEMENTED
 
-        STEP 3: Take rotor offset into account
+        === STEP 3 ===
+        Take rotor offset into account
         When a rotor has stepped, the offset must be taken into account when it
         comes to the output and the entrypoint of the next rotor.
+        
         Example 1
         'A' is pressed with the rotor in 'B' (1) position, it will return the
-        output from 'B' as rotor is in position 'B', e.g. Enigma Rotor 1 will
+        output from 'B' as rotor is in position 'B', e.g.Enigma Rotor 1 will
         return 'K' for 'B', but as the rotor is in position 'B' (forward 1) the
         exit position is offset by 1 which means 'J' is returned.
+        
         Example 2
         'Z' is pressed with the rotor in 'B' (1) position, it will return the
         output from 'A' as rotor is in position 'B' and this then wraps ('Z'
-        forward 1 = 'A'), e.g. Enigma Rotor 1 will return 'E' for a letter 'A',
+        forward 1 = 'A'), e.g.Enigma Rotor 1 will return 'E' for a letter 'A',
         but the rotor is in position 'B' (forward 1) so 'J' is returned.
+        */
 
-        @param contact Reference contact to get circuit with.
-        @return A contact number.
-        '''
+        printf ("Encrypting '%d' on rotor %s, foward = %d\n",
+            contact, rotor_name_.c_str(), forward);
+        printf ("=> Rotor position = %d\n", rotor_position_);
 
-        self._logger.log_debug(
-            f"Encrypting '{contact} on rotor {self._name}, foward = {forward}")
-        self._logger.log_debug(f"=> Rotor position = {self._position}")
+        // STEP 1: Correct the input contact entrypoint for position
+        auto contact_position = DetermineNextPosition (contact + rotor_position_);
 
-        # STEP 1: Correct the input contact entrypoint for position
-        contact_position = self._determine_next_position(contact.value +
-                                                         self._position)
-        self._logger.log_debug("=> Compensating rotor entry. Originally " + \
-            f"'{contact.name}', now '{RotorContact(contact_position).name}'")
+        printf (
+            "=> Compensating rotor entry. Originally '%d', now '%d'",
+            contact, contact_position);
 
-        if forward:
-            output_contact = RotorContact[self._wiring[contact_position]]
-            self._logger.log_debug(
-                f"=> Foward Rotor position = '{output_contact.name}'")
+        if (forward)
+        {
+            auto output_contact = RotorContact[_wiring[contact_position]];
+            printf ("=> Foward Rotor position = '{output_contact.name}'");
+        }
+        else
+        {
+            auto letter = RotorContact (contact_position).name;
+            auto output_contact = RotorContact (_wiring.index (letter));
+            printf ("=> Backwards Rotor position = '{output_contact.name}'");
+        }
 
+        // STEP 2: Take ring settings into account
+        // Ring settings are not implemented - untested code
+        
+#ifdef __USE_UNTESTED_CODE__
+        if self.__ringSetting > 1:
+            outputPin = outputPin + (self.__ringSetting -1)
+
+        if (outputPin - (self.__ringSetting -1)) <= 0:
+            outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
+            - outputPin)
         else:
-            letter = RotorContact(contact_position).name
-            output_contact = RotorContact(self._wiring.index(letter))
-            self._logger.log_debug(
-                f"=> Backwards Rotor position = '{output_contact.name}'")
+            outputPin -= (self.__ringSetting - 1)
 
-        # STEP 2: Take ring settings into account
-        # Ring settings are not implemented - untested code
-        # if self.__ringSetting > 1:
-        #     #outputPin = outputPin + (self.__ringSetting -1)
-        #
-        #     if (outputPin - (self.__ringSetting -1)) <= 0:
-        #         outputPin = NumberOfRotorPins - ((self.__ringSetting -1) \
-        #          - outputPin)
-        #     else:
-        #         outputPin -= (self.__ringSetting -1)
-        #
-        #     #if outputPin > NumberOfRotorPins:
-        #     #    outputPin = outputPin - NumberOfRotorPins;
-        # final_contact = output_contact
+        if outputPin > NumberOfRotorPins:
+            outputPin = outputPin - NumberOfRotorPins;
+            final_contact = output_contact
+#endif
 
-        # STEP 3: Take rotor offset into account
-        self._logger.log_debug("=> Adjusting outgoing rotor, it was " + \
-            f"'{output_contact.name}'")
+        // STEP 3: Take rotor offset into account
+        printf ("=> Adjusting outgoing rotor, it was '%d'\n", output_contact);
 
-        output_contact = self._determine_next_position(output_contact.value -
-                                                       self._position)
-        self._logger.log_debug(
-            f"=> Outgoing Rotor position = '{RotorContact(output_contact).name}'")
-        return RotorContact(output_contact)
+        output_contact = DetermineNextPosition (output_contact.value -
+            rotor_position_);
+        printf ("=> Outgoing Rotor position = '%d'", output_contact);
+        return RotorContact (output_contact);
+    }
 
+#ifdef __OLD_CODE__
     def will_step_next(self) -> bool:
         '''
         Check to see if the rotor will cause the next one to also step.
@@ -209,3 +150,6 @@ class Rotor:
             new_pos = (self.MAX_CONTACT_NO + 1) + contact
 
         return new_pos
+#endif
+
+}   // namespace enigmaSimualator

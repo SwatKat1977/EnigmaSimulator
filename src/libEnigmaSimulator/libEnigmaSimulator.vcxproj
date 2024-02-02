@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Rotor.h" />
+    <ClInclude Include="RotorWiringLayout.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
