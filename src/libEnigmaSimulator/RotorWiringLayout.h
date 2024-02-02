@@ -20,7 +20,7 @@
 
 namespace enigmaSimualator {
 
-    const int MAX_WIRING_ENTRIES = 25;
+    const int MAX_WIRING_ENTRIES = 26;
 
     class RotorWiringLayout
     {
@@ -36,17 +36,50 @@ namespace enigmaSimualator {
                 throw std::runtime_error ("Too many wiring entries!");
             }
 
-            auto srcSearch = wiring_.find (src);
-            auto destSearch = wiring_.find (dest);
-            if (srcSearch != wiring_.end () || destSearch != wiring_.end ())
+            if (wiring_.find (src) != wiring_.end ())
             {
-                throw std::runtime_error ("Duplicate wiring entries!");
+                throw std::runtime_error ("Duplicate source wiring contact!");
             }
-            /*
-            for (auto it = someMap.begin(); it != someMap.end(); ++it)
-    if (it->second == someValue)
-        return it->first;
-            */
+
+            for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
+            {
+                if (it->second == dest)
+                {
+                throw std::runtime_error ("Duplicate destination wiring contact!");
+                }
+            }
+
+            wiring_.insert( {src, dest} );
+        }
+
+        bool IsValid()
+        {
+            return wiring_.size () == MAX_WIRING_ENTRIES;
+        }
+
+        // Get destination end of contact, if the wiring isn't valid then an
+        // invalid contact (kRotorContact_end) is returned.
+        RotorContact GetDestination(const RotorContact src, bool forward = true)
+        {
+            RotorContact destination = kRotorContact_end;
+
+            if (IsValid())
+            {
+                if (forward)
+                {
+                    destination = wiring_.find(src)->second;
+                }
+
+                for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
+                {
+                    if (it->second == src)
+                    {
+                        destination = it->first;
+                    }
+                }
+            }
+
+            return destination;
         }
 
     private:
