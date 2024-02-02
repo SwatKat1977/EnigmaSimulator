@@ -12,6 +12,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
+#ifndef PLUGBOARD_H
+#define PLUGBOARD_H
 #include <map>
 #include "RotorContact.h"
 
@@ -36,3 +38,5 @@ namespace enigmaSimualator {
     };
 
 }   // namespace enigmaSimualator
+
+#endif  //  #ifndef PLUGBOARD_H
