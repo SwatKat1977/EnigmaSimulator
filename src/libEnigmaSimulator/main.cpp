@@ -1,6 +1,7 @@
 #include <iostream>
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
+#include "Rotor.h"
 
 int main (int argc, char** argv)
 {
@@ -37,9 +38,6 @@ int main (int argc, char** argv)
 
     printf("Is Valid? : %d\n", wiringLayout.IsValid());
 
-    printf("DEST of A : %d\n", wiringLayout.GetDestination(enigmaSimualator::kRotorContact_A));
-    printf("DEST of Z : %d\n", wiringLayout.GetDestination(enigmaSimualator::kRotorContact_Z));
-
     std::cout << "A convert : "
               << enigmaSimualator::RotorContactStr[enigmaSimualator::kRotorContact_A]
               << std::endl;
@@ -47,6 +45,11 @@ int main (int argc, char** argv)
     std::cout << "Z convert : "
               << enigmaSimualator::RotorContactStr[enigmaSimualator::kRotorContact_Z]
               << std::endl;
+
+    auto rotor = enigmaSimualator::Rotor("Rotor 1", wiringLayout, std::vector<enigmaSimualator::RotorContact>());
+
+    auto test1 = rotor.Encrypt(enigmaSimualator::kRotorContact_A);
+    printf("[Test 1] 'A' pressed and we got '%d'\n", test1);
 
     return 0;
 }
