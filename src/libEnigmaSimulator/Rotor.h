@@ -30,18 +30,19 @@ namespace enigmaSimualator {
     public:
         Rotor (
             std::string rotor_name,
-            std::string wiring_name,
-            std::vector<RotorContact> notch_locations);
+            RotorWiringLayout wiring_,
+            std::vector<RotorContact> notches,
+            RotorContact initialPosition = kRotorContact_A);
 
         ~Rotor () = default;
 
         // Property getter : Name of the rotor.
         inline std::string RotorName () { return rotor_name_; }
 
-        // Property getter : Name of the wiring setup.
-        inline std::string WiringName () { return wiring_name_; }
+        // Property getter : Wiring setup.
+        inline RotorWiringLayout Wiring () { return wiring_; }
 
-        inline std::vector<RotorContact> Notches () { return notch_locations_; }
+        inline std::vector<RotorContact> Notches () { return notches_; }
 
         // Property getter : Position of the rotor.
         inline RotorContact RotorPosition () { return rotor_position_; }
@@ -50,16 +51,16 @@ namespace enigmaSimualator {
 
         void Step ();
 
-        void Encrypt (RotorContact contact, bool forward = true);
+        RotorContact Encrypt (RotorContact contact, bool forward = true);
 
         bool WillStepNext ();
 
-        RotorContact DetermineNextPosition (int contact);
+        RotorContact DetermineNextPosition (RotorContact contact);
 
     protected:
         std::string rotor_name_;
-        std::string wiring_name_;
-        std::vector<RotorContact> notch_locations_;
+        RotorWiringLayout wiring_;
+        std::vector<RotorContact> notches_;
         RotorContact rotor_position_;
     };
 

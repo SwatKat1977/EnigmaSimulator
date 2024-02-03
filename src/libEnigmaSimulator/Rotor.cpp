@@ -17,11 +17,18 @@
 namespace enigmaSimualator {
 
     Rotor::Rotor (std::string rotor_name,
-        std::string wiring_name,
-        std::vector<RotorContact> notch_locations)
-        : rotor_name_ (rotor_name), wiring_name_ (wiring_name),
-        notch_locations_ (notch_locations)
+        RotorWiringLayout wiring,
+        std::vector<RotorContact> notches,
+        RotorContact initialPosition)
+        : rotor_name_ (rotor_name),
+          notches_ (notches),
+          rotor_position_(initialPosition)
     {
+        if (!wiring.IsValid ())
+        {
+            delete this;
+            throw std::runtime_error ("Wiring layout is not valid");
+        }
     }
 
     void Rotor::RotorPosition (RotorContact position)
@@ -33,8 +40,8 @@ namespace enigmaSimualator {
     {
         rotor_position_ = RotorContact((rotor_position_ + 1) % MAX_CONTACT_NO);
     }
- 
-    void Rotor::Encrypt (RotorContact contact, bool forward)
+
+    RotorContact Rotor::Encrypt (RotorContact contact, bool forward)
     {
         /*
         Encrpyting a character is done in three stages:
@@ -60,13 +67,13 @@ namespace enigmaSimualator {
         Take rotor offset into account
         When a rotor has stepped, the offset must be taken into account when it
         comes to the output and the entrypoint of the next rotor.
-        
+
         Example 1
         'A' is pressed with the rotor in 'B' (1) position, it will return the
         output from 'B' as rotor is in position 'B', e.g.Enigma Rotor 1 will
         return 'K' for 'B', but as the rotor is in position 'B' (forward 1) the
         exit position is offset by 1 which means 'J' is returned.
-        
+
         Example 2
         'Z' is pressed with the rotor in 'B' (1) position, it will return the
         output from 'A' as rotor is in position 'B' and this then wraps ('Z'
@@ -79,27 +86,29 @@ namespace enigmaSimualator {
         printf ("=> Rotor position = %d\n", rotor_position_);
 
         // STEP 1: Correct the input contact entrypoint for position
-        auto contact_position = DetermineNextPosition (contact + rotor_position_);
+        auto contact_position = DetermineNextPosition (
+            RotorContact ((int)(contact)+(int)rotor_position_));
 
         printf (
             "=> Compensating rotor entry. Originally '%d', now '%d'",
             contact, contact_position);
 
+        RotorContact output_contact = kRotorContact_end;
+
         if (forward)
         {
-            auto output_contact = RotorContact[_wiring[contact_position]];
+            output_contact = wiring_.GetDestination(contact_position);
             printf ("=> Foward Rotor position = '{output_contact.name}'");
         }
         else
         {
-            auto letter = RotorContact (contact_position).name;
-            auto output_contact = RotorContact (_wiring.index (letter));
+            output_contact = wiring_.GetDestination (contact_position, true);
             printf ("=> Backwards Rotor position = '{output_contact.name}'");
         }
 
         // STEP 2: Take ring settings into account
         // Ring settings are not implemented - untested code
-        
+
 #ifdef __USE_UNTESTED_CODE__
         if self.__ringSetting > 1:
             outputPin = outputPin + (self.__ringSetting -1)
@@ -118,38 +127,49 @@ namespace enigmaSimualator {
         // STEP 3: Take rotor offset into account
         printf ("=> Adjusting outgoing rotor, it was '%d'\n", output_contact);
 
-        output_contact = DetermineNextPosition (output_contact.value -
-            rotor_position_);
+        output_contact = DetermineNextPosition (
+            RotorContact(output_contact - rotor_position_));
         printf ("=> Outgoing Rotor position = '%d'", output_contact);
-        return RotorContact (output_contact);
+        return output_contact;
     }
 
-#ifdef __OLD_CODE__
-    def will_step_next(self) -> bool:
-        '''
-        Check to see if the rotor will cause the next one to also step.
-        @return True if when this steps it will cause the next to to, otherwise
-                False is returned.
-        '''
-        curr_position = RotorContact(self._position).name
-        return curr_position in self._notch_locations
 
-    def _determine_next_position(self, contact : int) -> int:
+    /*
+        Check to see if this rotor will cause the following also step. It
+        returns true if it will cause the next to to, otherwise false.
+    */
+    bool Rotor::WillStepNext ()
+    {
+        return std::find (notches_.begin (),
+                          notches_.end (), rotor_position_)
+                          != notches_.end ();
+    }
 
-        if contact in [0, 25]:
-            new_pos = contact
+    RotorContact Rotor::DetermineNextPosition (RotorContact contact)
+    {
+        return kRotorContact_A;
 
-        elif contact >= 1:
-            if contact > self.MAX_CONTACT_NO:
-                new_pos = (contact % self.MAX_CONTACT_NO) -1
+#ifdef __CODE__
+        if (contact in[0, 25])
+        {
+            new_pos = contact;
+        }
+        else if (contact >= 1)
+        {
+            if (contact > MAX_CONTACT_NO)
+            {
+                new_pos = (contact % MAX_CONTACT_NO) - 1;
+            }
+            else
+            {
+                new_pos = contact;
+            }
+        }
+        else
+            new_pos = (MAX_CONTACT_NO + 1) + contact;
 
-            else:
-                new_pos = contact
-
-        else:
-            new_pos = (self.MAX_CONTACT_NO + 1) + contact
-
-        return new_pos
+        return new_pos;
 #endif
+    }
 
 }   // namespace enigmaSimualator
