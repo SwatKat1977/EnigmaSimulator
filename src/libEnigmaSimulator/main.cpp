@@ -35,8 +35,6 @@ int main (int argc, char** argv)
     wiringLayout.AddEntry (enigmaSimualator::kRotorContact_Y, enigmaSimualator::kRotorContact_C);
     wiringLayout.AddEntry (enigmaSimualator::kRotorContact_Z, enigmaSimualator::kRotorContact_J);
 
-    ///////    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_A, enigmaSimualator::kRotorContact_E);
-
     printf("Is Valid? : %d\n", wiringLayout.IsValid());
 
     printf("DEST of A : %d\n", wiringLayout.GetDestination(enigmaSimualator::kRotorContact_A));
