@@ -69,12 +69,14 @@ namespace enigmaSimualator {
                 {
                     destination = wiring_.find(src)->second;
                 }
-
-                for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
+                else
                 {
-                    if (it->second == src)
+                    for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
                     {
-                        destination = it->first;
+                        if (it->second == src)
+                        {
+                            destination = it->first;
+                        }
                     }
                 }
             }
