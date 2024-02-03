@@ -21,8 +21,13 @@ venv.bak/
 # Platform specific - Mac
 .DS_Store
 
+#### C++ Git Ignores ####
+
 # Visual Studio specific
 .vs
 *.user
 *.filters
 x64
+
+# Linux / Mac specific
+*.o
