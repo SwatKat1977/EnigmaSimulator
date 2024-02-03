@@ -13,6 +13,7 @@
     GNU General Public License for more details.
 */
 #include "Rotor.h"
+#include "Logging.h"
 
 namespace enigmaSimualator {
 
@@ -29,6 +30,8 @@ namespace enigmaSimualator {
             delete this;
             throw std::runtime_error ("Wiring layout is not valid");
         }
+
+        wiring_ = wiring;
     }
 
     void Rotor::RotorPosition (RotorContact position)
@@ -81,29 +84,42 @@ namespace enigmaSimualator {
         but the rotor is in position 'B' (forward 1) so 'J' is returned.
         */
 
-        printf ("Encrypting '%d' on rotor %s, foward = %d\n",
-            contact, rotor_name_.c_str(), forward);
-        printf ("=> Rotor position = %d\n", rotor_position_);
+        DEBUG_LOG ("Rotor::Encrypt() Entering...\n")
+        DEBUG_LOG ("=> Contact '%s' (%d) | rotor : '%s' | forward : %d\n",
+            RotorContactStr[contact], contact, rotor_name_.c_str(), forward)
+        DEBUG_LOG ("=> Current Rotor position : '%s' (%d)\n",
+            RotorContactStr[rotor_position_], rotor_position_)
 
         // STEP 1: Correct the input contact entrypoint for position
         auto contact_position = DetermineNextPosition (
             RotorContact ((int)(contact)+(int)rotor_position_));
 
-        printf (
-            "=> Compensating rotor entry. Originally '%d', now '%d'",
-            contact, contact_position);
+        DEBUG_LOG (
+            "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)\n",
+            RotorContactStr[contact],
+            contact,
+            RotorContactStr[contact_position],
+            contact_position);
 
         RotorContact output_contact = kRotorContact_end;
 
         if (forward)
         {
             output_contact = wiring_.GetDestination(contact_position);
-            printf ("=> Foward Rotor position = '{output_contact.name}'");
+            DEBUG_LOG ("=> Forward destination contact for '%s' (%d) : '%s' (%d)\n",
+                RotorContactStr[contact_position],
+                contact_position,
+                RotorContactStr[output_contact],
+                output_contact)
         }
         else
         {
             output_contact = wiring_.GetDestination (contact_position, true);
-            printf ("=> Backwards Rotor position = '{output_contact.name}'");
+            DEBUG_LOG ("=> Backwards destination contact for '%s' (%d) : '%s' (%d)\n",
+                RotorContactStr[contact_position],
+                contact_position,
+                RotorContactStr[output_contact],
+                output_contact)
         }
 
         // STEP 2: Take ring settings into account
@@ -125,11 +141,14 @@ namespace enigmaSimualator {
 #endif
 
         // STEP 3: Take rotor offset into account
-        printf ("=> Adjusting outgoing rotor, it was '%d'\n", output_contact);
+        printf ("=> Adjusting destination rotor for offset : '%s' (%d)\n",
+        RotorContactStr[output_contact], output_contact);
 
         output_contact = DetermineNextPosition (
             RotorContact(output_contact - rotor_position_));
-        printf ("=> Outgoing Rotor position = '%d'", output_contact);
+        printf ("=> Outgoing Rotor position = '%s' (%d)\n",
+        RotorContactStr[output_contact], output_contact);
+
         return output_contact;
     }
 
