@@ -19,10 +19,7 @@
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
 
-namespace enigmaSimualator {
-
-    const int MAX_CONTACT_NO = 25;
-    const int WIRING_LENGTH = 26;
+namespace enigmaSimulator {
 
     // Class representing an Enigma rotor wheel / drum / Walzen.
     class Rotor
@@ -55,7 +52,7 @@ namespace enigmaSimualator {
 
         bool WillStepNext ();
 
-        RotorContact DetermineNextPosition (RotorContact contact);
+        RotorContact OffsetContactPosition (RotorContact contact, const int offset);
 
     protected:
         std::string rotor_name_;
@@ -64,6 +61,6 @@ namespace enigmaSimualator {
         RotorContact rotor_position_;
     };
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
 
 #endif  //  #ifndef ROTOR_H

@@ -15,7 +15,10 @@
 #include "Rotor.h"
 #include "Logging.h"
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
+
+    const int MAX_CONTACT_NO = 25;
+    //const int WIRING_LENGTH = 26;
 
     Rotor::Rotor (std::string rotor_name,
         RotorWiringLayout wiring,
@@ -91,9 +94,10 @@ namespace enigmaSimualator {
             RotorContactStr[rotor_position_], rotor_position_)
 
         // STEP 1: Correct the input contact entrypoint for position
-        auto contact_position = DetermineNextPosition (
-            RotorContact ((int)(contact)+(int)rotor_position_));
+        auto contact_position = OffsetContactPosition (
+            contact, rotor_position_);
 
+        DEBUG_LOG("|==== STEP 1: Correct input contact with rotor position ====|\n")
         DEBUG_LOG (
             "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)\n",
             RotorContactStr[contact],
@@ -122,8 +126,9 @@ namespace enigmaSimualator {
                 output_contact)
         }
 
-        // STEP 2: Take ring settings into account
-        // Ring settings are not implemented - untested code
+        DEBUG_LOG("|==== STEP 2: Correct input contact with ring position ====|\n")
+        // STEP 2: Correct input contact using ring position
+        // Ring positions are not implemented - untested code
 
 #ifdef __USE_UNTESTED_CODE__
         if self.__ringSetting > 1:
@@ -140,18 +145,19 @@ namespace enigmaSimualator {
             final_contact = output_contact
 #endif
 
-        // STEP 3: Take rotor offset into account
-        printf ("=> Adjusting destination rotor for offset : '%s' (%d)\n",
-        RotorContactStr[output_contact], output_contact);
+        DEBUG_LOG("|==== STEP 3: Correct input contact with rotor offset ====|\n")
 
-        output_contact = DetermineNextPosition (
-            RotorContact(output_contact - rotor_position_));
-        printf ("=> Outgoing Rotor position = '%s' (%d)\n",
+        // STEP 3: Take rotor offset into account
+        DEBUG_LOG ("=> Adjusting destination rotor for offset : '%s' (%d)\n",
+        RotorContactStr[output_contact], output_contact)
+
+        output_contact = OffsetContactPosition (
+            output_contact, rotor_position_);
+        DEBUG_LOG ("=> Outgoing Rotor position = '%s' (%d)\n",
         RotorContactStr[output_contact], output_contact);
 
         return output_contact;
     }
-
 
     /*
         Check to see if this rotor will cause the following also step. It
@@ -164,31 +170,21 @@ namespace enigmaSimualator {
                           != notches_.end ();
     }
 
-    RotorContact Rotor::DetermineNextPosition (RotorContact contact)
+    RotorContact Rotor::OffsetContactPosition (RotorContact contact,
+                                               const int offset)
     {
-        return kRotorContact_A;
+        int new_position = contact + offset;
 
-#ifdef __CODE__
-        if (contact in[0, 25])
+        if (new_position > kRotorContact_Z)
         {
-            new_pos = contact;
+            new_position = (new_position % MAX_CONTACT_NO); // - 1;
         }
-        else if (contact >= 1)
+        else if (new_position < kRotorContact_A)
         {
-            if (contact > MAX_CONTACT_NO)
-            {
-                new_pos = (contact % MAX_CONTACT_NO) - 1;
-            }
-            else
-            {
-                new_pos = contact;
-            }
+            new_position = MAX_CONTACT_NO + new_position;
         }
-        else
-            new_pos = (MAX_CONTACT_NO + 1) + contact;
 
-        return new_pos;
-#endif
+        return RotorContact(new_position);
     }
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
