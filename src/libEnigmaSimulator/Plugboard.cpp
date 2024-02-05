@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include "Plugboard.h"
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
 
     Plugboard::Plugboard ()
     {
@@ -78,4 +78,4 @@ namespace enigmaSimualator {
         }
     }
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator

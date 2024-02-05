@@ -15,7 +15,7 @@
 #ifndef ROTORCONTACT_H
 #define ROTORCONTACT_H
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
 
     // Enumeration of a rotor contact character (A-Z)
     enum RotorContact
@@ -79,6 +79,6 @@ namespace enigmaSimualator {
         "Z",
     };
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
 
 #endif  //  #ifndef ROTORCONTACT_H
