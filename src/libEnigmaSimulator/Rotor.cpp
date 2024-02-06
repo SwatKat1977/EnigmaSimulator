@@ -30,7 +30,6 @@ namespace enigmaSimulator {
     {
         if (!wiring.IsValid ())
         {
-            delete this;
             throw std::runtime_error ("Wiring layout is not valid");
         }
 

@@ -1,5 +1,4 @@
 CPPFLAGS = -std=c++17 -Wall -g -I.
-#-DENIGMASIM_DEBUG
 
 ifeq (1,$(LOG_DEBUG))
 CPPFLAGS+=-DENIGMASIM_DEBUG
