@@ -48,6 +48,8 @@ int main (int argc, char** argv)
 
     auto rotor = enigmaSimulator::Rotor("Rotor 1", wiringLayout, std::vector<enigmaSimulator::RotorContact>());
 
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
+
     auto test1 = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
     printf("[Test 1] 'A' pressed and we got '%d'\n", test1);
 
