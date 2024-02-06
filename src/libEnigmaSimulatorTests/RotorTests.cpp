@@ -54,5 +54,3 @@ int main(int argc, char **argv)
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-/// g++ foo.cpp -o yup -std=c++17 -I /opt/homebrew/include -lgtest -L/opt/homebrew/lib -ftest-coverage
