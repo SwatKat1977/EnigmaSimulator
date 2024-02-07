@@ -36,22 +36,24 @@ int main (int argc, char** argv)
     wiringLayout.AddEntry (enigmaSimulator::kRotorContact_Y, enigmaSimulator::kRotorContact_C);
     wiringLayout.AddEntry (enigmaSimulator::kRotorContact_Z, enigmaSimulator::kRotorContact_J);
 
-    printf("Is Valid? : %d\n", wiringLayout.IsValid());
-
-    std::cout << "A convert : "
-              << enigmaSimulator::RotorContactStr[enigmaSimulator::kRotorContact_A]
-              << std::endl;
-
-    std::cout << "Z convert : "
-              << enigmaSimulator::RotorContactStr[enigmaSimulator::kRotorContact_Z]
-              << std::endl;
-
     auto rotor = enigmaSimulator::Rotor("Rotor 1", wiringLayout, std::vector<enigmaSimulator::RotorContact>());
 
     rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
 
     auto test1 = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
-    printf("[Test 1] 'A' pressed and we got '%d'\n", test1);
+    printf("[Test 1] 'A' in position 'B' pressed and we got '%s' (%d)\n",
+           enigmaSimulator::RotorContactStr[test1], test1);
+
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_D);
+    auto test2 = rotor.Encrypt(enigmaSimulator::kRotorContact_X);
+    printf("[Test 1] 'X' pressed and we got '%s' (%d)\n",
+           enigmaSimulator::RotorContactStr[test2], test2);
 
     return 0;
 }
+
+/*
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_D);
+    output = rotor.Encrypt(enigmaSimulator::kRotorContact_X);
+
+*/

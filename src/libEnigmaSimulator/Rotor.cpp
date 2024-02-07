@@ -17,8 +17,7 @@
 
 namespace enigmaSimulator {
 
-    const int MAX_CONTACT_NO = 25;
-    //const int WIRING_LENGTH = 26;
+    const int MAX_CONTACT_NO = 26;
 
     Rotor::Rotor (std::string rotor_name,
         RotorWiringLayout wiring,
@@ -92,9 +91,11 @@ namespace enigmaSimulator {
         DEBUG_LOG ("=> Current Rotor position : '%s' (%d)\n",
             RotorContactStr[rotor_position_], rotor_position_)
 
+        DEBUG_LOG("=> Offset : %d\n", rotor_position_ - kRotorContact_A)
+
         // STEP 1: Correct the input contact entrypoint for position
         auto contact_position = OffsetContactPosition (
-            contact, rotor_position_);
+            contact, rotor_position_ - kRotorContact_A);
 
         DEBUG_LOG("|==== STEP 1: Correct input contact with rotor position ====|\n")
         DEBUG_LOG (
@@ -147,13 +148,14 @@ namespace enigmaSimulator {
         DEBUG_LOG("|==== STEP 3: Correct input contact with rotor offset ====|\n")
 
         // STEP 3: Take rotor offset into account
-        DEBUG_LOG ("=> Adjusting destination rotor for offset : '%s' (%d)\n",
-        RotorContactStr[output_contact], output_contact)
+        DEBUG_LOG (
+            "=> Adjusting destination rotor for offset : '%s' (%d) by %d\n",
+        RotorContactStr[output_contact], output_contact, -rotor_position_)
 
         output_contact = OffsetContactPosition (
-            output_contact, rotor_position_);
+            output_contact, -(rotor_position_ - kRotorContact_A));
         DEBUG_LOG ("=> Outgoing Rotor position = '%s' (%d)\n",
-        RotorContactStr[output_contact], output_contact);
+        RotorContactStr[output_contact], output_contact)
 
         return output_contact;
     }
@@ -172,17 +174,27 @@ namespace enigmaSimulator {
     RotorContact Rotor::OffsetContactPosition (RotorContact contact,
                                                const int offset)
     {
+       DEBUG_LOG ("Rotor::OffsetContactPosition() Entering...\n")
+        DEBUG_LOG("=? Offsetting Rotor '%s' (%d) by %d positions\n",
+               RotorContactStr[contact], contact, offset)
+
         int new_position = contact + offset;
 
         if (new_position > kRotorContact_Z)
         {
+            DEBUG_LOG("=> Positive rotor offset\n")
             new_position = (new_position % MAX_CONTACT_NO); // - 1;
         }
         else if (new_position < kRotorContact_A)
         {
+            DEBUG_LOG("=> Negative rotor offset\n")
             new_position = MAX_CONTACT_NO + new_position;
         }
 
+        DEBUG_LOG("=> Offsetted rotor is '%s' (%d)\n",
+               RotorContactStr[new_position], new_position)
+
+       DEBUG_LOG ("Rotor::OffsetContactPosition() Leaving...\n")
         return RotorContact(new_position);
     }
 
