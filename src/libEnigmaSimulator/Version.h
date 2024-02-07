@@ -1,6 +1,6 @@
-'''
-    EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2021 Engima Simulator Development Team
+/*
+    Engima Machine Simulator
+    Copyright (C) 2015-2024 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -11,6 +11,19 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-'''
+*/
+#ifndef VERSION_H
+#define VERSION_H
+#include <string>
 
-VERSION = "0.8.1"
+namespace enigmaSimulator {
+
+    const int VERSION_MAJOR = 0;
+    const int VERSION_MINOR = 9;
+    const int VERSION_PATCH = 0;
+
+    const std::string VERSION_SUFFIX = "(Development)";
+
+}   // namespace enigmaSimulator
+
+#endif  //  #ifndef VERSION_H
