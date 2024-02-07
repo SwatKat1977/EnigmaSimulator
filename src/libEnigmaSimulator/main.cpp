@@ -51,9 +51,3 @@ int main (int argc, char** argv)
 
     return 0;
 }
-
-/*
-    rotor.RotorPosition(enigmaSimulator::kRotorContact_D);
-    output = rotor.Encrypt(enigmaSimulator::kRotorContact_X);
-
-*/
