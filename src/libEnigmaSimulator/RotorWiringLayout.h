@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include "RotorContact.h"
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
 
     const int MAX_WIRING_ENTRIES = 26;
 
@@ -69,12 +69,14 @@ namespace enigmaSimualator {
                 {
                     destination = wiring_.find(src)->second;
                 }
-
-                for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
+                else
                 {
-                    if (it->second == src)
+                    for (auto it = wiring_.begin(); it != wiring_.end(); ++it)
                     {
-                        destination = it->first;
+                        if (it->second == src)
+                        {
+                            destination = it->first;
+                        }
                     }
                 }
             }
@@ -86,6 +88,6 @@ namespace enigmaSimualator {
         std::map<RotorContact, RotorContact> wiring_;
     };
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
 
 #endif  //  #ifndef ROTORWIRINGLAYOUT_H

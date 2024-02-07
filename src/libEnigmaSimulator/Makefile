@@ -1,5 +1,9 @@
 CPPFLAGS = -std=c++17 -Wall -g -I.
 
+ifeq (1,$(LOG_DEBUG))
+CPPFLAGS+=-DENIGMASIM_DEBUG
+endif
+
 OBJS = Plugboard.o \
        Rotor.o \
 	   main.o
@@ -7,7 +11,7 @@ OBJS = Plugboard.o \
 LIBENIGMASIMULATOR = ${ENIGMASIM_BIN_DIR}/libEnigmaSimulator
 
 $(LIBENIGMASIMULATOR): $(OBJS)
-	g++ -o $(LIBENIGMASIMULATOR) $(OBJS)
+	g++ $(OPTIONS) -o $(LIBENIGMASIMULATOR) $(OBJS)
 
 all: $(LIBENIGMASIMULATOR)
 

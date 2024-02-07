@@ -13,8 +13,11 @@
     GNU General Public License for more details.
 */
 #include "Rotor.h"
+#include "Logging.h"
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
+
+    const int MAX_CONTACT_NO = 26;
 
     Rotor::Rotor (std::string rotor_name,
         RotorWiringLayout wiring,
@@ -26,9 +29,10 @@ namespace enigmaSimualator {
     {
         if (!wiring.IsValid ())
         {
-            delete this;
             throw std::runtime_error ("Wiring layout is not valid");
         }
+
+        wiring_ = wiring;
     }
 
     void Rotor::RotorPosition (RotorContact position)
@@ -81,33 +85,50 @@ namespace enigmaSimualator {
         but the rotor is in position 'B' (forward 1) so 'J' is returned.
         */
 
-        printf ("Encrypting '%d' on rotor %s, foward = %d\n",
-            contact, rotor_name_.c_str(), forward);
-        printf ("=> Rotor position = %d\n", rotor_position_);
+        DEBUG_LOG ("Rotor::Encrypt() Entering...\n")
+        DEBUG_LOG ("=> Contact '%s' (%d) | rotor : '%s' | forward : %d\n",
+            RotorContactStr[contact], contact, rotor_name_.c_str(), forward)
+        DEBUG_LOG ("=> Current Rotor position : '%s' (%d)\n",
+            RotorContactStr[rotor_position_], rotor_position_)
+
+        DEBUG_LOG("=> Offset : %d\n", rotor_position_ - kRotorContact_A)
 
         // STEP 1: Correct the input contact entrypoint for position
-        auto contact_position = DetermineNextPosition (
-            RotorContact ((int)(contact)+(int)rotor_position_));
+        auto contact_position = OffsetContactPosition (
+            contact, rotor_position_ - kRotorContact_A);
 
-        printf (
-            "=> Compensating rotor entry. Originally '%d', now '%d'",
-            contact, contact_position);
+        DEBUG_LOG("|==== STEP 1: Correct input contact with rotor position ====|\n")
+        DEBUG_LOG (
+            "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)\n",
+            RotorContactStr[contact],
+            contact,
+            RotorContactStr[contact_position],
+            contact_position);
 
         RotorContact output_contact = kRotorContact_end;
 
         if (forward)
         {
             output_contact = wiring_.GetDestination(contact_position);
-            printf ("=> Foward Rotor position = '{output_contact.name}'");
+            DEBUG_LOG ("=> Forward destination contact for '%s' (%d) : '%s' (%d)\n",
+                RotorContactStr[contact_position],
+                contact_position,
+                RotorContactStr[output_contact],
+                output_contact)
         }
         else
         {
             output_contact = wiring_.GetDestination (contact_position, true);
-            printf ("=> Backwards Rotor position = '{output_contact.name}'");
+            DEBUG_LOG ("=> Backwards destination contact for '%s' (%d) : '%s' (%d)\n",
+                RotorContactStr[contact_position],
+                contact_position,
+                RotorContactStr[output_contact],
+                output_contact)
         }
 
-        // STEP 2: Take ring settings into account
-        // Ring settings are not implemented - untested code
+        DEBUG_LOG("|==== STEP 2: Correct input contact with ring position ====|\n")
+        // STEP 2: Correct input contact using ring position
+        // Ring positions are not implemented - untested code
 
 #ifdef __USE_UNTESTED_CODE__
         if self.__ringSetting > 1:
@@ -124,15 +145,20 @@ namespace enigmaSimualator {
             final_contact = output_contact
 #endif
 
-        // STEP 3: Take rotor offset into account
-        printf ("=> Adjusting outgoing rotor, it was '%d'\n", output_contact);
+        DEBUG_LOG("|==== STEP 3: Correct input contact with rotor offset ====|\n")
 
-        output_contact = DetermineNextPosition (
-            RotorContact(output_contact - rotor_position_));
-        printf ("=> Outgoing Rotor position = '%d'", output_contact);
+        // STEP 3: Take rotor offset into account
+        DEBUG_LOG (
+            "=> Adjusting destination rotor for offset : '%s' (%d) by %d\n",
+        RotorContactStr[output_contact], output_contact, -rotor_position_)
+
+        output_contact = OffsetContactPosition (
+            output_contact, -(rotor_position_ - kRotorContact_A));
+        DEBUG_LOG ("=> Outgoing Rotor position = '%s' (%d)\n",
+        RotorContactStr[output_contact], output_contact)
+
         return output_contact;
     }
-
 
     /*
         Check to see if this rotor will cause the following also step. It
@@ -145,31 +171,31 @@ namespace enigmaSimualator {
                           != notches_.end ();
     }
 
-    RotorContact Rotor::DetermineNextPosition (RotorContact contact)
+    RotorContact Rotor::OffsetContactPosition (RotorContact contact,
+                                               const int offset)
     {
-        return kRotorContact_A;
+       DEBUG_LOG ("Rotor::OffsetContactPosition() Entering...\n")
+        DEBUG_LOG("=? Offsetting Rotor '%s' (%d) by %d positions\n",
+               RotorContactStr[contact], contact, offset)
 
-#ifdef __CODE__
-        if (contact in[0, 25])
-        {
-            new_pos = contact;
-        }
-        else if (contact >= 1)
-        {
-            if (contact > MAX_CONTACT_NO)
-            {
-                new_pos = (contact % MAX_CONTACT_NO) - 1;
-            }
-            else
-            {
-                new_pos = contact;
-            }
-        }
-        else
-            new_pos = (MAX_CONTACT_NO + 1) + contact;
+        int new_position = contact + offset;
 
-        return new_pos;
-#endif
+        if (new_position > kRotorContact_Z)
+        {
+            DEBUG_LOG("=> Positive rotor offset\n")
+            new_position = (new_position % MAX_CONTACT_NO); // - 1;
+        }
+        else if (new_position < kRotorContact_A)
+        {
+            DEBUG_LOG("=> Negative rotor offset\n")
+            new_position = MAX_CONTACT_NO + new_position;
+        }
+
+        DEBUG_LOG("=> Offsetted rotor is '%s' (%d)\n",
+               RotorContactStr[new_position], new_position)
+
+       DEBUG_LOG ("Rotor::OffsetContactPosition() Leaving...\n")
+        return RotorContact(new_position);
     }
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator

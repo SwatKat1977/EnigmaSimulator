@@ -1,52 +1,53 @@
 #include <iostream>
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
+#include "Rotor.h"
 
 int main (int argc, char** argv)
 {
-    enigmaSimualator::RotorWiringLayout wiringLayout;
+    enigmaSimulator::RotorWiringLayout wiringLayout;
 
     // EKMFLGDQVZNTOWYHXUSPAIBRCJ
 
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_A, enigmaSimualator::kRotorContact_E);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_B, enigmaSimualator::kRotorContact_K);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_C, enigmaSimualator::kRotorContact_M);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_D, enigmaSimualator::kRotorContact_F);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_E, enigmaSimualator::kRotorContact_L);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_F, enigmaSimualator::kRotorContact_G);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_G, enigmaSimualator::kRotorContact_D);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_H, enigmaSimualator::kRotorContact_Q);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_I, enigmaSimualator::kRotorContact_V);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_J, enigmaSimualator::kRotorContact_Z);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_K, enigmaSimualator::kRotorContact_N);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_L, enigmaSimualator::kRotorContact_T);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_M, enigmaSimualator::kRotorContact_O);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_N, enigmaSimualator::kRotorContact_W);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_O, enigmaSimualator::kRotorContact_Y);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_P, enigmaSimualator::kRotorContact_H);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_Q, enigmaSimualator::kRotorContact_X);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_R, enigmaSimualator::kRotorContact_U);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_S, enigmaSimualator::kRotorContact_S);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_T, enigmaSimualator::kRotorContact_P);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_U, enigmaSimualator::kRotorContact_A);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_V, enigmaSimualator::kRotorContact_I);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_W, enigmaSimualator::kRotorContact_B);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_X, enigmaSimualator::kRotorContact_R);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_Y, enigmaSimualator::kRotorContact_C);
-    wiringLayout.AddEntry (enigmaSimualator::kRotorContact_Z, enigmaSimualator::kRotorContact_J);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_A, enigmaSimulator::kRotorContact_E);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_B, enigmaSimulator::kRotorContact_K);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_C, enigmaSimulator::kRotorContact_M);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_D, enigmaSimulator::kRotorContact_F);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_E, enigmaSimulator::kRotorContact_L);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_F, enigmaSimulator::kRotorContact_G);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_G, enigmaSimulator::kRotorContact_D);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_H, enigmaSimulator::kRotorContact_Q);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_I, enigmaSimulator::kRotorContact_V);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_J, enigmaSimulator::kRotorContact_Z);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_K, enigmaSimulator::kRotorContact_N);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_L, enigmaSimulator::kRotorContact_T);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_M, enigmaSimulator::kRotorContact_O);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_N, enigmaSimulator::kRotorContact_W);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_O, enigmaSimulator::kRotorContact_Y);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_P, enigmaSimulator::kRotorContact_H);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_Q, enigmaSimulator::kRotorContact_X);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_R, enigmaSimulator::kRotorContact_U);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_S, enigmaSimulator::kRotorContact_S);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_T, enigmaSimulator::kRotorContact_P);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_U, enigmaSimulator::kRotorContact_A);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_V, enigmaSimulator::kRotorContact_I);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_W, enigmaSimulator::kRotorContact_B);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_X, enigmaSimulator::kRotorContact_R);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_Y, enigmaSimulator::kRotorContact_C);
+    wiringLayout.AddEntry (enigmaSimulator::kRotorContact_Z, enigmaSimulator::kRotorContact_J);
 
-    printf("Is Valid? : %d\n", wiringLayout.IsValid());
+    auto rotor = enigmaSimulator::Rotor("Rotor 1", wiringLayout, std::vector<enigmaSimulator::RotorContact>());
 
-    printf("DEST of A : %d\n", wiringLayout.GetDestination(enigmaSimualator::kRotorContact_A));
-    printf("DEST of Z : %d\n", wiringLayout.GetDestination(enigmaSimualator::kRotorContact_Z));
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
 
-    std::cout << "A convert : "
-              << enigmaSimualator::RotorContactStr[enigmaSimualator::kRotorContact_A]
-              << std::endl;
+    auto test1 = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
+    printf("[Test 1] 'A' in position 'B' pressed and we got '%s' (%d)\n",
+           enigmaSimulator::RotorContactStr[test1], test1);
 
-    std::cout << "Z convert : "
-              << enigmaSimualator::RotorContactStr[enigmaSimualator::kRotorContact_Z]
-              << std::endl;
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_D);
+    auto test2 = rotor.Encrypt(enigmaSimulator::kRotorContact_X);
+    printf("[Test 1] 'X' pressed and we got '%s' (%d)\n",
+           enigmaSimulator::RotorContactStr[test2], test2);
 
     return 0;
 }

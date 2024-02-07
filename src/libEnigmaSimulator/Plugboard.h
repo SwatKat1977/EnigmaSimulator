@@ -17,7 +17,7 @@
 #include <map>
 #include "RotorContact.h"
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
 
     // Class representing an Enigma plugboard / Steckerbrett.
     class Plugboard
@@ -37,6 +37,6 @@ namespace enigmaSimualator {
         std::map<RotorContact, RotorContact> entries_;
     };
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
 
 #endif  //  #ifndef PLUGBOARD_H
