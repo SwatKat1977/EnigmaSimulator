@@ -1,6 +1,6 @@
-'''
-    EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2021 Engima Simulator Development Team
+/*
+    Engima Machine Simulator
+    Copyright (C) 2015-2024 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -11,8 +11,10 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-'''
+*/
 from simulation.rotor_contact import RotorContact
+
+namespace enigmaSimulator {
 
 class Reflector:
     ''' Implementation of an Enigma reflector. '''
@@ -58,3 +60,5 @@ class Reflector:
         #  ValueError exception is raised.
         '''
         return RotorContact[self._wiring[contact.value]]
+
+}   // namespace enigmaSimulator

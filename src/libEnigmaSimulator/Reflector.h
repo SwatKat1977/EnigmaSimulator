@@ -1,6 +1,6 @@
-'''
-    EnigmaSimulator - A software implementation of the Engima Machine.
-    Copyright (C) 2015-2021 Engima Simulator Development Team
+/*
+    Engima Machine Simulator
+    Copyright (C) 2015-2024 Engima Simulator Development Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -11,50 +11,35 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-'''
-from simulation.rotor_contact import RotorContact
+*/
+#ifndef REFLECTOR_H
+#define REFLECTOR_H
+#include <map>
+#include <string>
+#include "RotorContact.h"
 
-class Reflector:
-    ''' Implementation of an Enigma reflector. '''
-    __slots__ = ['_name', '_wiring']
+namespace enigmaSimulator {
 
-    # The number of pins or contacts on a reflector.
-    NumberOfReflectorPins = 26
+    // Implementation of an Enigma reflector.
+    class Reflector
+    {
+    public:
 
-    @property
-    def name(self):
-        ''' Property getter : Human readable name of the reflector. '''
-        return self._name
+        Reflector(std::string name, RotorWiringLayout wiring);
 
-    @property
-    def wiring(self):
-        ''' Property getter : How the reflector is wired. '''
-        return self._wiring
+        ~Reflector() = default;
 
-    def __init__(self, name, wiring):
-        '''
-        Reflector constructor.
-        @param name The human readable reflector name.
-        @param wiring Wiring setting from right to left.
-        '''
-        self._name = name
+        inline const std::string Name() { return name_; }
 
-        # Check to make sure wiring is a list.
-        if not isinstance(wiring, str):
-            raise ValueError("Reflector wiring should be a string")
+        inline const RotorWiringLayout Wiring() { return wiring_; }
 
-        if len(wiring) != self.NumberOfReflectorPins:
-            raise ValueError("Reflector wiring string incorrect")
+        RotorContact Encrypt(RotorContact contact);
 
-        # define how the rotor is internally wired.
-        self._wiring = wiring
+    protected:
+        std::string name_;
+        RotorWiringLayout wiring_;
+    };
 
-    def encrypt(self, contact : RotorContact) -> RotorContact:
-        '''
-        Using the reflector, encrpyt the contact using the pins on the
-        right-hand side of the reflector.
-        #  @param contact Input contact to encrypt.
-        #  @return If successful a contact number is returned, on error a
-        #  ValueError exception is raised.
-        '''
-        return RotorContact[self._wiring[contact.value]]
+}   // namespace enigmaSimulator
+
+#endif  //  #ifndef REFLECTOR_H
