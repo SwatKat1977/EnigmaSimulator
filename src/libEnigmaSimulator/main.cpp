@@ -1,4 +1,5 @@
 #include <iostream>
+#include "EnigmaMachineType.h"
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
 #include "Reflector.h"
