@@ -12,12 +12,12 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef ROTORTEST_H
-#define ROTORTEST_H
+#ifndef REFLECTORTEST_H
+#define REFLECTORTEST_H
 #include "Common.h"
 #include "RotorWiringLayout.h"
 
-class RotorTest : public testing::Test {
+class ReflectorTest : public testing::Test {
  protected:
     enigmaSimulator::RotorWiringLayout valid_wiring_layout_;
     enigmaSimulator::RotorWiringLayout invalid_wiring_layout_;
@@ -89,4 +89,4 @@ private:
     }
 };
 
-#endif  //  #ifndef ROTORTEST_H
+#endif  //  #ifndef REFLECTORTEST_H

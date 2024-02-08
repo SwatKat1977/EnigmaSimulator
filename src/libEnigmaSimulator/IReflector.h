@@ -12,9 +12,25 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef IREFLECTOR_H
+#define IREFLECTOR_H
+#include <string>
+#include "RotorContact.h"
+#include "RotorWiringLayout.h"
 
-#include <gtest/gtest.h>
+namespace enigmaSimulator {
 
-#endif  //  #ifndef COMMON_H
+    // Interface for Enigma reflector.
+    class IReflector
+    {
+    public:
+        virtual const std::string Name() = 0;
+
+        virtual const RotorWiringLayout Wiring() = 0;
+
+        virtual RotorContact Encrypt(RotorContact contact, bool forward = true) = 0;
+    };
+
+}   // namespace enigmaSimulator
+
+#endif  //  #ifndef IREFLECTOR_H

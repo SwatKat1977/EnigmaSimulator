@@ -12,9 +12,18 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef VERSION_H
+#define VERSION_H
+#include <string>
 
-#include <gtest/gtest.h>
+namespace enigmaSimulator {
 
-#endif  //  #ifndef COMMON_H
+    const int VERSION_MAJOR = 0;
+    const int VERSION_MINOR = 9;
+    const int VERSION_PATCH = 0;
+
+    const std::string VERSION_SUFFIX = "(Development)";
+
+}   // namespace enigmaSimulator
+
+#endif  //  #ifndef VERSION_H

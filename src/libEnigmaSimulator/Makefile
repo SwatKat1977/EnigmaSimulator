@@ -6,6 +6,7 @@ endif
 
 OBJS = Plugboard.o \
        Rotor.o \
+	   Reflector.o \
 	   main.o
 
 LIBENIGMASIMULATOR = ${ENIGMASIM_BIN_DIR}/libEnigmaSimulator

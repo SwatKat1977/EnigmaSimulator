@@ -12,9 +12,24 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef COMMON_H
-#define COMMON_H
+#include "Reflector.h"
 
-#include <gtest/gtest.h>
+namespace enigmaSimulator {
 
-#endif  //  #ifndef COMMON_H
+    Reflector::Reflector(std::string name, RotorWiringLayout wiring)
+        : name_(name)
+    {
+        if (!wiring.IsValid ())
+        {
+            throw std::runtime_error ("Wiring layout is not valid");
+        }
+
+        wiring_ = wiring;
+    }
+
+    RotorContact Reflector::Encrypt(RotorContact contact, bool forward)
+    {
+        return wiring_.GetDestination(contact, forward);
+    }
+
+}   // namespace enigmaSimulator
