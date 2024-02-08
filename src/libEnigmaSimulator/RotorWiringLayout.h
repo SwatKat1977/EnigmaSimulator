@@ -16,16 +16,33 @@
 #define ROTORWIRINGLAYOUT_H
 #include <map>
 #include <stdexcept>
+#include <string>
 #include "RotorContact.h"
 
 namespace enigmaSimulator {
 
     const int MAX_WIRING_ENTRIES = 26;
+    const char LETTERS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     class RotorWiringLayout
     {
     public:
         RotorWiringLayout () = default;
+
+        RotorWiringLayout (std::string layout)
+        {
+            if (layout.size() != MAX_WIRING_ENTRIES)
+            {
+                throw std::runtime_error ("Incorrect wiring entries!");
+            }
+
+            for (int i = 0; i < MAX_WIRING_ENTRIES; i++)
+            {
+                RotorContact src = RotorContact(i+1);
+                RotorContact dest = RotorContact((layout.c_str()[i] -65) +1);
+                AddEntry(src, dest);
+            }
+        }
 
         ~RotorWiringLayout () = default;
 
