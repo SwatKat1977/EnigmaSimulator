@@ -7,7 +7,9 @@ CXX = g++
 
 OBJS = ../libEnigmaSimulator/Rotor.o \
 	../libEnigmaSimulator/Plugboard.o \
+	../libEnigmaSimulator/Reflector.o \
 	RotorTests.o \
+	ReflectorTests.o \
 	Main.o
 
 LIBTESTS = ./libEnigmaSimulatorTests
