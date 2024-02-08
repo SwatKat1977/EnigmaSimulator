@@ -28,49 +28,6 @@ namespace enigmaSimulator {
         kRotorCount_4 = 4
     };
 
-#ifdef __USE_PY__
-class RotorDefintion:
-    __slots__ = ['_name', '_notches', '_wiring']
-
-    @property
-    def name(self) -> str:
-        ''' Get name of rotor. '''
-        return self._name
-
-    @property
-    def notches(self) -> str:
-        ''' Get a list of turnover notches. '''
-        return self._notches
-
-    @property
-    def wiring(self) -> str:
-        ''' Get the rotor wiring. '''
-        return self._wiring
-
-    def __init__(self, name: str, wiring : str, notches : list) -> None:
-        self._name = name
-        self._notches = notches
-        self._wiring = wiring
-
-class ReflectorDefinition:
-    __slots__ = ['_name', '_wiring']
-
-    @property
-    def name(self) -> str:
-        ''' Get name of reflector. '''
-        return self._name
-
-    @property
-    def wiring(self) -> str:
-        ''' Get the reflector wiring. '''
-        return self._wiring
-
-    def __init__(self, name: str, wiring : str) -> None:
-        self._name = name
-        self._wiring = wiring
-
-#endif  //  #ifndef __USE_PY__
-
     // Definition of an Enigma machine tyoe.
     class EnigmaMachineType
     {
@@ -89,32 +46,32 @@ class ReflectorDefinition:
             bool hasPlugboard,
             RotorNamesList valid_rotors,
             ReflectorNamesList valid_reflectors) :
-            long_name_(longName), short_name_(shortName),
-            total_rotors_(totalRotors), has_plugboard_(hasPlugboard),
+            has_plugboard_(hasPlugboard),
+            long_name_(longName),
+            short_name_(shortName),
+            total_rotors_(totalRotors),
             valid_reflectors_(valid_reflectors),
             valid_rotors_(valid_rotors)
         {
         }
 
         // Get the long name of the Enigma machine.
-        inline std::string LongName() { return self._long_name; }
+        inline std::string LongName() { return long_name_; }
 
         // Get the short name of the Enigma machine.
-        inline std::string ShortName() { return self._short_name; }
+        inline std::string ShortName() { return short_name_; }
 
         // Get the total number of rotors for an Enigma machine.
-        inline RotorCount TotalRotors() { return self._total_rotors; }
+        inline RotorCount TotalRotors() { return total_rotors_; }
 
-        // Get the Enigma machine has a plugboard flag. '''
-        inline bool HasPlugboard(self) { return self._has_plugboard; }
+        // Get the Enigma machine has a plugboard flag.
+        inline bool HasPlugboard() { return has_plugboard_; }
 
-        def rotors(self) -> bool:
-            ''' Get the list of available rotors for the machine. '''
-            return self._rotors
+        // Get the list of available reflectors for the machine.
+        ReflectorNamesList reflectors() { return valid_reflectors_; }
 
-        def reflectors(self) -> bool:
-            ''' Get the list of available reflectors for the machine. '''
-            return self._reflectors
+        // Get the list of available rotors for the machine.
+        RotorNamesList rotors() { return valid_rotors_; }
     };
 
 }   // namespace enigmaSimulator
