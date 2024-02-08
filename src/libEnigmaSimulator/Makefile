@@ -6,8 +6,9 @@ endif
 
 OBJS = EnigmaMachine.o \
 	Plugboard.o \
-	Rotor.o \
 	Reflector.o \
+	Rotor.o \
+	RotorFactory.o \
 	main.o
 
 LIBENIGMASIMULATOR = ${ENIGMASIM_BIN_DIR}/libEnigmaSimulator
