@@ -1,6 +1,7 @@
 #include <map>
 #include <string>
 #include "RotorFactory.h"
+#include "RotorWiringLayout.h"
 
 namespace enigmaSimulator {
 
@@ -10,8 +11,9 @@ struct RotorEntry
     std::string notches;
 };
 
+using RotorsMap = std::map<std::string, RotorEntry>;
 const std::string ENIGMA_1 = "Enigma1_";
-const std::map<std::string, RotorEntry> ROTORS =
+RotorsMap ROTORS =
 {
     // Enigma I
     { ENIGMA_1 + "I",   { "EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Y" } },
@@ -23,7 +25,30 @@ const std::map<std::string, RotorEntry> ROTORS =
 
 Rotor *CreateRotor(std::string rotorName)
 {
-    return nullptr;
+    RotorsMap::iterator it = ROTORS.find(rotorName);
+
+    if (it == ROTORS.end())
+    {
+        return nullptr;
+    }
+
+    RotorEntry entry = it->second;
+
+    std::vector<RotorContact> notches;
+
+    if (entry.notches.size())
+    {
+        for (int i = 0; i < entry.notches.size(); i++)
+        {
+            auto notch = RotorContact((entry.notches.c_str()[i] -65) +1);
+            notches.push_back(notch);
+        }
+    }
+
+    return new Rotor(
+        rotorName,
+        RotorWiringLayout(entry.layout),
+        notches);
 }
 
 }   // namespace enigmaSimulator

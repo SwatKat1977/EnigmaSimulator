@@ -4,11 +4,18 @@
 #include "Reflector.h"
 #include "Rotor.h"
 #include "Version.h"
+#include "RotorFactory.h"
 
 int main (int argc, char** argv)
 {
     enigmaSimulator::RotorWiringLayout wiringLayout;
 
+    const std::string layout = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
+    enigmaSimulator::RotorWiringLayout wiringLayoutTest(layout);
+
+    enigmaSimulator::CreateRotor("Enigma1_II");
+
+    return 0;
     // EKMFLGDQVZNTOWYHXUSPAIBRCJ
 
     wiringLayout.AddEntry (enigmaSimulator::kRotorContact_A, enigmaSimulator::kRotorContact_E);
