@@ -12,36 +12,25 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef REFLECTOR_H
-#define REFLECTOR_H
-#include <map>
+#ifndef IREFLECTOR_H
+#define IREFLECTOR_H
 #include <string>
-#include "IReflector.h"
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
 
 namespace enigmaSimulator {
 
-    // Implementation of an Enigma reflector.
-    class Reflector : public IReflector
+    // Interface for Enigma reflector.
+    class IReflector
     {
     public:
+        virtual const std::string Name() = 0;
 
-        Reflector(std::string name, RotorWiringLayout wiring);
+        virtual const RotorWiringLayout Wiring() = 0;
 
-        ~Reflector() = default;
-
-        inline const std::string Name() { return name_; }
-
-        inline const RotorWiringLayout Wiring() { return wiring_; }
-
-        RotorContact Encrypt(RotorContact contact, bool forward = true);
-
-    protected:
-        std::string name_;
-        RotorWiringLayout wiring_;
+        virtual RotorContact Encrypt(RotorContact contact, bool forward = true) = 0;
     };
 
 }   // namespace enigmaSimulator
 
-#endif  //  #ifndef REFLECTOR_H
+#endif  //  #ifndef IREFLECTOR_H
