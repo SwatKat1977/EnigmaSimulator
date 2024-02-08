@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include "RotorContact.h"
+#include "RotorWiringLayout.h"
 
 namespace enigmaSimulator {
 
@@ -33,7 +34,7 @@ namespace enigmaSimulator {
 
         inline const RotorWiringLayout Wiring() { return wiring_; }
 
-        RotorContact Encrypt(RotorContact contact);
+        RotorContact Encrypt(RotorContact contact, bool forward = true);
 
     protected:
         std::string name_;

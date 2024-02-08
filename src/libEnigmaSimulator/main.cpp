@@ -1,6 +1,7 @@
 #include <iostream>
 #include "RotorContact.h"
 #include "RotorWiringLayout.h"
+#include "Reflector.h"
 #include "Rotor.h"
 #include "Version.h"
 

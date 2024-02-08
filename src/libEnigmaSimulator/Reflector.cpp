@@ -12,53 +12,24 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-from simulation.rotor_contact import RotorContact
+#include "Reflector.h"
 
 namespace enigmaSimulator {
 
-class Reflector:
-    ''' Implementation of an Enigma reflector. '''
-    __slots__ = ['_name', '_wiring']
+    Reflector::Reflector(std::string name, RotorWiringLayout wiring)
+        : name_(name)
+    {
+        if (!wiring.IsValid ())
+        {
+            throw std::runtime_error ("Wiring layout is not valid");
+        }
 
-    # The number of pins or contacts on a reflector.
-    NumberOfReflectorPins = 26
+        wiring_ = wiring;
+    }
 
-    @property
-    def name(self):
-        ''' Property getter : Human readable name of the reflector. '''
-        return self._name
-
-    @property
-    def wiring(self):
-        ''' Property getter : How the reflector is wired. '''
-        return self._wiring
-
-    def __init__(self, name, wiring):
-        '''
-        Reflector constructor.
-        @param name The human readable reflector name.
-        @param wiring Wiring setting from right to left.
-        '''
-        self._name = name
-
-        # Check to make sure wiring is a list.
-        if not isinstance(wiring, str):
-            raise ValueError("Reflector wiring should be a string")
-
-        if len(wiring) != self.NumberOfReflectorPins:
-            raise ValueError("Reflector wiring string incorrect")
-
-        # define how the rotor is internally wired.
-        self._wiring = wiring
-
-    def encrypt(self, contact : RotorContact) -> RotorContact:
-        '''
-        Using the reflector, encrpyt the contact using the pins on the
-        right-hand side of the reflector.
-        #  @param contact Input contact to encrypt.
-        #  @return If successful a contact number is returned, on error a
-        #  ValueError exception is raised.
-        '''
-        return RotorContact[self._wiring[contact.value]]
+    RotorContact Reflector::Encrypt(RotorContact contact, bool forward)
+    {
+        return wiring_.GetDestination(contact, forward);
+    }
 
 }   // namespace enigmaSimulator
