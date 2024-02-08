@@ -15,6 +15,7 @@
 #ifndef ENIGMAMACHINETYPE_H
 #define ENIGMAMACHINETYPE_H
 #include <string>
+#include <vector>
 
 namespace enigmaSimulator {
 
@@ -31,27 +32,21 @@ namespace enigmaSimulator {
     // Definition of an Enigma machine tyoe.
     class EnigmaMachineType
     {
-    protected:
-        bool has_plugboard_;
-        std::string long_name_;
-        std::string short_name_;
-        RotorCount total_rotors_;
-        ReflectorNamesList valid_reflectors_;
-        RotorNamesList valid_rotors_;
+    public:
 
         EnigmaMachineType(
             std::string longName,
             std::string shortName,
             RotorCount totalRotors,
             bool hasPlugboard,
-            RotorNamesList valid_rotors,
-            ReflectorNamesList valid_reflectors) :
+            RotorNamesList rotors,
+            ReflectorNamesList reflectors) :
             has_plugboard_(hasPlugboard),
             long_name_(longName),
             short_name_(shortName),
             total_rotors_(totalRotors),
-            valid_reflectors_(valid_reflectors),
-            valid_rotors_(valid_rotors)
+            reflectors_(reflectors),
+            rotors_(rotors)
         {
         }
 
@@ -68,10 +63,33 @@ namespace enigmaSimulator {
         inline bool HasPlugboard() { return has_plugboard_; }
 
         // Get the list of available reflectors for the machine.
-        ReflectorNamesList reflectors() { return valid_reflectors_; }
+        ReflectorNamesList AllReflectors() { return reflectors_; }
 
         // Get the list of available rotors for the machine.
-        RotorNamesList rotors() { return valid_rotors_; }
+        RotorNamesList AllRotors() { return rotors_; }
+
+        bool IsValidReflector(std::string name)
+        {
+            return ( std::find(reflectors_.begin(),
+                               reflectors_.end(),
+                               name) != reflectors_.end() );
+        }
+
+        bool IsValidRotor(std::string name)
+        {
+            return ( std::find(rotors_.begin(),
+                               rotors_.end(),
+                               name) != rotors_.end() );
+        }
+
+    protected:
+        bool has_plugboard_;
+        std::string long_name_;
+        std::string short_name_;
+        RotorCount total_rotors_;
+        ReflectorNamesList reflectors_;
+        RotorNamesList rotors_;
+
     };
 
 }   // namespace enigmaSimulator

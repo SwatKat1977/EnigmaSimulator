@@ -6,6 +6,7 @@
 #include "Rotor.h"
 #include "Version.h"
 #include "RotorFactory.h"
+#include "EnigmaMachineTypes.h"
 
 int main (int argc, char** argv)
 {
@@ -13,6 +14,19 @@ int main (int argc, char** argv)
 
     const std::string layout = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     enigmaSimulator::RotorWiringLayout wiringLayoutTest(layout);
+
+    enigmaSimulator::EnigmaMachineType machineType(
+        "Enigma Model 1",
+        "Enigma1",
+        enigmaSimulator::kRotorCount_3,
+        true,
+        enigmaSimulator::RotorNamesList { "ABC1", "DEF2"},
+        enigmaSimulator::ReflectorNamesList {"ZZZ1"});
+
+    printf("Count : %d | Total Rotors : %d | Total Reflectors : %d\n",
+        machineType.TotalRotors(),
+        (int)machineType.AllRotors().size(),
+        (int)machineType.AllReflectors().size());
 
     enigmaSimulator::CreateRotor("Enigma1_II");
 
