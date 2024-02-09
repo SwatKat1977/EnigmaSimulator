@@ -127,14 +127,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EnigmaMachine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plugboard.cpp" />
     <ClCompile Include="Rotor.cpp" />
     <ClCompile Include="RotorContact.h" />
+    <ClCompile Include="RotorFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EnigmaMachine.h" />
+    <ClInclude Include="EnigmaMachineDefinition.h" />
+    <ClInclude Include="EnigmaMachineType.h" />
+    <ClInclude Include="EnigmaMachineTypes.h" />
+    <ClInclude Include="IReflector.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Rotor.h" />
+    <ClInclude Include="RotorFactory.h" />
     <ClInclude Include="RotorWiringLayout.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
