@@ -15,8 +15,11 @@
 #ifndef REFLECTORFACTORY_H
 #define REFLECTORFACTORY_H
 #include <string>
+#include "Reflector.h"
 
 namespace enigmaSimulator {
+
+    const Reflector CreateReflector (std::string reflectorName);
 
 }   // namespace enigmaSimulator
 
