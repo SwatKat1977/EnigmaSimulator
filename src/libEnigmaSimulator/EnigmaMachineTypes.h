@@ -18,17 +18,11 @@
 #include <string>
 #include "EnigmaMachineType.h"
 #include "RotorFactory.h"
+#include "EnigmaMachineDefinition.h"
 
 namespace enigmaSimulator {
 
-    enum EnigmaMachineDefinition
-    {
-        kEnigmaMachineDefinition_Enigma1,
-        kEnigmaMachineDefinition_EnigmaModelM3,
-        kEnigmaMachineDefinition_EnigmaModelM4
-    };
-
-    std::map<EnigmaMachineDefinition, EnigmaMachineType> ENIGMA_MODELS = {
+    const std::map<EnigmaMachineDefinition, EnigmaMachineType> ENIGMA_MODELS = {
 
         // The Enigma I was the main Enigma machine used by the German Army and
         // Air Force. The military machines were the only ones with a plug board. The

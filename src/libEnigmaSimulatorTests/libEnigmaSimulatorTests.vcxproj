@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{57821669-313c-4caa-8e08-b6ad8a65d03e}</ProjectGuid>
-    <RootNamespace>libEnigmaSimulator</RootNamespace>
+    <ProjectGuid>{a987b758-d9ad-40c0-ad76-d48c07992652}</ProjectGuid>
+    <RootNamespace>libEnigmaSimulatorTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,23 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EnigmaMachine.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Plugboard.cpp" />
-    <ClCompile Include="Rotor.cpp" />
-    <ClCompile Include="RotorContact.h" />
-    <ClCompile Include="RotorFactory.cpp" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="EnigmaMachineTest.h" />
+    <ClInclude Include="ReflectorTest.h" />
+    <ClInclude Include="RotorTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EnigmaMachine.h" />
-    <ClInclude Include="EnigmaMachineDefinition.h" />
-    <ClInclude Include="EnigmaMachineType.h" />
-    <ClInclude Include="EnigmaMachineTypes.h" />
-    <ClInclude Include="IReflector.h" />
-    <ClInclude Include="Plugboard.h" />
-    <ClInclude Include="Rotor.h" />
-    <ClInclude Include="RotorFactory.h" />
-    <ClInclude Include="RotorWiringLayout.h" />
+    <ClCompile Include="EnigmaMachineTests.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ReflectorTests.cpp" />
+    <ClCompile Include="RotorTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,7 @@
 #include "Version.h"
 #include "RotorFactory.h"
 #include "EnigmaMachineTypes.h"
+#include "EnigmaMachine.h"
 
 int main (int argc, char** argv)
 {
@@ -29,6 +30,15 @@ int main (int argc, char** argv)
         (int)machineType.AllReflectors().size());
 
     enigmaSimulator::CreateRotor("Enigma1_II");
+
+    auto machine = enigmaSimulator::EnigmaMachine();
+    bool status = machine.Configure(
+        enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
+        enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
+        "novalue");
+
+    std::cout << "Status : " << std::boolalpha << status
+              << " | Last error : " << machine.LastError() << std::endl;
 
     return 0;
     // EKMFLGDQVZNTOWYHXUSPAIBRCJ
