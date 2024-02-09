@@ -61,13 +61,13 @@ RotorsMap ROTORS =
     { ENIGMA_M4_VIII, { "FKQHTLXOCBJSPDZRAMEWNIUYGV", "ZM" } }
 };
 
-Rotor *CreateRotor(std::string rotorName)
+const Rotor CreateRotor(std::string rotorName)
 {
     RotorsMap::iterator it = ROTORS.find(rotorName);
 
     if (it == ROTORS.end())
     {
-        return nullptr;
+        throw std::runtime_error("Invalid rotor '" + rotorName + "'");
     }
 
     RotorEntry entry = it->second;
@@ -83,7 +83,7 @@ Rotor *CreateRotor(std::string rotorName)
         }
     }
 
-    return new Rotor(
+    return Rotor(
         rotorName,
         RotorWiringLayout(entry.layout),
         notches);

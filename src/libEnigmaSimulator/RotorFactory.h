@@ -46,7 +46,7 @@ namespace enigmaSimulator {
     const std::string ENIGMA_M4_VII = "EnigmaM4_VII";
     const std::string ENIGMA_M4_VIII = "EnigmaM4_VIII";
 
-    Rotor *CreateRotor(std::string rotorName);
+    const Rotor CreateRotor(std::string rotorName);
 
 }   // namespace enigmaSimulator
 
