@@ -15,16 +15,15 @@
 #ifndef ENIGMAMACHINETEST_H
 #define ENIGMAMACHINETEST_H
 #include "Common.h"
-#include "RotorWiringLayout.h"
+#include "EnigmaMachine.h"
 
 class EnigmaMachineTest : public testing::Test {
-    void SetUp() override
-    {
-    }
+ protected:
+    enigmaSimulator::EnigmaMachine machine_;
 
-    void TearDown() override
-    {
-    }
+    void SetUp() override { }
+
+    void TearDown() override { }
 };
 
 #endif  //  #ifndef ENIGMAMACHINETEST_H

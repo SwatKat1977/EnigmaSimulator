@@ -5,9 +5,12 @@ LIB_DIRS = -L /opt/homebrew/lib
 LIBRARIES = -lgtest
 CXX = g++
 
-OBJS = ../libEnigmaSimulator/Rotor.o \
+OBJS = ../libEnigmaSimulator/EnigmaMachine.o \
+    ../libEnigmaSimulator/Rotor.o \
+	../libEnigmaSimulator/RotorFactory.o \
 	../libEnigmaSimulator/Plugboard.o \
 	../libEnigmaSimulator/Reflector.o \
+	EnigmaMachineTests.o \
 	RotorTests.o \
 	ReflectorTests.o \
 	Main.o
