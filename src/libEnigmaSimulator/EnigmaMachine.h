@@ -49,10 +49,10 @@ namespace enigmaSimulator {
 
         // Get the plugboard, it can be a nullptr if a plugboard hasn't been
         // configured.
-        Plugboard *plugboard() { return plugboard_; }
+        Plugboard *MachinePlugboard() { return plugboard_; }
 
         // Get the reflector.
-        IReflector *reflector() { return reflector_; }
+        IReflector *MachineReflector() { return reflector_; }
 
         bool Configure(EnigmaMachineDefinition machineType,
                        RotorNamesList rotors,

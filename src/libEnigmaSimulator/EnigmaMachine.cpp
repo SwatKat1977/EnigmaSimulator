@@ -64,9 +64,6 @@ namespace enigmaSimulator {
             position = static_cast<RotorPositionNumber>(static_cast<int>(position) + 1);
         }
 
-        Rotor one = *rotors_[kRotorPositionNumber_1];
-        std::cout << "one xx " << one.RotorName() << std::endl;
-
         if (modelDetails.HasPlugboard())
         {
             DEBUG_LOG("Machine is using a plugboard\n")
