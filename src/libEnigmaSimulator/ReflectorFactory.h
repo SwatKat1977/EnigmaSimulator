@@ -19,6 +19,19 @@
 
 namespace enigmaSimulator {
 
+    // Enigma Model 1
+    const std::string ENIGMA_1_REFLECTOR_UKW_A = "Enigma1_Reflector_UKW-A";
+    const std::string ENIGMA_1_REFLECTOR_UKW_B = "Enigma1_Reflector_UKW-B";
+    const std::string ENIGMA_1_REFLECTOR_UKW_C = "Enigma1_Reflector_UKW-C";
+
+    // Enigma Model M3
+    const std::string ENIGMA_M3_REFLECTOR_UKW_B = "EnigmaM3_Reflector_UKW-B";
+    const std::string ENIGMA_M3_REFLECTOR_UKW_C = "EnigmaM3_Reflector_UKW-C";
+
+    // Enigma Model M4
+    const std::string ENIGMA_M4_REFLECTOR_UKW_B = "EnigmaM4_Reflector_UKW-B";
+    const std::string ENIGMA_M4_REFLECTOR_UKW_C = "EnigmaM4_Reflector_UKW-C";
+
     const Reflector CreateReflector (std::string reflectorName);
 
 }   // namespace enigmaSimulator
