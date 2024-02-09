@@ -12,68 +12,85 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
+#include <algorithm>
+#include <iostream>
+#include <memory>
 #include "EnigmaMachine.h"
+#include "EnigmaMachineTypes.h"
+#include "Logging.h"
+
+namespace enigmaSimulator {
+
+    EnigmaMachine::EnigmaMachine() 
+        : is_configured_(false),
+          lastError_(""),
+          plugboard_(nullptr),
+          reflector_(nullptr)
+    {}
+
+    bool EnigmaMachine::Configure(EnigmaMachineDefinition machineType,
+                                  RotorNamesList rotors,
+                                  std::string reflectorName)
+    {
+        type_ = machineType;
+
+        auto modelDetails = ENIGMA_MODELS.find(machineType)->second;
+
+        DEBUG_LOG("Configuring machine...\n")
+
+        if (rotors.size() != modelDetails.TotalRotors())
+        {
+            lastError_ = "Invalid number of rotors specified";
+            return false;
+        }
+
+        RotorPositionNumber position = kRotorPositionNumber_1;
+        RotorNamesList validRotors = modelDetails.AllRotors();
+        for (auto rotorName = rotors.begin();
+             rotorName != rotors.end(); ++rotorName)
+        {
+            if (std::find(validRotors.begin(),
+                          validRotors.end(),
+                          (*rotorName)) == validRotors.end())
+            {
+                lastError_ = "Unknown rotor '" + (*rotorName) + "'";
+                return false;
+            }
+
+            rotors_.insert (
+                { position,
+                  std::make_unique<Rotor> (CreateRotor((*rotorName))) } );
+            DEBUG_LOG("Added rotor '%s'\n", (*rotorName).c_str())
+            position = static_cast<RotorPositionNumber>(static_cast<int>(position) + 1);
+        }
+
+        Rotor one = *rotors_[kRotorPositionNumber_1];
+        std::cout << "one xx " << one.RotorName() << std::endl;
+
+        if (modelDetails.HasPlugboard())
+        {
+            DEBUG_LOG("Machine is using a plugboard\n")
+            plugboard_ = new Plugboard();
+        }
+#ifdef __IMPLEMENT_REFLECTOR__
+        ReflectorNamesList validReflectors = modelDetails.AllReflectors();
+        if (std::find(validReflectors.begin(),
+                      validReflectors.end(),
+                      reflectorName) == validReflectors.end())
+        {
+            lastError_ = "Unknown relector '" + reflectorName + "'";
+            return false;
+        }
+#endif
+        reflector_ = nullptr;
+        DEBUG_LOG("Using reflector '%s'\n", reflectorName.c_str())
+
+        is_configured_ = true;
+
+        return true;
+    }
 
 #ifdef __OLD_CODE__
-
-    def __init__(self):
-        self._model_details = None
-        self._double_step = False
-        self._last_error = ''
-        self._plugboard = None
-        self._reflector = None
-        self._rotors = []
-        self._is_configured = False
-        self._logger = Logger(__name__, write_to_console = True)
-
-
-        def configure(self, model : str, rotors, reflector):
-
-            if model not in ENIGMA_MODELS:
-                raise ValueError('Enigma model is not valid')
-
-            self._model_details = ENIGMA_MODELS[model]
-
-            self._logger.log_debug(f"Configuring machine as '{model}'")
-
-            no_of_rotors_req = self._model_details.no_of_rotors.value
-
-            if len(rotors) != no_of_rotors_req:
-                self._last_error = 'Invalid number of rotors specified, ' + \
-                    f'requires {no_of_rotors_req} rotors'
-                return False
-
-            for rotor in rotors:
-                details = [r for r in self._model_details.rotors if r.name == rotor]
-
-                if not details:
-                    self._last_error = f"Rotor '{rotor}' is invalid, aborting!"
-                    return False
-
-                details = details[0]
-                entry = Rotor(details.name, details.wiring, details.notches,
-                              self._logger)
-                self._rotors.append(entry)
-
-                self._logger.log_debug(f"Added rotor '{rotor}'")
-
-            if self._model_details.has_plugboard:
-                self._logger.log_debug("Machine is using a plugboard")
-                self._plugboard = Plugboard()
-
-            details = [r for r in self._model_details.reflectors
-                       if r.name == reflector]
-
-            if not details:
-                self._last_error = f"Reflector '{reflector}' is invalid, aborting!"
-                return False
-
-            self._logger.log_debug(f"Added reflector '{reflector}'")
-            self._reflector = Reflector(details[0].name, details[0].wiring)
-
-            self._is_configured = True
-
-            return True
 
         def press_key(self, key : RotorContact) -> RotorContact:
             '''
@@ -220,6 +237,6 @@
                                    f"{rotor_2}")
 #endif
 
-namespace enigmaSimulator {
-
 }   // namespace enigmaSimulator
+
+// # 253 #

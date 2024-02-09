@@ -17,23 +17,27 @@
 #include <string>
 #include "IReflector.h"
 #include "Plugboard.h"
-#include "EnigmaMachineTypes.h"
+#include "EnigmaMachineDefinition.h"
+#include "EnigmaMachineType.h"
+#include "Rotor.h"
 
 namespace enigmaSimulator {
+
+    enum RotorPositionNumber
+    {
+        kRotorPositionNumber_1 = 0,
+        kRotorPositionNumber_2 = 1,
+        kRotorPositionNumber_3 = 2,
+        kRotorPositionNumber_4 = 3
+    };
 
     // Implementation of the Enigma machine machine.
     class EnigmaMachine
     {
-    protected:
-        bool is_configured_;
-        std::string last_error_;
-        Plugboard *plugboard_;
-        IReflector *reflector_;
-
     public:
+
 #ifdef __PY__
-        __slots__ = ['_double_step', '_is_configured', '_last_error', '_logger',
-                     '_model_details', '_plugboard', '_reflector', '_rotors']
+        __slots__ = ['_double_step'
 #endif
 
         EnigmaMachine();
@@ -41,7 +45,7 @@ namespace enigmaSimulator {
         inline bool IsConfigured() { return is_configured_; }
 
         // Get the last reported error in human-readable form.
-        inline std::string LastError() { return last_error_; }
+        inline std::string LastError() { return lastError_; }
 
         // Get the plugboard, it can be a nullptr if a plugboard hasn't been
         // configured.
@@ -50,9 +54,9 @@ namespace enigmaSimulator {
         // Get the reflector.
         IReflector *reflector() { return reflector_; }
 
-        bool Configure(EnigmaMachineDefinition model,
+        bool Configure(EnigmaMachineDefinition machineType,
                        RotorNamesList rotors,
-                       ReflectorNamesList reflector);
+                       std::string reflectoName);
 
         RotorContact PressKey(RotorContact key);
 
@@ -61,14 +65,18 @@ namespace enigmaSimulator {
         void GetRotorPosition(int rotorNo);
 
     protected:
+        bool is_configured_;
+        std::string lastError_;
+        Plugboard *plugboard_;
+        IReflector *reflector_;
+        EnigmaMachineDefinition type_;
+        std::map<RotorPositionNumber, std::unique_ptr<Rotor>> rotors_;
 
-        void StepRotors( ):
+        void StepRotors( );
 
-        void _log_rotor_states(self, prefix_str : str);
+        void LogRotorStates(std::string prefix_str);
     };
 
 }   // namespace enigmaSimulator
 
 #endif  //  #ifndef ENIGMAMACHINE_H
-
-// # 253 #
