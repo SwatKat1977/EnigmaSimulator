@@ -25,6 +25,7 @@ TEST_F(EnigmaMachineTest, ConfigureIncorrectRotors)
 
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Invalid number of rotors specified");
+    EXPECT_FALSE(machine_.IsConfigured());
 }
 
 TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
@@ -35,6 +36,7 @@ TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
         "novalue");
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Unknown rotor 'Enigma1_A'");
+    EXPECT_FALSE(machine_.IsConfigured());
 
     status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
@@ -42,6 +44,7 @@ TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
         "novalue");
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Unknown rotor 'Enigma1_B'");
+    EXPECT_FALSE(machine_.IsConfigured());
 
     status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
@@ -49,6 +52,7 @@ TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
         "novalue");
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Unknown rotor 'Enigma1_C'");
+    EXPECT_FALSE(machine_.IsConfigured());
 }
 
 TEST_F(EnigmaMachineTest, ConfigureVerifyPlugboard)
@@ -60,4 +64,5 @@ TEST_F(EnigmaMachineTest, ConfigureVerifyPlugboard)
     EXPECT_TRUE(status) << "Expecting configuration to return true (success)";
     EXPECT_NE(machine_.MachinePlugboard(), nullptr) << "Plugboard should not be nullptr";
     EXPECT_EQ(machine_.LastError(), "");
+    EXPECT_TRUE(machine_.IsConfigured());
 }
