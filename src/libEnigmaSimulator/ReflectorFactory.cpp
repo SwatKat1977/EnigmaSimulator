@@ -17,20 +17,34 @@
 
 namespace enigmaSimulator {
 
-std::map<std::string, std::string> REFLECTORS =
-{
-    // Enigma I
-    { ENIGMA_1_REFLECTOR_UKW_A, "EJMZALYXVBWFCRQUONTSPIKHGD" },
-    { ENIGMA_1_REFLECTOR_UKW_B, "YRUHQSLDPXNGOKMIEBFZCWVJAT" },
-    { ENIGMA_1_REFLECTOR_UKW_C, "FVPJIAOYEDRZXWGCTKUQSBNMHL" },
+    using ReflectorsMap = std::map<std::string, std::string>;
 
-    // Enigma Model M3
-    { ENIGMA_M3_REFLECTOR_UKW_B, "YRUHQSLDPXNGOKMIEBFZCWVJAT" },
-    { ENIGMA_M3_REFLECTOR_UKW_C, "FVPJIAOYEDRZXWGCTKUQSBNMHL" },
+    ReflectorsMap REFLECTORS =
+    {
+        // Enigma I
+        { ENIGMA_1_REFLECTOR_UKW_A, "EJMZALYXVBWFCRQUONTSPIKHGD" },
+        { ENIGMA_1_REFLECTOR_UKW_B, "YRUHQSLDPXNGOKMIEBFZCWVJAT" },
+        { ENIGMA_1_REFLECTOR_UKW_C, "FVPJIAOYEDRZXWGCTKUQSBNMHL" },
 
-    // German Navy 4-rotor M4 Enigma
-    { ENIGMA_M4_REFLECTOR_UKW_B, "ENKQAUYWJICOPBLMDXZVFTHRGS" },
-    { ENIGMA_M4_REFLECTOR_UKW_C, "RDOBJNTKVEHMLFCWZAXGYIPSUQ" }
-};
+        // Enigma Model M3
+        { ENIGMA_M3_REFLECTOR_UKW_B, "YRUHQSLDPXNGOKMIEBFZCWVJAT" },
+        { ENIGMA_M3_REFLECTOR_UKW_C, "FVPJIAOYEDRZXWGCTKUQSBNMHL" },
+
+        // German Navy 4-rotor M4 Enigma
+        { ENIGMA_M4_REFLECTOR_UKW_B, "ENKQAUYWJICOPBLMDXZVFTHRGS" },
+        { ENIGMA_M4_REFLECTOR_UKW_C, "RDOBJNTKVEHMLFCWZAXGYIPSUQ" }
+    };
+
+    const Reflector CreateReflector (std::string name)
+    {
+        ReflectorsMap::iterator it = REFLECTORS.find (name);
+
+        if (it == REFLECTORS.end ())
+        {
+            throw std::runtime_error ("Invalid reflector '" + name + "'");
+        }
+
+        return Reflector (name, RotorWiringLayout (it->second));
+    }
 
 }   // namespace enigmaSimulator
