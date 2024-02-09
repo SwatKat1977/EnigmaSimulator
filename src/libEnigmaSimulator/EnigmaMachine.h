@@ -56,7 +56,7 @@ namespace enigmaSimulator {
 
         bool Configure(EnigmaMachineDefinition machineType,
                        RotorNamesList rotors,
-                       std::string reflectoName);
+                       std::string reflectorName);
 
         RotorContact PressKey(RotorContact key);
 
