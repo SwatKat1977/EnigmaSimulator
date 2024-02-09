@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include "EnigmaMachineType.h"
+#include "ReflectorFactory.h"
 #include "RotorFactory.h"
 #include "EnigmaMachineDefinition.h"
 
@@ -42,7 +43,10 @@ namespace enigmaSimulator {
                                               ENIGMA_1_ROTOR_III,
                                               ENIGMA_1_ROTOR_IV,
                                               ENIGMA_1_ROTOR_V },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_1_REFLECTOR_UKW_A,
+              ENIGMA_1_REFLECTOR_UKW_B,
+              ENIGMA_1_REFLECTOR_UKW_C }
           )
         },
 
@@ -68,7 +72,9 @@ namespace enigmaSimulator {
                                               ENIGMA_M3_ROTOR_VII,
                                               ENIGMA_M3_ROTOR_VIII,
                                               },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_M3_REFLECTOR_UKW_B,
+              ENIGMA_M3_REFLECTOR_UKW_C }
           )
         },
 
@@ -97,7 +103,9 @@ namespace enigmaSimulator {
                                               ENIGMA_M4_ROTOR_VII,
                                               ENIGMA_M4_ROTOR_VIII,
                                               },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_M4_REFLECTOR_UKW_B,
+              ENIGMA_M4_REFLECTOR_UKW_C }
           )
         }
     };
