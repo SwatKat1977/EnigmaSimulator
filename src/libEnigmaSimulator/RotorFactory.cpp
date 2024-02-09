@@ -27,10 +27,6 @@ struct RotorEntry
 
 using RotorsMap = std::map<std::string, RotorEntry>;
 
-const std::string ENIGMA_1 = "Enigma1_";
-const std::string ENIGMA_M3 = "EnigmaM3_";
-const std::string ENIGMA_M4 = "EnigmaM4_";
-
 RotorsMap ROTORS =
 {
     // Enigma I
