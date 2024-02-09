@@ -130,6 +130,7 @@
     <ClCompile Include="EnigmaMachine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plugboard.cpp" />
+    <ClCompile Include="Reflector.cpp" />
     <ClCompile Include="Rotor.cpp" />
     <ClCompile Include="RotorContact.h" />
     <ClCompile Include="RotorFactory.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="EnigmaMachineTypes.h" />
     <ClInclude Include="IReflector.h" />
     <ClInclude Include="Plugboard.h" />
+    <ClInclude Include="Reflector.h" />
     <ClInclude Include="Rotor.h" />
     <ClInclude Include="RotorFactory.h" />
     <ClInclude Include="RotorWiringLayout.h" />
