@@ -86,80 +86,89 @@ namespace enigmaSimulator {
         return true;
     }
 
+    /*
+    To encrypt/decrypt a message, we need to run the key through the enigma
+    machine in the following order (for some models plugboard is optional):
+    plug board => rotors => reflector => rotors => plugboard.
+    @param key Key to encode.
+    @return Encoded character.
+    */
+    RotorContact EnigmaMachine::PressKey(RotorContact key)
+    {
+        RotorContact currentLetter = key;
+
+        DEBUG_LOG("EnigmaMachine::press_key() received : '%s'\n",
+            RotorContactStr[key])
+
+        // To encrypt a key entry it needs to run through the circuit:
+        // plug board => rotors => reflector => rotors => plugboard.
+        //  The variable currentLetter will maintain the contact state.
+        LogRotorStates("=> Rotors before stepping :");
+
+        // Before any encrypting can begin step the rotor.
+        StepRotors();
+
+        LogRotorStates("Rotors after stepping :");
+
+        // If a plugboard exists for machine then encode through it.
+        if (plugboard_)
+        {
+            currentLetter = plugboard_->GetPlug(key);
+            DEBUG_LOG("Plugboard | Passed '%s' in and returned '%s'\n",
+                      RotorContactStr[key], RotorContactStr[currentLetter])
+        }
+
+        DEBUG_LOG("Passing letter through rotors from right to left\n")
+
 #ifdef __OLD_CODE__
-
-        def press_key(self, key : RotorContact) -> RotorContact:
-            '''
-            To encrypt/decrypt a message, we need to run the key through the enigma
-            machine in the following order (for some models plugboard is optional):
-            plug board => rotors => reflector => rotors => plugboard.
-            @param key Key to encode.
-            @return Encoded character.
-            '''
-            self._logger.log_debug(f"Machine::press_key() received : '{key.name}'")
-
-            # To encrypt a key entry it needs to run through the circuit:
-            # plug board => rotors => reflector => rotors => plugboard.
-            #  The variable currentLetter will maintain the contact state.
-
-            self._log_rotor_states('Rotors before stepping :')
-
-            # Before any encrypting can begin step the rotor.
-            self._step_rotors()
-
-            self._log_rotor_states('Rotors after stepping :')
-
-            # If a plugboard exists for machine then encode through it.
-            if self._plugboard is not None:
-                current_letter = self._plugboard.get_plug(key)
-                self._logger.log_debug(f"Plugboard | Passed '{key.name}' in " + \
-                                       f"and received '{current_letter.name}'")
-
-            self._logger.log_debug("Passing letter through rotors from right to left")
-
-            # Pass the letter through the rotors from right to left.
-            for rotor in reversed(self._rotors):
-                old_letter = RotorContact(current_letter).name
-
-                # Get substituted letter from the rotor.  There are two values that
-                # are returned.  First is what actual letter came out and then the
-                # second that gives you next rotor position after taking the rotors
-                # position into account.
-                #current_letter = rotor.get_forward_circuit(current_letter)
-                current_letter = rotor.encrypt(current_letter)
-
-                debug_msg = f"Rotor | Passing '{old_letter}' to {rotor.name} " + \
-                            f"returned '{RotorContact(current_letter).name}'"
-                self._logger.log_debug(debug_msg)
-
-            # Pass the letter through the reflector.
+        # Pass the letter through the rotors from right to left.
+        for rotor in reversed(self._rotors):
             old_letter = RotorContact(current_letter).name
-            current_letter = self._reflector.encrypt(current_letter)
 
-            debug_msg = f"Passed '{old_letter}' to reflector => " + \
-                        f"{current_letter.name}"
+            # Get substituted letter from the rotor.  There are two values that
+            # are returned.  First is what actual letter came out and then the
+            # second that gives you next rotor position after taking the rotors
+            # position into account.
+            #current_letter = rotor.get_forward_circuit(current_letter)
+            current_letter = rotor.encrypt(current_letter)
+
+            debug_msg = f"Rotor | Passing '{old_letter}' to {rotor.name} " + \
+                        f"returned '{RotorContact(current_letter).name}'"
             self._logger.log_debug(debug_msg)
 
-            self._logger.log_debug("Passing letter through rotors from left to right")
+        # Pass the letter through the reflector.
+        old_letter = RotorContact(current_letter).name
+        current_letter = self._reflector.encrypt(current_letter)
 
-            # Pass the letter through the rotors from left to right.
-            for rotor in self._rotors:
-                old_letter = RotorContact(current_letter).name
-                current_letter = rotor.encrypt(current_letter, forward=False)
+        debug_msg = f"Passed '{old_letter}' to reflector => " + \
+                    f"{current_letter.name}"
+        self._logger.log_debug(debug_msg)
 
-                debug_msg = f"Passing '{old_letter}' to {rotor.name} =>" + \
-                            f"'{RotorContact(current_letter).name}'"
-                self._logger.log_debug(debug_msg)
+        self._logger.log_debug("Passing letter through rotors from left to right")
 
-            # If a plugboard exists for machine then encode through it.
-            if self._plugboard is not None:
-                current_letter = self._plugboard.get_plug(current_letter)
+        # Pass the letter through the rotors from left to right.
+        for rotor in self._rotors:
+            old_letter = RotorContact(current_letter).name
+            current_letter = rotor.encrypt(current_letter, forward=False)
 
-            self._logger.log_debug(f"Output letter '{current_letter.name}'")
-            self._logger.log_debug("*********************************************")
+            debug_msg = f"Passing '{old_letter}' to {rotor.name} =>" + \
+                        f"'{RotorContact(current_letter).name}'"
+            self._logger.log_debug(debug_msg)
 
-            # Return encoded character.
-            return current_letter
+        # If a plugboard exists for machine then encode through it.
+        if self._plugboard is not None:
+            current_letter = self._plugboard.get_plug(current_letter)
+
+        self._logger.log_debug(f"Output letter '{current_letter.name}'")
+        self._logger.log_debug("*********************************************")
+
+#endif
+
+        // Return encoded character.
+        return currentLetter;
+    }
+
+#ifdef __OLD_CODE__
 
         def set_rotor_position(self, rotor_no : int, position : int) -> None:
             ''' Set the position of the rotor. '''
@@ -176,62 +185,69 @@ namespace enigmaSimulator {
 
         def get_rotor_position(self, rotor_no):
             return self._rotors[rotor_no].position
-
-
-        def _step_rotors(self):
-            '''
-            Rotor stepping occurs from the right to left whilst a stepping
-            notch is encountered.
-            '''
-
-            # Step next rotor flag.
-            will_step_next_rotor = False
-
-            ######################################
-            ### Assume 3 rotor machine for now ###
-            ######################################
-            no_of_rotors = 3
-
-            # Determine the furthest right rotor (0 indexed list)
-            rotor_position = no_of_rotors -1
-
-            # Because the right-hand pawl has no rotor or ring to its right, rotor
-            # stepping happens with every key depression.
-            rotor = self._rotors[rotor_position]
-            will_step_next_rotor = rotor.will_step_next()
-            rotor.step()
-
-            # If there is a double-step then perform it and reset the flag.
-            if self._double_step:
-                print("[DEBUG] Doing a double step")
-                self._rotors[0].step()
-                self._rotors[1].step()
-                self._double_step = False
-
-            # Only continue if there is more If stepping to be done.
-            if not will_step_next_rotor:
-                return
-
-            # Move to next rotor.
-            rotor_position -= 1
-            rotor = self._rotors[rotor_position]
-
-            # Step the next rotor.
-            rotor.step()
-
-            # If the 2nd rotor will step rotor 1 (left most one) then a double-step
-            # needs to take place.  This is where the middle rotor will step again
-            # next button press, along with the left one.
-            if rotor.will_step_next():
-                self._double_step = True
-
-        def _log_rotor_states(self, prefix_str : str) -> None:
-            rotor_0 = RotorContact(self._rotors[0].position).name
-            rotor_1 = RotorContact(self._rotors[1].position).name
-            rotor_2 = RotorContact(self._rotors[2].position).name
-            self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
-                                   f"{rotor_2}")
 #endif
+
+    void EnigmaMachine::StepRotors()
+    {
+#ifdef __OLD_CODE__
+        '''
+        Rotor stepping occurs from the right to left whilst a stepping
+        notch is encountered.
+        '''
+
+        # Step next rotor flag.
+        will_step_next_rotor = False
+
+        ######################################
+        ### Assume 3 rotor machine for now ###
+        ######################################
+        no_of_rotors = 3
+
+        # Determine the furthest right rotor (0 indexed list)
+        rotor_position = no_of_rotors -1
+
+        # Because the right-hand pawl has no rotor or ring to its right, rotor
+        # stepping happens with every key depression.
+        rotor = self._rotors[rotor_position]
+        will_step_next_rotor = rotor.will_step_next()
+        rotor.step()
+
+        # If there is a double-step then perform it and reset the flag.
+        if self._double_step:
+            print("[DEBUG] Doing a double step")
+            self._rotors[0].step()
+            self._rotors[1].step()
+            self._double_step = False
+
+        # Only continue if there is more If stepping to be done.
+        if not will_step_next_rotor:
+            return
+
+        # Move to next rotor.
+        rotor_position -= 1
+        rotor = self._rotors[rotor_position]
+
+        # Step the next rotor.
+        rotor.step()
+
+        # If the 2nd rotor will step rotor 1 (left most one) then a double-step
+        # needs to take place.  This is where the middle rotor will step again
+        # next button press, along with the left one.
+        if rotor.will_step_next():
+            self._double_step = True
+#endif
+    }
+
+    void EnigmaMachine::LogRotorStates(std::string prefix)
+    {
+#ifdef __OLD_CODE__
+        rotor_0 = RotorContact(self._rotors[0].position).name
+        rotor_1 = RotorContact(self._rotors[1].position).name
+        rotor_2 = RotorContact(self._rotors[2].position).name
+        self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
+                               f"{rotor_2}")
+#endif
+    }
 
     IRotor *EnigmaMachine::GetRotor(RotorPositionNumber position)
     {
