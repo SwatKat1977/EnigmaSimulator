@@ -77,7 +77,6 @@ namespace enigmaSimulator {
             return false;
         }
 
-        //auto reflector = CreateReflector (reflectorName);
         reflector_ = CreateReflector (reflectorName);
         DEBUG_LOG("Using reflector '%s'\n", reflectorName.c_str())
 
@@ -120,21 +119,25 @@ namespace enigmaSimulator {
 
         DEBUG_LOG("Passing letter through rotors from right to left\n")
 
+
+        // Pass the letter through the rotors from right to left.
+        for (auto rotor = rotors_.rbegin (); rotor != rotors_.rend (); ++rotor)
+        {
+            RotorContact oldLetter = currentLetter;
+
+            // Get substituted letter from each rotor. The returned value will
+            // take into account the position of the rotor.
+            currentLetter = rotor->second->Encrypt (currentLetter);
+
+            DEBUG_LOG ("<==== ROTOR '%s' ====>\n",
+                rotor->second->RotorName ().c_str ())
+            DEBUG_LOG ("Rotor | Passing '%s' to %s returned '%s'\n",
+                RotorContactStr[oldLetter],
+                rotor->second->RotorName().c_str(),
+                RotorContactStr[currentLetter])
+        }
+
 #ifdef __OLD_CODE__
-        # Pass the letter through the rotors from right to left.
-        for rotor in reversed(self._rotors):
-            old_letter = RotorContact(current_letter).name
-
-            # Get substituted letter from the rotor.  There are two values that
-            # are returned.  First is what actual letter came out and then the
-            # second that gives you next rotor position after taking the rotors
-            # position into account.
-            #current_letter = rotor.get_forward_circuit(current_letter)
-            current_letter = rotor.encrypt(current_letter)
-
-            debug_msg = f"Rotor | Passing '{old_letter}' to {rotor.name} " + \
-                        f"returned '{RotorContact(current_letter).name}'"
-            self._logger.log_debug(debug_msg)
 
         # Pass the letter through the reflector.
         old_letter = RotorContact(current_letter).name
