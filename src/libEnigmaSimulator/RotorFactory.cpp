@@ -57,7 +57,7 @@ RotorsMap ROTORS =
     { ENIGMA_M4_ROTOR_VIII, { "FKQHTLXOCBJSPDZRAMEWNIUYGV", "ZM" } }
 };
 
-const Rotor CreateRotor(std::string rotorName)
+IRotor *CreateRotor(std::string rotorName)
 {
     RotorsMap::iterator it = ROTORS.find(rotorName);
 
@@ -79,7 +79,7 @@ const Rotor CreateRotor(std::string rotorName)
         }
     }
 
-    return Rotor(
+    return new Rotor(
         rotorName,
         RotorWiringLayout(entry.layout),
         notches);

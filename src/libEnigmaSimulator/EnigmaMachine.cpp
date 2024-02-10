@@ -57,9 +57,7 @@ namespace enigmaSimulator {
                 return false;
             }
 
-            rotors_.insert (
-                { position,
-                  std::make_unique<Rotor> (CreateRotor((*rotorName))) } );
+            rotors_.insert ( { position, CreateRotor((*rotorName)) } );
             DEBUG_LOG("Added rotor '%s'\n", (*rotorName).c_str())
             position = static_cast<RotorPositionNumber>(static_cast<int>(position) + 1);
         }
@@ -234,6 +232,19 @@ namespace enigmaSimulator {
             self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
                                    f"{rotor_2}")
 #endif
+
+    IRotor *EnigmaMachine::GetRotor(RotorPositionNumber position)
+    {
+        auto modelDetails = ENIGMA_MODELS.find(type_)->second;
+
+        if (static_cast<int>(position) >=
+            static_cast<int>(modelDetails.TotalRotors()))
+        {
+            return nullptr;
+        }
+
+        return rotors_[position];
+    }
 
 }   // namespace enigmaSimulator
 

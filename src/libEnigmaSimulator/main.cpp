@@ -37,6 +37,8 @@ int main (int argc, char** argv)
         enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
         "Enigma1_Reflector_UKW-A");
 
+    machine.GetRotor(enigmaSimulator::kRotorPositionNumber_3);
+
     std::cout << "Status : " << std::boolalpha << status
               << " | Last error : " << machine.LastError() << std::endl;
 
