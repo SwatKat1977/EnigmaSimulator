@@ -23,6 +23,8 @@ namespace enigmaSimulator {
     class IRotor
     {
     public:
+        virtual ~IRotor() {}
+
         // Property getter : Name of the rotor.
         virtual std::string RotorName () = 0;
 
