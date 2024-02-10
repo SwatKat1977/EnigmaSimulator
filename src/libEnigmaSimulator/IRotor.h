@@ -37,17 +37,13 @@ namespace enigmaSimulator {
         // Property getter : Position of the rotor.
         virtual RotorContact RotorPosition () = 0;
 
-#ifdef BROKEN
         virtual void RotorPosition (RotorContact position) = 0;
-#endif  //  #ifdef BROKEN
 
         virtual void Step () = 0;
 
-#ifdef BROKEN
         virtual RotorContact Encrypt (
             RotorContact contact,
             bool forward = true) = 0;
-#endif  //  #ifdef BROKEN
 
         virtual bool WillStepNext () = 0;
     };
