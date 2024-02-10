@@ -54,16 +54,14 @@ namespace enigmaSimulator {
 
     /*
         Get the opposite end of a plug.If there is a plug then work out the
-        other end, otherwise return kRotorContact_end to represent no plug.
+        other end, otherwise return same letter to represent no plug.
 
-        @param src Plug to get the other end of.
-
-        @return Other end of plug.For example if 'A' is wired to 'T' then 'T'
-        would be returned, but if 'C' wasn't wired then 'C' is returned.
+        For example if 'A' is wired to 'T' then 'T' would be returned, but if
+        'C' wasn't wired then 'C' is returned.
     */
     RotorContact Plugboard::GetPlug (RotorContact src)
     {
-        return entries_[src];
+        return (entries_[src] == kRotorContact_end) ? src : entries_[src];
     }
 
     void Plugboard::Reset ()
