@@ -42,6 +42,8 @@ int main (int argc, char** argv)
     std::cout << "Status : " << std::boolalpha << status
               << " | Last error : " << machine.LastError() << std::endl;
 
+    machine.PressKey(enigmaSimulator::kRotorContact_A);
+
     return 0;
     // EKMFLGDQVZNTOWYHXUSPAIBRCJ
 
