@@ -119,7 +119,6 @@ namespace enigmaSimulator {
 
         DEBUG_LOG("Passing letter through rotors from right to left\n")
 
-
         // Pass the letter through the rotors from right to left.
         for (auto rotor = rotors_.rbegin (); rotor != rotors_.rend (); ++rotor)
         {
@@ -137,17 +136,14 @@ namespace enigmaSimulator {
                 RotorContactStr[currentLetter])
         }
 
+        // Pass the letter through the reflector.
+        RotorContact oldLetter = currentLetter;
+        currentLetter = reflector_->Encrypt (currentLetter);
+        DEBUG_LOG ("[Reflector] '%s' => '%s'\n",
+            RotorContactStr[oldLetter], RotorContactStr[currentLetter]);
+
 #ifdef __OLD_CODE__
-
-        # Pass the letter through the reflector.
-        old_letter = RotorContact(current_letter).name
-        current_letter = self._reflector.encrypt(current_letter)
-
-        debug_msg = f"Passed '{old_letter}' to reflector => " + \
-                    f"{current_letter.name}"
-        self._logger.log_debug(debug_msg)
-
-        self._logger.log_debug("Passing letter through rotors from left to right")
+        self._logger.log_debug ("Passing letter through rotors from left to right");
 
         # Pass the letter through the rotors from left to right.
         for rotor in self._rotors:
