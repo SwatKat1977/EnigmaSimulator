@@ -24,6 +24,9 @@ namespace enigmaSimulator {
     class IReflector
     {
     public:
+
+        virtual ~IReflector() {}
+
         virtual const std::string Name() = 0;
 
         virtual const RotorWiringLayout Wiring() = 0;
