@@ -7,6 +7,7 @@ endif
 OBJS = EnigmaMachine.o \
 	Plugboard.o \
 	Reflector.o \
+	ReflectorFactory.o \
 	Rotor.o \
 	RotorFactory.o \
 	main.o
