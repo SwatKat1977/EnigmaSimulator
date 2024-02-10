@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;ENIGMASIM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -143,6 +143,7 @@
     <ClInclude Include="EnigmaMachineTypes.h" />
     <ClInclude Include="IReflector.h" />
     <ClInclude Include="IRotor.h" />
+    <ClInclude Include="Logging.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Reflector.h" />
     <ClInclude Include="ReflectorFactory.h" />
