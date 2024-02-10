@@ -154,15 +154,14 @@ namespace enigmaSimulator {
                 RotorContactStr[currentLetter])
         }
 
-#ifdef __OLD_CODE__
-        # If a plugboard exists for machine then encode through it.
-        if self._plugboard is not None:
-            current_letter = self._plugboard.get_plug(current_letter)
+        // If a plugboard exists for machine then encode through it.
+        if (plugboard_)
+        {
+            currentLetter = plugboard_->GetPlug (currentLetter);
+        }
 
-        self._logger.log_debug(f"Output letter '{current_letter.name}'")
-        self._logger.log_debug("*********************************************")
-
-#endif
+        DEBUG_LOG ("Output letter : '%s'\n", RotorContactStr[currentLetter])
+        DEBUG_LOG ("*********************************************")
 
         // Return encoded character.
         return currentLetter;
