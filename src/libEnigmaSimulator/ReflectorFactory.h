@@ -15,7 +15,7 @@
 #ifndef REFLECTORFACTORY_H
 #define REFLECTORFACTORY_H
 #include <string>
-#include "Reflector.h"
+#include "IReflector.h"
 
 namespace enigmaSimulator {
 
@@ -32,7 +32,7 @@ namespace enigmaSimulator {
     const std::string ENIGMA_M4_REFLECTOR_UKW_B = "EnigmaM4_Reflector_UKW-B";
     const std::string ENIGMA_M4_REFLECTOR_UKW_C = "EnigmaM4_Reflector_UKW-C";
 
-    const Reflector CreateReflector (std::string reflectorName);
+    IReflector *CreateReflector (std::string reflectorName);
 
 }   // namespace enigmaSimulator
 

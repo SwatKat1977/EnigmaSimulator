@@ -69,7 +69,7 @@ namespace enigmaSimulator {
             DEBUG_LOG("Machine is using a plugboard\n")
             plugboard_ = new Plugboard();
         }
-#ifdef __IMPLEMENT_REFLECTOR__
+
         ReflectorNamesList validReflectors = modelDetails.AllReflectors();
         if (std::find(validReflectors.begin(),
                       validReflectors.end(),
@@ -78,8 +78,9 @@ namespace enigmaSimulator {
             lastError_ = "Unknown relector '" + reflectorName + "'";
             return false;
         }
-#endif
-        reflector_ = nullptr;
+
+        //auto reflector = CreateReflector (reflectorName);
+        reflector_ = CreateReflector (reflectorName);
         DEBUG_LOG("Using reflector '%s'\n", reflectorName.c_str())
 
         is_configured_ = true;

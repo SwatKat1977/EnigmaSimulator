@@ -14,6 +14,7 @@
 */
 #include <map>
 #include "ReflectorFactory.h"
+#include "Reflector.h"
 
 namespace enigmaSimulator {
 
@@ -35,7 +36,7 @@ namespace enigmaSimulator {
         { ENIGMA_M4_REFLECTOR_UKW_C, "RDOBJNTKVEHMLFCWZAXGYIPSUQ" }
     };
 
-    const Reflector CreateReflector (std::string name)
+    IReflector *CreateReflector (std::string name)
     {
         ReflectorsMap::iterator it = REFLECTORS.find (name);
 
@@ -44,7 +45,7 @@ namespace enigmaSimulator {
             throw std::runtime_error ("Invalid reflector '" + name + "'");
         }
 
-        return Reflector (name, RotorWiringLayout (it->second));
+        return new Reflector (name, RotorWiringLayout (it->second));
     }
 
 }   // namespace enigmaSimulator
