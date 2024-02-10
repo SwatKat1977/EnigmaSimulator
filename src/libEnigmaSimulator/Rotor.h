@@ -14,15 +14,13 @@
 */
 #ifndef ROTOR_H
 #define ROTOR_H
-#include <string>
 #include <vector>
-#include "RotorContact.h"
-#include "RotorWiringLayout.h"
+#include "IRotor.h"
 
 namespace enigmaSimulator {
 
     // Class representing an Enigma rotor wheel / drum / Walzen.
-    class Rotor
+    class Rotor : public IRotor
     {
     public:
         Rotor (
@@ -52,13 +50,13 @@ namespace enigmaSimulator {
 
         bool WillStepNext ();
 
-        RotorContact OffsetContactPosition (RotorContact contact, const int offset);
-
     protected:
         std::string rotor_name_;
         RotorWiringLayout wiring_;
         std::vector<RotorContact> notches_;
         RotorContact rotor_position_;
+
+        RotorContact OffsetContactPosition (RotorContact contact, const int offset);
     };
 
 }   // namespace enigmaSimulator
