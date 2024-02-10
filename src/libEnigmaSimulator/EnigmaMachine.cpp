@@ -130,9 +130,8 @@ namespace enigmaSimulator {
 
             DEBUG_LOG ("<==== ROTOR '%s' ====>\n",
                 rotor->second->RotorName ().c_str ())
-            DEBUG_LOG ("Rotor | Passing '%s' to %s returned '%s'\n",
+            DEBUG_LOG ("Rotor | Passing '%s' returned '%s'\n",
                 RotorContactStr[oldLetter],
-                rotor->second->RotorName().c_str(),
                 RotorContactStr[currentLetter])
         }
 
@@ -142,18 +141,20 @@ namespace enigmaSimulator {
         DEBUG_LOG ("[Reflector] '%s' => '%s'\n",
             RotorContactStr[oldLetter], RotorContactStr[currentLetter]);
 
+        DEBUG_LOG ("Passing letter through rotors from left to right\n")
+        for (auto rotor = rotors_.begin (); rotor != rotors_.end (); ++rotor)
+        {
+            oldLetter = currentLetter;
+            currentLetter = rotor->second->Encrypt (currentLetter);
+
+            DEBUG_LOG ("<==== ROTOR '%s' ====>\n",
+                rotor->second->RotorName ().c_str ())
+            DEBUG_LOG ("Rotor | Passing '%s' returned '%s'\n",
+                RotorContactStr[oldLetter],
+                RotorContactStr[currentLetter])
+        }
+
 #ifdef __OLD_CODE__
-        self._logger.log_debug ("Passing letter through rotors from left to right");
-
-        # Pass the letter through the rotors from left to right.
-        for rotor in self._rotors:
-            old_letter = RotorContact(current_letter).name
-            current_letter = rotor.encrypt(current_letter, forward=False)
-
-            debug_msg = f"Passing '{old_letter}' to {rotor.name} =>" + \
-                        f"'{RotorContact(current_letter).name}'"
-            self._logger.log_debug(debug_msg)
-
         # If a plugboard exists for machine then encode through it.
         if self._plugboard is not None:
             current_letter = self._plugboard.get_plug(current_letter)
@@ -264,3 +265,4 @@ namespace enigmaSimulator {
 }   // namespace enigmaSimulator
 
 // # 253 #
+// #### 268 ####
