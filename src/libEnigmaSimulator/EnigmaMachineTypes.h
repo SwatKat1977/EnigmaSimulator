@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include "EnigmaMachineType.h"
+#include "ReflectorFactory.h"
 #include "RotorFactory.h"
 #include "EnigmaMachineDefinition.h"
 
@@ -37,12 +38,15 @@ namespace enigmaSimulator {
             "Enigma1",
             enigmaSimulator::kRotorCount_3,
             true,
-            enigmaSimulator::RotorNamesList { ENIGMA_1_I, 
-                                              ENIGMA_1_II,
-                                              ENIGMA_1_III,
-                                              ENIGMA_1_IV,
-                                              ENIGMA_1_V },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::RotorNamesList { ENIGMA_1_ROTOR_I,
+                                              ENIGMA_1_ROTOR_II,
+                                              ENIGMA_1_ROTOR_III,
+                                              ENIGMA_1_ROTOR_IV,
+                                              ENIGMA_1_ROTOR_V },
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_1_REFLECTOR_UKW_A,
+              ENIGMA_1_REFLECTOR_UKW_B,
+              ENIGMA_1_REFLECTOR_UKW_C }
           )
         },
 
@@ -59,16 +63,18 @@ namespace enigmaSimulator {
             "M3",
             enigmaSimulator::kRotorCount_3,
             true,
-            enigmaSimulator::RotorNamesList { ENIGMA_M3_I, 
-                                              ENIGMA_M3_II,
-                                              ENIGMA_M3_III,
-                                              ENIGMA_M3_IV,
-                                              ENIGMA_M3_V,
-                                              ENIGMA_M3_VI,
-                                              ENIGMA_M3_VII,
-                                              ENIGMA_M3_VIII,
+            enigmaSimulator::RotorNamesList { ENIGMA_M3_ROTOR_I,
+                                              ENIGMA_M3_ROTOR_II,
+                                              ENIGMA_M3_ROTOR_III,
+                                              ENIGMA_M3_ROTOR_IV,
+                                              ENIGMA_M3_ROTOR_V,
+                                              ENIGMA_M3_ROTOR_VI,
+                                              ENIGMA_M3_ROTOR_VII,
+                                              ENIGMA_M3_ROTOR_VIII,
                                               },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_M3_REFLECTOR_UKW_B,
+              ENIGMA_M3_REFLECTOR_UKW_C }
           )
         },
 
@@ -88,16 +94,18 @@ namespace enigmaSimulator {
             "M4",
             enigmaSimulator::kRotorCount_4,
             true,
-            enigmaSimulator::RotorNamesList { ENIGMA_M4_I, 
-                                              ENIGMA_M4_II,
-                                              ENIGMA_M4_III,
-                                              ENIGMA_M4_IV,
-                                              ENIGMA_M4_V,
-                                              ENIGMA_M4_VI,
-                                              ENIGMA_M4_VII,
-                                              ENIGMA_M4_VIII,
+            enigmaSimulator::RotorNamesList { ENIGMA_M4_ROTOR_I,
+                                              ENIGMA_M4_ROTOR_II,
+                                              ENIGMA_M4_ROTOR_III,
+                                              ENIGMA_M4_ROTOR_IV,
+                                              ENIGMA_M4_ROTOR_V,
+                                              ENIGMA_M4_ROTOR_VI,
+                                              ENIGMA_M4_ROTOR_VII,
+                                              ENIGMA_M4_ROTOR_VIII,
                                               },
-            enigmaSimulator::ReflectorNamesList { }
+            enigmaSimulator::ReflectorNamesList {
+              ENIGMA_M4_REFLECTOR_UKW_B,
+              ENIGMA_M4_REFLECTOR_UKW_C }
           )
         }
     };

@@ -35,7 +35,9 @@ int main (int argc, char** argv)
     bool status = machine.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
         enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
-        "novalue");
+        "Enigma1_Reflector_UKW-A");
+
+    machine.GetRotor(enigmaSimulator::kRotorPositionNumber_3);
 
     std::cout << "Status : " << std::boolalpha << status
               << " | Last error : " << machine.LastError() << std::endl;

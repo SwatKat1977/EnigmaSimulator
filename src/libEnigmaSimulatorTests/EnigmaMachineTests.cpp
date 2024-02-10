@@ -21,7 +21,7 @@ TEST_F(EnigmaMachineTest, ConfigureIncorrectRotors)
     bool status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
         enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II"},
-        "novalue");
+        "Enigma1_Reflector_UKW-A");
 
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Invalid number of rotors specified");
@@ -33,7 +33,7 @@ TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
     bool status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
         enigmaSimulator::RotorNamesList { "Enigma1_A", "Enigma1_II", "Enigma1_III"},
-        "novalue");
+        "Enigma1_Reflector_UKW-A");
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Unknown rotor 'Enigma1_A'");
     EXPECT_FALSE(machine_.IsConfigured());
@@ -49,7 +49,7 @@ TEST_F(EnigmaMachineTest, ConfigureUnknownRotor)
     status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
         enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_C"},
-        "novalue");
+        "Enigma1_Reflector_UKW-A");
     EXPECT_FALSE(status) << "Expecting configuration to return false";
     EXPECT_EQ(machine_.LastError(), "Unknown rotor 'Enigma1_C'");
     EXPECT_FALSE(machine_.IsConfigured());
@@ -60,9 +60,20 @@ TEST_F(EnigmaMachineTest, ConfigureVerifyPlugboard)
     bool status = machine_.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
         enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
-        "novalue");
+        "Enigma1_Reflector_UKW-A");
     EXPECT_TRUE(status) << "Expecting configuration to return true (success)";
     EXPECT_NE(machine_.MachinePlugboard(), nullptr) << "Plugboard should not be nullptr";
     EXPECT_EQ(machine_.LastError(), "");
     EXPECT_TRUE(machine_.IsConfigured());
+}
+
+TEST_F(EnigmaMachineTest, ConfigureUnknownReflector)
+{
+    bool status = machine_.Configure(
+        enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
+        enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
+        "This is invalid");
+    EXPECT_FALSE(status) << "Expecting configuration to return false (unsuccess)";
+    EXPECT_EQ(machine_.LastError(), "Unknown relector 'This is invalid'");
+    EXPECT_FALSE(machine_.IsConfigured());
 }

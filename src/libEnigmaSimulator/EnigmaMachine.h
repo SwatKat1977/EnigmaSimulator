@@ -64,13 +64,15 @@ namespace enigmaSimulator {
 
         void GetRotorPosition(int rotorNo);
 
+        IRotor *GetRotor(RotorPositionNumber);
+
     protected:
         bool is_configured_;
         std::string lastError_;
         Plugboard *plugboard_;
         IReflector *reflector_;
         EnigmaMachineDefinition type_;
-        std::map<RotorPositionNumber, std::unique_ptr<Rotor>> rotors_;
+        std::map<RotorPositionNumber, IRotor *> rotors_;
 
         void StepRotors( );
 
