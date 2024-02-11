@@ -175,7 +175,7 @@ namespace enigmaSimulator {
                                                const int offset)
     {
        DEBUG_LOG ("Rotor::OffsetContactPosition() Entering...\n")
-        DEBUG_LOG("=? Offsetting Rotor '%s' (%d) by %d positions\n",
+        DEBUG_LOG("=> Offsetting Rotor '%s' (%d) by %d positions\n",
                RotorContactStr[contact], contact, offset)
 
         int new_position = contact + offset;
