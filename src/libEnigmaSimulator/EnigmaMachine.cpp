@@ -186,55 +186,73 @@ namespace enigmaSimulator {
             return self._rotors[rotor_no].position
 #endif
 
+    /*
+    Rotor stepping occurs from the right to left when a stepping notch is hit.
+    */
     void EnigmaMachine::StepRotors()
     {
-#ifdef __OLD_CODE__
-        '''
-        Rotor stepping occurs from the right to left whilst a stepping
-        notch is encountered.
-        '''
+        auto details = ENIGMA_MODELS.find(type_)->second;
 
-        # Step next rotor flag.
-        will_step_next_rotor = False
+/*
+    enum RotorPositionNumber
+    {
+        kRotorPositionNumber_1 = 0,
+        kRotorPositionNumber_2 = 1,
+        kRotorPositionNumber_3 = 2,
+        kRotorPositionNumber_4 = 3
+    };
+*/
 
-        ######################################
-        ### Assume 3 rotor machine for now ###
-        ######################################
-        no_of_rotors = 3
+        int totalRotors = static_cast<int>(details.TotalRotors());
 
-        # Determine the furthest right rotor (0 indexed list)
-        rotor_position = no_of_rotors -1
+        // Step next rotor flag.
+        bool willStepNextRotor = false;
 
-        # Because the right-hand pawl has no rotor or ring to its right, rotor
-        # stepping happens with every key depression.
-        rotor = self._rotors[rotor_position]
-        will_step_next_rotor = rotor.will_step_next()
-        rotor.step()
+        // Determine the furthest right rotor (0 indexed list)
+        //RotorPositionNumber position = RotorPositionNumber(totalRotors -1);
+        int position = totalRotors -1;
 
-        # If there is a double-step then perform it and reset the flag.
-        if self._double_step:
-            print("[DEBUG] Doing a double step")
-            self._rotors[0].step()
-            self._rotors[1].step()
-            self._double_step = False
+        while( position >= kRotorPositionNumber_1)
+        {
+            IRotor *rotor = rotors_[RotorPositionNumber(position)];
 
-        # Only continue if there is more If stepping to be done.
-        if not will_step_next_rotor:
-            return
+            if (static_cast<int>(position +1) == details.TotalRotors())
+            {
+                printf("[TMP] Furthest right rotor....\n");
+                //std::cout << "Rotor : " << rotor << std::endl;
+                // As the right-hand pawl has no rotor or ring to its right,
+                // rotor stepping happens with every key depression.
+                //willStepNextRotor = rotor->WillStepNext();
+                rotor->Step();
+            }
+            else
+            {
+                printf("[TMP] Rotor to step...\n");
+                rotor->Step();
+            }
 
-        # Move to next rotor.
-        rotor_position -= 1
-        rotor = self._rotors[rotor_position]
+#ifdef __IMPLEMENT_DOUBLE_STEP_CODE__   // Code to be ported
+            # If there is a double-step then perform it and reset the flag.
+            if self._double_step:
+                print("[DEBUG] Doing a double step")
+                self._rotors[0].step()
+                self._rotors[1].step()
+                self._double_step = False
+#endif  //  #ifdef __IMPLEMENT_DOUBLE_STEP_CODE__
 
-        # Step the next rotor.
-        rotor.step()
+            // Only continue if there is more stepping to be done.
+            if (!willStepNextRotor) return;
 
-        # If the 2nd rotor will step rotor 1 (left most one) then a double-step
-        # needs to take place.  This is where the middle rotor will step again
-        # next button press, along with the left one.
-        if rotor.will_step_next():
-            self._double_step = True
-#endif
+#ifdef __IMPLEMENT_DOUBLE_STEP_CODE__   // Code to be ported
+            # If the 2nd rotor will step rotor 1 (left most one) then a double-step
+            # needs to take place.  This is where the middle rotor will step again
+            # next button press, along with the left one.
+            if rotor.will_step_next():
+                self._double_step = True
+#endif  //  #ifdef __IMPLEMENT_DOUBLE_STEP_CODE__
+
+            position = position -= 1;
+        }
     }
 
     void EnigmaMachine::LogRotorStates(std::string prefix)
@@ -262,6 +280,3 @@ namespace enigmaSimulator {
     }
 
 }   // namespace enigmaSimulator
-
-// # 253 #
-// #### 268 ####
