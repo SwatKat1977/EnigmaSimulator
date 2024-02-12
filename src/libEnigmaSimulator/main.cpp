@@ -23,8 +23,6 @@ void LogDebugMessage(enigmaSimulator::LogLevel level,
     std::cout << "[" << levelStr << "] " << msg << std::endl;
 }
 
-//enigmaSimulator::DebugLog(__FUNCTION__, "This is a test, NCC-%d is %s", 1701, "USS-Enterprise");
-
 int main (int argc, char** argv)
 {
     enigmaSimulator::AssignLoggingDebugCallback(LogDebugMessage);
