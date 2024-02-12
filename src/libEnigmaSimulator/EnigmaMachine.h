@@ -76,7 +76,7 @@ namespace enigmaSimulator {
 
         void StepRotors( );
 
-        void LogRotorStates(std::string prefix_str);
+        void LogRotorStates(std::string prefix);
     };
 
 }   // namespace enigmaSimulator

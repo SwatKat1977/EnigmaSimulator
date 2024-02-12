@@ -22,15 +22,37 @@ Copyright 2014-2023 Integrated Test Management Suite Development Team
 */
 #ifndef LOGGING_H
 #define LOGGING_H
+#include <string>
 
-namespace enigmaSimualator {
+namespace enigmaSimulator {
 
+    enum LogLevel
+    {
+        kLogLevel_info = 0,
+        kLogLevel_trace = 1
+    };
+
+    using DebugLoggingCallbackFunc = void (*)(
+        std::string functionName, std::string msg, bool clipped);
+    using TraceLoggingCallbackFunc = void (*)(
+        LogLevel level, std::string msg, bool clipped);
+
+    void AssignLoggingDebugCallback( DebugLoggingCallbackFunc callback );
+
+    void AssignLoggingTraceCallback( TraceLoggingCallbackFunc callback );
+
+    void DebugLog(std::string functionName, const char *format, ...);
+
+    void TraceLog(LogLevel level, const char *format, ...);
+
+#ifdef __OLD__
 #ifdef ENIGMASIM_DEBUG
 #    define DEBUG_LOG(...) printf (__VA_ARGS__);
 #else
 #    define DEBUG_LOG(...)
 #endif
+#endif
 
-}   // namespace enigmaSimualator
+}   // namespace enigmaSimulator
 
 #endif  // #ifndef LOGGING_H
