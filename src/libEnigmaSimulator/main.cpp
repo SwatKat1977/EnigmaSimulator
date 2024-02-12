@@ -30,16 +30,33 @@ int main (int argc, char** argv)
 
     auto machine = enigmaSimulator::EnigmaMachine();
     bool status = machine.Configure(
-        enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
-        enigmaSimulator::RotorNamesList { "Enigma1_I", "Enigma1_II", "Enigma1_III"},
-        "Enigma1_Reflector_UKW-A");
+        enigmaSimulator::kEnigmaMachineDefinition_EnigmaModelM3,
+        enigmaSimulator::RotorNamesList { "EnigmaM3_I", "EnigmaM3_II", "EnigmaM3_III"},
+        "EnigmaM3_Reflector_UKW-B");
 
     if (!status)
     {
         std::cout << "Last error : " << machine.LastError () << std::endl;
+        return 0;
     }
 
-    machine.PressKey(enigmaSimulator::kRotorContact_A);
+    std::cout << "Left Rotor : "
+              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_1)->RotorName()
+              << std::endl;
+    std::cout << "Middle Rotor : "
+              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_2)->RotorName()
+              << std::endl;
+    std::cout << "Right Rotor : "
+              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_3)->RotorName()
+              << std::endl;
+
+    std::cout << "ENCODED 'A' : "
+              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
+              << std::endl;
+    return 0;
+    std::cout << "ENCODED 'A' : "
+              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
+              << std::endl;
 
     return 0;
 }

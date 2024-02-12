@@ -131,6 +131,8 @@ namespace enigmaSimulator {
             currentLetter = rotor->second->Encrypt (currentLetter);
 
             DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "<===================================================>");
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "<==== ROTOR '%s' ====>",
                 rotor->second->RotorName ().c_str ());
             DebugLog( "EnigmaMachine::" + std::string(__func__),
