@@ -85,21 +85,25 @@ namespace enigmaSimulator {
         but the rotor is in position 'B' (forward 1) so 'J' is returned.
         */
 
-        DEBUG_LOG ("Rotor::Encrypt() Entering...\n")
-        DEBUG_LOG ("=> Contact '%s' (%d) | rotor : '%s' | forward : %d\n",
-            RotorContactStr[contact], contact, rotor_name_.c_str(), forward)
-        DEBUG_LOG ("=> Current Rotor position : '%s' (%d)\n",
-            RotorContactStr[rotor_position_], rotor_position_)
-
-        DEBUG_LOG("=> Offset : %d\n", rotor_position_ - kRotorContact_A)
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "Entering...");
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "=> Contact '%s' (%d) | rotor : '%s' | forward : %d",
+            RotorContactStr[contact], contact, rotor_name_.c_str(), forward);
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "=> Current Rotor position : '%s' (%d)",
+            RotorContactStr[rotor_position_], rotor_position_);
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "=> Offset : %d", rotor_position_ - kRotorContact_A);
 
         // STEP 1: Correct the input contact entrypoint for position
         auto contact_position = OffsetContactPosition (
             contact, rotor_position_ - kRotorContact_A);
 
-        DEBUG_LOG("|==== STEP 1: Correct input contact with rotor position ====|\n")
-        DEBUG_LOG (
-            "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)\n",
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "|==== STEP 1: Correct input contact with rotor position ====|");
+        DebugLog( "Rotor::" + std::string(__func__),
+            "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)",
             RotorContactStr[contact],
             contact,
             RotorContactStr[contact_position],
@@ -110,23 +114,26 @@ namespace enigmaSimulator {
         if (forward)
         {
             output_contact = wiring_.GetDestination(contact_position);
-            DEBUG_LOG ("=> Forward destination contact for '%s' (%d) : '%s' (%d)\n",
+            DebugLog( "Rotor::" + std::string(__func__),
+                "=> Forward destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],
                 contact_position,
                 RotorContactStr[output_contact],
-                output_contact)
+                output_contact);
         }
         else
         {
             output_contact = wiring_.GetDestination (contact_position, true);
-            DEBUG_LOG ("=> Backwards destination contact for '%s' (%d) : '%s' (%d)\n",
+            DebugLog( "Rotor::" + std::string(__func__),
+                "=> Backwards destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],
                 contact_position,
                 RotorContactStr[output_contact],
-                output_contact)
+                output_contact);
         }
 
-        DEBUG_LOG("|==== STEP 2: Correct input contact with ring position ====|\n")
+        DebugLog( "Rotor::" + std::string(__func__),
+            "|==== STEP 2: Correct input contact with ring position ====|");
         // STEP 2: Correct input contact using ring position
         // Ring positions are not implemented - untested code
 
@@ -145,17 +152,19 @@ namespace enigmaSimulator {
             final_contact = output_contact
 #endif
 
-        DEBUG_LOG("|==== STEP 3: Correct input contact with rotor offset ====|\n")
+        DebugLog( "Rotor::" + std::string(__func__),
+            "|==== STEP 3: Correct input contact with rotor offset ====|");
 
         // STEP 3: Take rotor offset into account
-        DEBUG_LOG (
-            "=> Adjusting destination rotor for offset : '%s' (%d) by %d\n",
-        RotorContactStr[output_contact], output_contact, -rotor_position_)
+        DebugLog( "Rotor::" + std::string(__func__),
+            "=> Adjusting destination rotor for offset : '%s' (%d) by %d",
+        RotorContactStr[output_contact], output_contact, -rotor_position_);
 
         output_contact = OffsetContactPosition (
             output_contact, -(rotor_position_ - kRotorContact_A));
-        DEBUG_LOG ("=> Outgoing Rotor position = '%s' (%d)\n",
-        RotorContactStr[output_contact], output_contact)
+        DebugLog( "Rotor::" + std::string(__func__),
+            "=> Outgoing Rotor position = '%s' (%d)",
+        RotorContactStr[output_contact], output_contact);
 
         return output_contact;
     }
@@ -174,27 +183,33 @@ namespace enigmaSimulator {
     RotorContact Rotor::OffsetContactPosition (RotorContact contact,
                                                const int offset)
     {
-       DEBUG_LOG ("Rotor::OffsetContactPosition() Entering...\n")
-        DEBUG_LOG("=> Offsetting Rotor '%s' (%d) by %d positions\n",
-               RotorContactStr[contact], contact, offset)
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "Entering...");
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "=> Offsetting Rotor '%s' (%d) by %d positions",
+               RotorContactStr[contact], contact, offset);
 
         int new_position = contact + offset;
 
         if (new_position > kRotorContact_Z)
         {
-            DEBUG_LOG("=> Positive rotor offset\n")
+            DebugLog( "Rotor::" + std::string(__func__),
+                      "=> Positive rotor offset");
             new_position = (new_position % MAX_CONTACT_NO); // - 1;
         }
         else if (new_position < kRotorContact_A)
         {
-            DEBUG_LOG("=> Negative rotor offset\n")
+            DebugLog( "Rotor::" + std::string(__func__),
+                "=> Negative rotor offset");
             new_position = MAX_CONTACT_NO + new_position;
         }
 
-        DEBUG_LOG("=> Offsetted rotor is '%s' (%d)\n",
-               RotorContactStr[new_position], new_position)
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "=> Offsetted rotor is '%s' (%d)",
+               RotorContactStr[new_position], new_position);
 
-       DEBUG_LOG ("Rotor::OffsetContactPosition() Leaving...\n")
+       DebugLog( "Rotor::" + std::string(__func__),
+                 "Rotor::OffsetContactPosition() Leaving...");
         return RotorContact(new_position);
     }
 

@@ -5,6 +5,7 @@ CPPFLAGS+=-DENIGMASIM_DEBUG
 endif
 
 OBJS = EnigmaMachine.o \
+	Logging.o \
 	Plugboard.o \
 	Reflector.o \
 	ReflectorFactory.o \

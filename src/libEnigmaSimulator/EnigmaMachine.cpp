@@ -36,7 +36,7 @@ namespace enigmaSimulator {
 
         auto modelDetails = ENIGMA_MODELS.find(machineType)->second;
 
-        DEBUG_LOG("Configuring machine...\n")
+        TraceLog(kLogLevel_info, "Configuring machine...");
 
         if (rotors.size() != modelDetails.TotalRotors())
         {
@@ -58,13 +58,13 @@ namespace enigmaSimulator {
             }
 
             rotors_.insert ( { position, CreateRotor((*rotorName)) } );
-            DEBUG_LOG("Added rotor '%s'\n", (*rotorName).c_str())
+            TraceLog (kLogLevel_info, "Added rotor '%s'", (*rotorName).c_str());
             position = static_cast<RotorPositionNumber>(static_cast<int>(position) + 1);
         }
 
         if (modelDetails.HasPlugboard())
         {
-            DEBUG_LOG("Machine is using a plugboard\n")
+            TraceLog (kLogLevel_info, "Machine is using a plugboard");
             plugboard_ = new Plugboard();
         }
 
@@ -78,7 +78,7 @@ namespace enigmaSimulator {
         }
 
         reflector_ = CreateReflector (reflectorName);
-        DEBUG_LOG("Using reflector '%s'\n", reflectorName.c_str())
+        TraceLog (kLogLevel_info, "Using reflector '%s'", reflectorName.c_str());
 
         is_configured_ = true;
 
@@ -96,8 +96,8 @@ namespace enigmaSimulator {
     {
         RotorContact currentLetter = key;
 
-        DEBUG_LOG("EnigmaMachine::press_key() received : '%s'\n",
-            RotorContactStr[key])
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+            "received : '%s'", RotorContactStr[key]);
 
         // To encrypt a key entry it needs to run through the circuit:
         // plug board => rotors => reflector => rotors => plugboard.
@@ -113,11 +113,13 @@ namespace enigmaSimulator {
         if (plugboard_)
         {
             currentLetter = plugboard_->GetPlug(key);
-            DEBUG_LOG("Plugboard | Passed '%s' in and returned '%s'\n",
-                      RotorContactStr[key], RotorContactStr[currentLetter])
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "Plugboard | Passed '%s' in and returned '%s'",
+                      RotorContactStr[key], RotorContactStr[currentLetter]);
         }
 
-        DEBUG_LOG("Passing letter through rotors from right to left\n")
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+                  "Passing letter through rotors from right to left");
 
         // Pass the letter through the rotors from right to left.
         for (auto rotor = rotors_.rbegin (); rotor != rotors_.rend (); ++rotor)
@@ -128,30 +130,36 @@ namespace enigmaSimulator {
             // take into account the position of the rotor.
             currentLetter = rotor->second->Encrypt (currentLetter);
 
-            DEBUG_LOG ("<==== ROTOR '%s' ====>\n",
-                rotor->second->RotorName ().c_str ())
-            DEBUG_LOG ("Rotor | Passing '%s' returned '%s'\n",
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "<==== ROTOR '%s' ====>",
+                rotor->second->RotorName ().c_str ());
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "Rotor | Passing '%s' returned '%s'",
                 RotorContactStr[oldLetter],
-                RotorContactStr[currentLetter])
+                RotorContactStr[currentLetter]);
         }
 
         // Pass the letter through the reflector.
         RotorContact oldLetter = currentLetter;
         currentLetter = reflector_->Encrypt (currentLetter);
-        DEBUG_LOG ("[Reflector] '%s' => '%s'\n",
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+                  "[Reflector] '%s' => '%s'",
             RotorContactStr[oldLetter], RotorContactStr[currentLetter]);
 
-        DEBUG_LOG ("Passing letter through rotors from left to right\n")
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+                  "Passing letter through rotors from left to right");
         for (auto rotor = rotors_.begin (); rotor != rotors_.end (); ++rotor)
         {
             oldLetter = currentLetter;
             currentLetter = rotor->second->Encrypt (currentLetter);
 
-            DEBUG_LOG ("<==== ROTOR '%s' ====>\n",
-                rotor->second->RotorName ().c_str ())
-            DEBUG_LOG ("Rotor | Passing '%s' returned '%s'\n",
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "<==== ROTOR '%s' ====>",
+                rotor->second->RotorName ().c_str ());
+            DebugLog( "EnigmaMachine::" + std::string(__func__),
+                      "Rotor | Passing '%s' returned '%s'",
                 RotorContactStr[oldLetter],
-                RotorContactStr[currentLetter])
+                RotorContactStr[currentLetter]);
         }
 
         // If a plugboard exists for machine then encode through it.
@@ -160,8 +168,10 @@ namespace enigmaSimulator {
             currentLetter = plugboard_->GetPlug (currentLetter);
         }
 
-        DEBUG_LOG ("Output letter : '%s'\n", RotorContactStr[currentLetter])
-        DEBUG_LOG ("*********************************************")
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+                  "Output letter : '%s'", RotorContactStr[currentLetter]);
+        DebugLog( "EnigmaMachine::" + std::string(__func__), 
+                  "*********************************************");
 
         // Return encoded character.
         return currentLetter;
@@ -192,17 +202,6 @@ namespace enigmaSimulator {
     void EnigmaMachine::StepRotors()
     {
         auto details = ENIGMA_MODELS.find(type_)->second;
-
-/*
-    enum RotorPositionNumber
-    {
-        kRotorPositionNumber_1 = 0,
-        kRotorPositionNumber_2 = 1,
-        kRotorPositionNumber_3 = 2,
-        kRotorPositionNumber_4 = 3
-    };
-*/
-
         int totalRotors = static_cast<int>(details.TotalRotors());
 
         // Step next rotor flag.

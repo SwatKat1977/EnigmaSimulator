@@ -8,9 +8,28 @@
 #include "RotorFactory.h"
 #include "EnigmaMachineTypes.h"
 #include "EnigmaMachine.h"
+#include "Logging.h"
+
+void LogDebugMessage(std::string functionName, std::string msg, bool clipped)
+{
+    std::cout << "[DEBUG] " << functionName << "() " << msg << std::endl;
+}
+
+void LogDebugMessage(enigmaSimulator::LogLevel level,
+    std::string msg, bool clipped)
+{
+    std::string levelStr = ((level == enigmaSimulator::kLogLevel_info))
+        ? "INFO" : "TRACE";
+    std::cout << "[" << levelStr << "] " << msg << std::endl;
+}
+
+//enigmaSimulator::DebugLog(__FUNCTION__, "This is a test, NCC-%d is %s", 1701, "USS-Enterprise");
 
 int main (int argc, char** argv)
 {
+    enigmaSimulator::AssignLoggingDebugCallback(LogDebugMessage);
+    enigmaSimulator::AssignLoggingTraceCallback(LogDebugMessage);
+
     auto machine = enigmaSimulator::EnigmaMachine();
     bool status = machine.Configure(
         enigmaSimulator::kEnigmaMachineDefinition_Enigma1,
