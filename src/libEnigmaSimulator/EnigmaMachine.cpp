@@ -126,15 +126,17 @@ namespace enigmaSimulator {
         {
             RotorContact oldLetter = currentLetter;
 
-            // Get substituted letter from each rotor. The returned value will
-            // take into account the position of the rotor.
-            currentLetter = rotor->second->Encrypt (currentLetter);
-
             DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "<===================================================>");
             DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "<==== ROTOR '%s' ====>",
                 rotor->second->RotorName ().c_str ());
+            rotor->second->PrettyPrintWiring();
+
+            // Get substituted letter from each rotor. The returned value will
+            // take into account the position of the rotor.
+            currentLetter = rotor->second->Encrypt (currentLetter);
+
             DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "Rotor | Passing '%s' returned '%s'",
                 RotorContactStr[oldLetter],
@@ -153,15 +155,18 @@ namespace enigmaSimulator {
         for (auto rotor = rotors_.begin (); rotor != rotors_.end (); ++rotor)
         {
             oldLetter = currentLetter;
-            currentLetter = rotor->second->Encrypt (currentLetter);
+            currentLetter = rotor->second->Encrypt (currentLetter, false);
 
             DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "<==== ROTOR '%s' ====>",
                 rotor->second->RotorName ().c_str ());
+            rotor->second->PrettyPrintWiring();
             DebugLog( "EnigmaMachine::" + std::string(__func__),
                       "Rotor | Passing '%s' returned '%s'",
                 RotorContactStr[oldLetter],
                 RotorContactStr[currentLetter]);
+            rotorOffset = rotor->second->RotorPosition()
+                        - kRotorContact_A;
         }
 
         // If a plugboard exists for machine then encode through it.
@@ -210,7 +215,6 @@ namespace enigmaSimulator {
         bool willStepNextRotor = false;
 
         // Determine the furthest right rotor (0 indexed list)
-        //RotorPositionNumber position = RotorPositionNumber(totalRotors -1);
         int position = totalRotors -1;
 
         while( position >= kRotorPositionNumber_1)
