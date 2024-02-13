@@ -120,7 +120,7 @@ namespace enigmaSimulator {
         }
         else
         {
-            output_contact = wiring_.GetDestination (contact_position, true);
+            output_contact = wiring_.GetDestination (contact_position, false);
             DebugLog( "Rotor::" + std::string(__func__),
                 "=> Backwards destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],

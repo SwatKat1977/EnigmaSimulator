@@ -11,6 +11,7 @@ OBJS = ../libEnigmaSimulator/EnigmaMachine.o \
 	../libEnigmaSimulator/Plugboard.o \
 	../libEnigmaSimulator/Reflector.o \
 	../libEnigmaSimulator/ReflectorFactory.o \
+	../libEnigmaSimulator/Logging.o \
 	EnigmaMachineTests.o \
 	RotorTests.o \
 	ReflectorTests.o \

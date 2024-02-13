@@ -72,8 +72,10 @@ TEST_F(RotorTest, EncryptNoPositionOrRingOffset)
         std::vector<enigmaSimulator::RotorContact>());
 
     auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
-
     ASSERT_EQ(output, enigmaSimulator::kRotorContact_E);
+
+    output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
+    ASSERT_EQ(output, enigmaSimulator::kRotorContact_U);
 }
 
 TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
@@ -94,10 +96,14 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
         valid_wiring_layout_,
         std::vector<enigmaSimulator::RotorContact>());
 
+    // Forward test
     rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
     auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
-
     ASSERT_EQ(output, enigmaSimulator::kRotorContact_J);
+
+    // Reverse test
+    output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
+    ASSERT_EQ(output, enigmaSimulator::kRotorContact_V);
 
     /*
     Test encrypting a letter with a longer position change, the position is
