@@ -42,14 +42,14 @@ namespace enigmaSimulator {
             throw std::runtime_error ("Source and destination the same");
         }
 
-        if ((entries_[src] != kRotorContact_end) ||
-            (entries_[dest] != kRotorContact_end))
+        if ((entries_.find(src)->second != kRotorContact_end) ||
+            (entries_.find(dest)->second != kRotorContact_end))
         {
             throw std::runtime_error ("Source / destination in use");
         }
 
-        entries_.insert ({src, dest});
-        entries_.insert ({dest, src});
+        entries_.find(src)->second = dest;
+        entries_.find(dest)->second = src;
     }
 
     /*
