@@ -46,6 +46,11 @@ namespace enigmaSimulator {
             bool forward = true) = 0;
 
         virtual bool WillStepNext () = 0;
+
+        virtual RotorContact OffsetContactPosition (
+            RotorContact contact, const int offset) = 0;
+
+        virtual void PrettyPrintWiring() = 0;
     };
 
 }   // namespace enigmaSimulator
