@@ -86,15 +86,12 @@ namespace enigmaSimulator {
         */
 
         DebugLog( "Rotor::" + std::string(__func__),
-                  "Entering...");
-        DebugLog( "Rotor::" + std::string(__func__),
                   "=> Contact '%s' (%d) | rotor : '%s' | forward : %d",
             RotorContactStr[contact], contact, rotor_name_.c_str(), forward);
         DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Current Rotor position : '%s' (%d)",
-            RotorContactStr[rotor_position_], rotor_position_);
-        DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Offset : %d", rotor_position_ - kRotorContact_A);
+                  "=> Current Rotor position : '%s' (%d) is offset by %d",
+            RotorContactStr[rotor_position_], rotor_position_,
+            rotor_position_ - kRotorContact_A);
 
         // STEP 1: Correct the input contact entrypoint for position
         auto contact_position = OffsetContactPosition (
@@ -123,7 +120,7 @@ namespace enigmaSimulator {
         }
         else
         {
-            output_contact = wiring_.GetDestination (contact_position, true);
+            output_contact = wiring_.GetDestination (contact_position, false);
             DebugLog( "Rotor::" + std::string(__func__),
                 "=> Backwards destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],
@@ -184,8 +181,6 @@ namespace enigmaSimulator {
                                                const int offset)
     {
         DebugLog( "Rotor::" + std::string(__func__),
-                  "Entering...");
-        DebugLog( "Rotor::" + std::string(__func__),
                   "=> Offsetting Rotor '%s' (%d) by %d positions",
                RotorContactStr[contact], contact, offset);
 
@@ -208,9 +203,27 @@ namespace enigmaSimulator {
                   "=> Offsetted rotor is '%s' (%d)",
                RotorContactStr[new_position], new_position);
 
-       DebugLog( "Rotor::" + std::string(__func__),
-                 "Rotor::OffsetContactPosition() Leaving...");
         return RotorContact(new_position);
+    }
+
+    void Rotor::PrettyPrintWiring()
+    {
+        int contact = kRotorContact_A;
+        std::string src;
+        std::string dest;
+
+        while (contact <= kRotorContact_Z)
+        {
+            src += RotorContactStr[contact];
+            dest += RotorContactStr[wiring_.GetDestination(
+                RotorContact(contact))];
+            contact++;
+        }
+
+        TraceLog( kLogLevel_trace,
+                  "Source      : %s", src.c_str());
+        TraceLog( kLogLevel_trace,
+                  "Destination : %s", dest.c_str());
     }
 
 }   // namespace enigmaSimulator

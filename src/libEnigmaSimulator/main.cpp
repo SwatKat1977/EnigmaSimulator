@@ -53,7 +53,9 @@ int main (int argc, char** argv)
     std::cout << "ENCODED 'A' : "
               << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
               << std::endl;
-    return 0;
+    std::cout << "ENCODED 'A' : "
+              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
+              << std::endl;
     std::cout << "ENCODED 'A' : "
               << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
               << std::endl;
