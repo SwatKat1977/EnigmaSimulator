@@ -165,8 +165,6 @@ namespace enigmaSimulator {
                       "Rotor | Passing '%s' returned '%s'",
                 RotorContactStr[oldLetter],
                 RotorContactStr[currentLetter]);
-            rotorOffset = rotor->second->RotorPosition()
-                        - kRotorContact_A;
         }
 
         // If a plugboard exists for machine then encode through it.

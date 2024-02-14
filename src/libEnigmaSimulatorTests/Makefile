@@ -13,6 +13,7 @@ OBJS = ../libEnigmaSimulator/EnigmaMachine.o \
 	../libEnigmaSimulator/ReflectorFactory.o \
 	../libEnigmaSimulator/Logging.o \
 	EnigmaMachineTests.o \
+	PlugboardTests.o \
 	RotorTests.o \
 	ReflectorTests.o \
 	Main.o
