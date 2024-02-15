@@ -1,27 +1,5 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# pyenv
-.python-version
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Python coverage
-.coverage
-
 # Platform specific - Mac
 .DS_Store
-
-#### C++ Git Ignores ####
 
 # Visual Studio specific
 .vs
@@ -29,5 +7,5 @@ venv.bak/
 *.filters
 x64
 
-# Linux / Mac specific
+# Platform specific - Linux / Mac
 *.o
