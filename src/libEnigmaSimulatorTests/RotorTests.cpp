@@ -141,3 +141,24 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
         << "Expected 'B', got '"
         << enigmaSimulator::RotorContactStr[output] << "'";
 }
+
+/*
+    test : will_step_next()
+        # Test will not step.
+        assertEqual : rotor.will_step_next(), False
+
+        # Test will step.
+        rotor.position = RotorContact.Q.value
+        assertEqual : rotor.will_step_next(), true
+
+    test :step
+        # Simple step test from positioh 1 to 2.
+        self.assertEqual(self._valid_pass_through_rotor.position, 0)
+        self._valid_pass_through_rotor.step()
+        self.assertEqual(self._valid_pass_through_rotor.position, 1)
+
+        # Step test from position 25 (Z) to 1 (A).
+        self._valid_pass_through_rotor.position = 25
+        self._valid_pass_through_rotor.step()
+        self.assertEqual(self._valid_pass_through_rotor.position, 1)
+*/
