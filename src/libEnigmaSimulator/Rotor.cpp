@@ -84,27 +84,26 @@ namespace enigmaSimulator {
         forward 1 = 'A'), e.g.Enigma Rotor 1 will return 'E' for a letter 'A',
         but the rotor is in position 'B' (forward 1) so 'J' is returned.
         */
-
+        DebugLog( "Rotor::" + std::string(__func__), "Rotor '%s'",
+            rotor_name_.c_str() );
         DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Contact '%s' (%d) | rotor : '%s' | forward : %d",
-            RotorContactStr[contact], contact, rotor_name_.c_str(), forward);
+                  "=> Input : '%s' (%d) | forward : %s",
+            RotorContactStr[contact], contact, forward ? "Y" : "N");
         DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Current Rotor position : '%s' (%d) is offset by %d",
+                  "=> Rotor position : '%s' (%d) | Offset by %d",
             RotorContactStr[rotor_position_], rotor_position_,
             rotor_position_ - kRotorContact_A);
 
         // STEP 1: Correct the input contact entrypoint for position
+        int rotorOffset = rotor_position_ - kRotorContact_A;
         auto contact_position = OffsetContactPosition (
-            contact, rotor_position_ - kRotorContact_A);
-
+            contact, rotorOffset);
         DebugLog( "Rotor::" + std::string(__func__),
                   "|==== STEP 1: Correct input contact with rotor position ====|");
         DebugLog( "Rotor::" + std::string(__func__),
             "=> Contact after position correction rotor : '%s' (%d) => '%s' (%d)",
-            RotorContactStr[contact],
-            contact,
-            RotorContactStr[contact_position],
-            contact_position);
+            RotorContactStr[contact], contact,
+            RotorContactStr[contact_position], contact_position);
 
         RotorContact output_contact = kRotorContact_end;
 
@@ -180,10 +179,6 @@ namespace enigmaSimulator {
     RotorContact Rotor::OffsetContactPosition (RotorContact contact,
                                                const int offset)
     {
-        DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Offsetting Rotor '%s' (%d) by %d positions",
-               RotorContactStr[contact], contact, offset);
-
         int new_position = contact + offset;
 
         if (new_position > kRotorContact_Z)
@@ -198,10 +193,6 @@ namespace enigmaSimulator {
                 "=> Negative rotor offset");
             new_position = MAX_CONTACT_NO + new_position;
         }
-
-        DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Offsetted rotor is '%s' (%d)",
-               RotorContactStr[new_position], new_position);
 
         return RotorContact(new_position);
     }

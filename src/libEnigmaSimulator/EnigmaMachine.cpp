@@ -189,12 +189,6 @@ namespace enigmaSimulator {
             currentLetter = plugboard_->GetPlug (currentLetter);
         }
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "Output letter : '%s'", RotorContactStr[currentLetter]);
-        DebugLog( "EnigmaMachine::" + std::string(__func__), 
-                  "*********************************************");
-
-        // Return encoded character.
         return currentLetter;
     }
 
