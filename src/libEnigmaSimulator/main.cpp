@@ -15,7 +15,7 @@ void LogDebugMessage(std::string functionName, std::string msg, bool clipped)
     std::cout << "[DEBUG] " << functionName << "() " << msg << std::endl;
 }
 
-void LogDebugMessage(enigmaSimulator::LogLevel level,
+void LogTraceMessage(enigmaSimulator::LogLevel level,
     std::string msg, bool clipped)
 {
     std::string levelStr = ((level == enigmaSimulator::kLogLevel_info))
@@ -25,8 +25,26 @@ void LogDebugMessage(enigmaSimulator::LogLevel level,
 
 int main (int argc, char** argv)
 {
-    enigmaSimulator::AssignLoggingDebugCallback(LogDebugMessage);
-    enigmaSimulator::AssignLoggingTraceCallback(LogDebugMessage);
+    bool enableDebug = false;
+    bool enableTrace = false;
+
+    for (auto i = 1; i < argc; ++i)
+    {
+        if (strcmp(argv[i], "/d") == 0) enableDebug = true;
+        if (strcmp(argv[i], "/t") == 0) enableTrace = true;
+    }
+
+    if (enableDebug)
+    {
+        std::cout << "Assigning debug callback" << std::endl;
+        enigmaSimulator::AssignLoggingDebugCallback(LogDebugMessage);
+    }
+
+    if (enableTrace)
+    {
+        std::cout << "Assigning trace callback" << std::endl;
+        enigmaSimulator::AssignLoggingTraceCallback(LogTraceMessage);
+    }
 
     auto machine = enigmaSimulator::EnigmaMachine();
     bool status = machine.Configure(
@@ -40,25 +58,18 @@ int main (int argc, char** argv)
         return 0;
     }
 
-    std::cout << "Left Rotor : "
-              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_1)->RotorName()
-              << std::endl;
-    std::cout << "Middle Rotor : "
-              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_2)->RotorName()
-              << std::endl;
-    std::cout << "Right Rotor : "
-              << machine.GetRotor(enigmaSimulator::kRotorPositionNumber_3)->RotorName()
-              << std::endl;
+    enigmaSimulator::RotorContact output;
+    output = machine.PressKey(enigmaSimulator::kRotorContact_A);
+    std::cout << "Pressed Letter 'A' | Output : " <<
+        enigmaSimulator::RotorContactStr[output] << std::endl;
 
-    std::cout << "ENCODED 'A' : "
-              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
-              << std::endl;
-    std::cout << "ENCODED 'A' : "
-              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
-              << std::endl;
-    std::cout << "ENCODED 'A' : "
-              << enigmaSimulator::RotorContactStr[machine.PressKey(enigmaSimulator::kRotorContact_A)]
-              << std::endl;
+    output = machine.PressKey(enigmaSimulator::kRotorContact_A);
+    std::cout << "Pressed Letter 'A' | Output : " <<
+        enigmaSimulator::RotorContactStr[output] << std::endl;
+
+    output = machine.PressKey(enigmaSimulator::kRotorContact_A);
+    std::cout << "Pressed Letter 'A' | Output : " <<
+        enigmaSimulator::RotorContactStr[output] << std::endl;
 
     return 0;
 }
