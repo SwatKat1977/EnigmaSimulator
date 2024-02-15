@@ -96,8 +96,7 @@ namespace enigmaSimulator {
     {
         RotorContact currentLetter = key;
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-            "received : '%s'", RotorContactStr[key]);
+        TraceLog(kLogLevel_trace, "received : '%s'", RotorContactStr[key]);
 
         // To encrypt a key entry it needs to run through the circuit:
         // plug board => rotors => reflector => rotors => plugboard.
@@ -109,18 +108,26 @@ namespace enigmaSimulator {
 
         LogRotorStates("Rotors after stepping :");
 
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
+        TraceLog(kLogLevel_trace, "=====| Passing through plugboard");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
         // If a plugboard exists for machine then encode through it.
         if (plugboard_)
         {
             currentLetter = plugboard_->GetPlug(key);
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
+            TraceLog(kLogLevel_trace,
                       "Plugboard | Passed '%s' in and returned '%s'",
                       RotorContactStr[key], RotorContactStr[currentLetter]);
         }
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "Passing letter through rotors from right to left");
-
+        TraceLog(kLogLevel_trace,
+            "=====| Passing through rotors from Right to left");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
         // Pass the letter through the rotors from right to left.
         for (auto rotor = rotors_.rbegin (); rotor != rotors_.rend (); ++rotor)
         {
@@ -143,6 +150,12 @@ namespace enigmaSimulator {
                 RotorContactStr[currentLetter]);
         }
 
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+            "===============================================================");
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+            "=====| Passing through the reflector");
+        DebugLog( "EnigmaMachine::" + std::string(__func__),
+            "===============================================================");
         // Pass the letter through the reflector.
         RotorContact oldLetter = currentLetter;
         currentLetter = reflector_->Encrypt (currentLetter);
