@@ -74,19 +74,20 @@ namespace enigmaSimulator {
         it's 'K' offset 1 position.
         */
         int rotor_offset = rotor_position_ - kRotorContact_A;
+        auto contact_position = contact;
 
         DebugLog( "Rotor::" + std::string(__func__), "Rotor '%s'",
             rotor_name_.c_str() );
         DebugLog( "Rotor::" + std::string(__func__),
                   "=> Input : '%s' (%d) | forward : %s",
-            RotorContactStr[contact], contact, forward ? "Y" : "N");
+            RotorContactStr[contact_position], contact_position,
+            forward ? "Y" : "N");
         DebugLog( "Rotor::" + std::string(__func__),
                   "=> Rotor position : '%s' (%d) | Offset by %d",
             RotorContactStr[rotor_position_], rotor_position_, rotor_offset);
 
         // STEP 1: Correct the input contact entrypoint for position
-        auto contact_position = OffsetContactPosition (
-            contact, rotor_offset);
+        contact_position = OffsetContactPosition (contact_position, rotor_offset);
         DebugLog( "Rotor::" + std::string(__func__),
                   "|==== STEP 1: Correct input contact with rotor position ====|");
         DebugLog( "Rotor::" + std::string(__func__),
@@ -98,6 +99,14 @@ namespace enigmaSimulator {
         // Ring positions are not implemented - untested code
         DebugLog( "Rotor::" + std::string(__func__),
             "|==== STEP 2: Correct for ring position ====|");
+
+        auto ring_position_offset = ring_position_ - kRotorContact_A;
+        DebugLog( "Rotor::" + std::string(__func__),
+            "Ring Position offset : %d", ring_position_offset);
+
+        //contact_position = OffsetContactPosition (
+        //    contact, rotor_offset);
+
 #ifdef __UNTESTED__
         if (ring_position_ > kRotorContact_A)
         {
