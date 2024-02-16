@@ -86,7 +86,6 @@ namespace enigmaSimulator {
                   "=> Rotor position : '%s' (%d) | Offset by %d",
             RotorContactStr[rotor_position_], rotor_position_, rotor_offset);
 
-        // STEP 1: Correct the input contact entrypoint for position
         contact_position = OffsetContactPosition (contact_position, rotor_offset);
         DebugLog( "Rotor::" + std::string(__func__),
                   "|==== STEP 1: Correct input contact with rotor position ====|");
@@ -95,36 +94,18 @@ namespace enigmaSimulator {
             RotorContactStr[contact], contact,
             RotorContactStr[contact_position], contact_position);
 
-        // STEP 2: Correct input contact using ring position
-        // Ring positions are not implemented - untested code
         DebugLog( "Rotor::" + std::string(__func__),
             "|==== STEP 2: Correct for ring position ====|");
 
         auto ring_position_offset = ring_position_ - kRotorContact_A;
         DebugLog( "Rotor::" + std::string(__func__),
-            "Ring Position offset : %d", ring_position_offset);
+            "=> Ring Position offset : %d", ring_position_offset);
 
-        //contact_position = OffsetContactPosition (
-        //    contact, rotor_offset);
+        contact_position = OffsetContactPosition (contact, rotor_offset);
 
-#ifdef __UNTESTED__
-        if (ring_position_ > kRotorContact_A)
-        {
-            int ringPosition = ring_position_ - kRotorContact_A;
-            output_contact = OffsetContactPosition();
-            outputPin = outputPin + (self.__ringSetting -1);
-        }
-
-        if (outputPin - (self.__ringSetting -1)) <= 0:
-            outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
-            - outputPin)
-        else:
-            outputPin -= (self.__ringSetting - 1)
-
-        if outputPin > NumberOfRotorPins:
-            outputPin = outputPin - NumberOfRotorPins;
-            final_contact = output_contact
-#endif
+        DebugLog( "Rotor::" + std::string(__func__),
+            "=> Contact after ring position correction rotor : '%s' (%d)",
+            RotorContactStr[contact_position], contact_position);
 
         DebugLog( "Rotor::" + std::string(__func__),
                   "|==== STEP 3: Get destination for contact ====|");
@@ -151,7 +132,6 @@ namespace enigmaSimulator {
                 output_contact);
         }
 
-        // STEP 4: Take rotor offset into account
         DebugLog( "Rotor::" + std::string(__func__),
             "|==== STEP 4: Correct the output contact for position ====|");
 
