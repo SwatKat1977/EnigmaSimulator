@@ -73,6 +73,8 @@ namespace enigmaSimulator {
         corrected back.  E.g. If in position 2 (B) then 'A' will return 'J' as
         it's 'K' offset 1 position.
         */
+        int rotor_offset = rotor_position_ - kRotorContact_A;
+
         DebugLog( "Rotor::" + std::string(__func__), "Rotor '%s'",
             rotor_name_.c_str() );
         DebugLog( "Rotor::" + std::string(__func__),
@@ -80,13 +82,11 @@ namespace enigmaSimulator {
             RotorContactStr[contact], contact, forward ? "Y" : "N");
         DebugLog( "Rotor::" + std::string(__func__),
                   "=> Rotor position : '%s' (%d) | Offset by %d",
-            RotorContactStr[rotor_position_], rotor_position_,
-            rotor_position_ - kRotorContact_A);
+            RotorContactStr[rotor_position_], rotor_position_, rotor_offset);
 
         // STEP 1: Correct the input contact entrypoint for position
-        int rotorOffset = rotor_position_ - kRotorContact_A;
         auto contact_position = OffsetContactPosition (
-            contact, rotorOffset);
+            contact, rotor_offset);
         DebugLog( "Rotor::" + std::string(__func__),
                   "|==== STEP 1: Correct input contact with rotor position ====|");
         DebugLog( "Rotor::" + std::string(__func__),
