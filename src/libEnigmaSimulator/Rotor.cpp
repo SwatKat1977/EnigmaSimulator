@@ -94,6 +94,31 @@ namespace enigmaSimulator {
             RotorContactStr[contact], contact,
             RotorContactStr[contact_position], contact_position);
 
+        // STEP 2: Correct input contact using ring position
+        // Ring positions are not implemented - untested code
+        DebugLog( "Rotor::" + std::string(__func__),
+            "|==== STEP 2: Correct for ring position ====|");
+#ifdef __UNTESTED__
+        if (ring_position_ > kRotorContact_A)
+        {
+            int ringPosition = ring_position_ - kRotorContact_A;
+            output_contact = OffsetContactPosition();
+            outputPin = outputPin + (self.__ringSetting -1);
+        }
+
+        if (outputPin - (self.__ringSetting -1)) <= 0:
+            outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
+            - outputPin)
+        else:
+            outputPin -= (self.__ringSetting - 1)
+
+        if outputPin > NumberOfRotorPins:
+            outputPin = outputPin - NumberOfRotorPins;
+            final_contact = output_contact
+#endif
+
+        DebugLog( "Rotor::" + std::string(__func__),
+                  "|==== STEP 3: Get destination for contact ====|");
         RotorContact output_contact = kRotorContact_end;
 
         if (forward)
@@ -117,32 +142,10 @@ namespace enigmaSimulator {
                 output_contact);
         }
 
+        // STEP 4: Take rotor offset into account
         DebugLog( "Rotor::" + std::string(__func__),
-            "|==== STEP 2: Correct input contact with ring position ====|");
-        // STEP 2: Correct input contact using ring position
-        // Ring positions are not implemented - untested code
-#ifdef __UNTESTED__
-        if (ring_position_ > kRotorContact_A)
-        {
-            int ringPosition = ring_position_ - kRotorContact_A;
-            output_contact = OffsetContactPosition();
-            outputPin = outputPin + (self.__ringSetting -1);
-        }
+            "|==== STEP 4: Correct the output contact for position ====|");
 
-        if (outputPin - (self.__ringSetting -1)) <= 0:
-            outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
-            - outputPin)
-        else:
-            outputPin -= (self.__ringSetting - 1)
-
-        if outputPin > NumberOfRotorPins:
-            outputPin = outputPin - NumberOfRotorPins;
-            final_contact = output_contact
-#endif
-        DebugLog( "Rotor::" + std::string(__func__),
-            "|==== STEP 3: Correct input contact with rotor offset ====|");
-
-        // STEP 3: Take rotor offset into account
         DebugLog( "Rotor::" + std::string(__func__),
             "=> Adjusting destination rotor for offset : '%s' (%d) by %d",
         RotorContactStr[output_contact], output_contact, -rotor_position_);
