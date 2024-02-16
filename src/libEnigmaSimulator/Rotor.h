@@ -58,6 +58,7 @@ namespace enigmaSimulator {
         std::string rotor_name_;
         RotorWiringLayout wiring_;
         std::vector<RotorContact> notches_;
+        RotorContact ring_position_;
         RotorContact rotor_position_;
     };
 

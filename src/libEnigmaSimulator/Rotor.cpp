@@ -25,6 +25,7 @@ namespace enigmaSimulator {
         RotorContact initialPosition)
         : rotor_name_ (rotor_name),
           notches_ (notches),
+          ring_position_(kRotorContact_A),
           rotor_position_(initialPosition)
     {
         if (!wiring.IsValid ())
@@ -50,39 +51,27 @@ namespace enigmaSimulator {
         /*
         Encrpyting a character is done in three stages:
 
-        === STEP 1 ===
-        Correct the input contact entrypoint for position :
+        Example 1
+        'A' is pressed with 'Rotor I' in position 1 (A), with the ring position
+        at position 1 (A) will return the output from 'A' (Rotor I returns 'E').
+
+        Example 2
+        'A' is pressed with 'Rotor 1' in position 2 (B), with the ring position
+        at position 1 (A) will return the output from 'B' ('A' has been moved
+        on 1 due to rotor position 'B'. (Rotor 1 returns 'J' for a letter 'B').
+
+        STEP 1 : Correct the input contact entrypoint for position
         Take into account the current position of the rotor and determine if it
         has wrapped past the letter 'Z'.
 
-        Example 1
-        'A' is pressed with the rotor in position 1 ('A'), it will returns the
-        output from 'A'. Enigma Rotor 1 will return 'E' for letter 'A'.
+        STEP 2 : Correct for ring position : CURRENTLY NOT IMPLEMENTED
 
-        Example 2
-        'A' is pressed with the rotor in position 2 ('B'), it will return the
-        output from 'B' ('A' has been moved on 1 as rotor is in position 'B').
-        Enigma Rotor 1 will return 'K' for a letter 'B'
+        STEP 3 : Get destination for contact
 
-        === STEP 2 ===
-        Take ring settings into account : CURRENTLY NOT IMPLEMENTED
-
-        === STEP 3 ===
-        Take rotor offset into account
-        When a rotor has stepped, the offset must be taken into account when it
-        comes to the output and the entrypoint of the next rotor.
-
-        Example 1
-        'A' is pressed with the rotor in 'B' (1) position, it will return the
-        output from 'B' as rotor is in position 'B', e.g.Enigma Rotor 1 will
-        return 'K' for 'B', but as the rotor is in position 'B' (forward 1) the
-        exit position is offset by 1 which means 'J' is returned.
-
-        Example 2
-        'Z' is pressed with the rotor in 'B' (1) position, it will return the
-        output from 'A' as rotor is in position 'B' and this then wraps ('Z'
-        forward 1 = 'A'), e.g.Enigma Rotor 1 will return 'E' for a letter 'A',
-        but the rotor is in position 'B' (forward 1) so 'J' is returned.
+        STEP 4 : Correct the output contact for position
+        If the rotor position has moved then the output contact needs to
+        corrected back.  E.g. If in position 2 (B) then 'A' will return 'J' as
+        it's 'K' offset 1 position.
         */
         DebugLog( "Rotor::" + std::string(__func__), "Rotor '%s'",
             rotor_name_.c_str() );
@@ -132,10 +121,13 @@ namespace enigmaSimulator {
             "|==== STEP 2: Correct input contact with ring position ====|");
         // STEP 2: Correct input contact using ring position
         // Ring positions are not implemented - untested code
-
-#ifdef __USE_UNTESTED_CODE__
-        if self.__ringSetting > 1:
-            outputPin = outputPin + (self.__ringSetting -1)
+#ifdef __UNTESTED__
+        if (ring_position_ > kRotorContact_A)
+        {
+            int ringPosition = ring_position_ - kRotorContact_A;
+            output_contact = OffsetContactPosition();
+            outputPin = outputPin + (self.__ringSetting -1);
+        }
 
         if (outputPin - (self.__ringSetting -1)) <= 0:
             outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
@@ -147,7 +139,6 @@ namespace enigmaSimulator {
             outputPin = outputPin - NumberOfRotorPins;
             final_contact = output_contact
 #endif
-
         DebugLog( "Rotor::" + std::string(__func__),
             "|==== STEP 3: Correct input contact with rotor offset ====|");
 
