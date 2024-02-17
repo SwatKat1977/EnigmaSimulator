@@ -97,11 +97,12 @@ namespace enigmaSimulator {
         DebugLog( "Rotor::" + std::string(__func__),
             "|==== STEP 2: Correct for ring position ====|");
 
-        auto ring_position_offset = ring_position_ - kRotorContact_A;
+        int ring_position_offset = ring_position_ - kRotorContact_A;
         DebugLog( "Rotor::" + std::string(__func__),
             "=> Ring Position offset : %d", ring_position_offset);
 
-        contact_position = OffsetContactPosition (contact, rotor_offset);
+        contact_position = OffsetContactPosition (contact_position,
+            ring_position_offset);
 
         DebugLog( "Rotor::" + std::string(__func__),
             "=> Contact after ring position correction rotor : '%s' (%d)",
