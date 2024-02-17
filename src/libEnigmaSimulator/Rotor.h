@@ -44,6 +44,12 @@ namespace enigmaSimulator {
 
         void RotorPosition (RotorContact position);
 
+        // Property getter : Position of the ring.
+        inline RotorContact RingPosition() { return ring_position_; }
+
+        // Property setter : Position of the ring.
+        inline void RingPosition(RotorContact pos) { ring_position_ = pos; }
+
         void Step ();
 
         RotorContact Encrypt (RotorContact contact, bool forward = true);
