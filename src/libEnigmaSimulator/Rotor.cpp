@@ -76,15 +76,12 @@ namespace enigmaSimulator {
         int rotor_offset = rotor_position_ - kRotorContact_A;
         auto contact_position = contact;
 
-        DebugLog( "Rotor::" + std::string(__func__), "Rotor '%s'",
-            rotor_name_.c_str() );
-        DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Input : '%s' (%d) | forward : %s",
+        DebugLog( "Rotor::Encrypt", "Rotor '%s'", rotor_name_.c_str() );
+        DebugLog( "Rotor::Encrypt", "=> Input : '%s' (%d) | forward : %s",
             RotorContactStr[contact_position], contact_position,
             forward ? "Y" : "N");
-        DebugLog( "Rotor::" + std::string(__func__),
-                  "=> Rotor position : '%s' (%d) | Offset by %d",
-            RotorContactStr[rotor_position_], rotor_position_, rotor_offset);
+        DebugLog( "Rotor::Encrypt", "=> Rotor position : '%s' | Offset : %d",
+            RotorContactStr[rotor_position_], rotor_offset);
 
         contact_position = OffsetContactPosition (contact_position, rotor_offset);
         DebugLog( "Rotor::" + std::string(__func__),
@@ -94,7 +91,7 @@ namespace enigmaSimulator {
             RotorContactStr[contact], contact,
             RotorContactStr[contact_position], contact_position);
 
-        DebugLog( "Rotor::" + std::string(__func__),
+        DebugLog( "Rotor::Encrypt",
             "|==== STEP 2: Correct for ring position ====|");
 
         int ring_position_offset = ring_position_ - kRotorContact_A;
@@ -108,7 +105,7 @@ namespace enigmaSimulator {
             "=> Contact after ring position correction rotor : '%s' (%d)",
             RotorContactStr[contact_position], contact_position);
 
-        DebugLog( "Rotor::" + std::string(__func__),
+        DebugLog( "Rotor::Encrypt",
                   "|==== STEP 3: Get destination for contact ====|");
         RotorContact output_contact = kRotorContact_end;
 
