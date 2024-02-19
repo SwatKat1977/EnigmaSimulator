@@ -63,7 +63,6 @@
     <ClInclude Include="Logging.h">
       <Filter>Logging</Filter>
     </ClInclude>
-    <ClInclude Include="WiredRotaryDevice.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="IWiredRotaryDevice.h" />
   </ItemGroup>
