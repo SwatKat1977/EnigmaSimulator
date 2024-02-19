@@ -20,6 +20,7 @@ Copyright 2014-2023 Integrated Test Management Suite Development Team
     along with this program.If not, see < https://www.gnu.org/licenses/>.
 -----------------------------------------------------------------------------
 */
+#include <cstdarg>
 #include <stdio.h>
 #include <iostream>
 #include "Logging.h"
