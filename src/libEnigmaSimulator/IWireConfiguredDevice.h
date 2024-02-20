@@ -24,11 +24,9 @@ namespace enigmaSimulator {
 
         ~IWiredRotaryDevice () { }
 
-    protected:
         virtual bool HasValidWiring () = 0;
-
-        virtual RotorContact GetDestination (const RotorContact src,
-            bool forward = true) = 0;
+        virtual RotorContact WiringPathForward (const RotorContact src) = 0;
+        virtual RotorContact WiringPathReverse (const RotorContact dest) = 0;
     };
 
 }   // namespace enigmaSimulator
