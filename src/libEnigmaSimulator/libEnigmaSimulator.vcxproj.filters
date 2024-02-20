@@ -26,7 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RotorWiringLayout.h" />
     <ClInclude Include="Rotor.h">
       <Filter>Rotor</Filter>
     </ClInclude>
