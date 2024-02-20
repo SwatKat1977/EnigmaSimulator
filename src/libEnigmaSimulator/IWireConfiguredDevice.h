@@ -12,17 +12,17 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#ifndef IWIREDROTARYDEVICE_H
-#define IWIREDROTARYDEVICE_H
+#ifndef IWIRECONFIGUREDDEVICE_H
+#define IWIRECONFIGUREDDEVICE_H
 #include "RotorContact.h"
 
 namespace enigmaSimulator {
 
-    class IWiredRotaryDevice
+    class IWireConfiguredDevice
     {
     public:
 
-        ~IWiredRotaryDevice () { }
+        ~IWireConfiguredDevice () { }
 
         virtual bool HasValidWiring () = 0;
         virtual RotorContact WiringPathForward (const RotorContact src) = 0;
@@ -31,4 +31,4 @@ namespace enigmaSimulator {
 
 }   // namespace enigmaSimulator
 
-#endif  //  #ifndef IWIREDROTARYDEVICE_H
+#endif  //  #ifndef IWIRECONFIGUREDDEVICE_H
