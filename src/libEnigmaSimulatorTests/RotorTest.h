@@ -36,7 +36,7 @@ class RotorTest : public testing::Test {
 private:
     void BuildValidWiringLayout()
     {
-        std::string validLayout = "ekmflgdqvzntowyhxuspaibrcj";
+        std::string validLayout = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
         valid_wiring_layout_ = RotorWireConfiguration(validLayout);
     }
 };
