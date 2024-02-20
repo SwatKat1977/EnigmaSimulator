@@ -15,12 +15,12 @@
 #ifndef REFLECTORTEST_H
 #define REFLECTORTEST_H
 #include "Common.h"
-#include "RotorWiringLayout.h"
+#include "RotorWireConfiguration.h"
 
 class ReflectorTest : public testing::Test {
  protected:
-    enigmaSimulator::RotorWiringLayout valid_wiring_layout_;
-    enigmaSimulator::RotorWiringLayout invalid_wiring_layout_;
+    enigmaSimulator::RotorWireConfiguration valid_wiring_layout_;
+    enigmaSimulator::RotorWireConfiguration invalid_wiring_layout_;
 
     void SetUp() override
     {
