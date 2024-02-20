@@ -61,8 +61,6 @@ namespace enigmaSimulator {
 
         RotorContact WiringPathForward (const RotorContact src)
         {
-            RotorContact destination = kRotorContact_end;
-
             if (!HasValidWiring ()) throw std::runtime_error ("Invalid wiring");
 
             return wiring_.find (src)->second.dest;
