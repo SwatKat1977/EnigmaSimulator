@@ -19,28 +19,39 @@
 #include <string>
 #include "Definitions.h"
 #include "IRotorWireConfiguration.h"
+#include "Logging.h"
 #include "RotorContact.h"
 
 namespace enigmaSimulator {
 
+    using WiringLayoutMap = std::map<RotorContact, WiringEntry>;
+
+    const std::string DEFAULT_SRC_LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     class RotorWireConfiguration : public IRotorWireConfiguration
     {
     public:
-
         RotorWireConfiguration () = default;
 
-        RotorWireConfiguration (std::string layout) : wiring_it_(wiring_.end())
+        RotorWireConfiguration (std::string dest_layout,
+            std::string src_layout = DEFAULT_SRC_LAYOUT) : wiring_it_(wiring_.end())
         {
-            if (layout.size () != MAX_WIRING_ENTRIES)
+            if (dest_layout.size () != MAX_WIRING_ENTRIES)
             {
-                throw std::runtime_error ("Incorrect wiring entries!");
+                throw std::runtime_error ("Incorrect destination wiring entries!");
             }
 
-            for (int i = 0; i < MAX_WIRING_ENTRIES; i++)
+            if (src_layout.size () != MAX_WIRING_ENTRIES)
             {
-                RotorContact src = RotorContact (i + 1);
-                RotorContact dest = RotorContact ((layout.c_str ()[i] - 65) + 1);
-                AddEntry (src, dest);
+                throw std::runtime_error ("Incorrect source wiring entries!");
+            }
+
+            for (int i = 0; i < src_layout.size (); i++)
+            {
+                RotorContact position = RotorContact (i + 1);
+                RotorContact src = RotorContact ((src_layout.c_str ()[i] - 65) + 1);
+                RotorContact dest = RotorContact ((dest_layout.c_str ()[i] - 65) + 1);
+                AddEntry (position, src, dest);
             }
         }
 
@@ -54,7 +65,7 @@ namespace enigmaSimulator {
 
             if (!HasValidWiring ()) throw std::runtime_error ("Invalid wiring");
 
-            return wiring_.find (src)->second;
+            return wiring_.find (src)->second.dest;
         }
 
         RotorContact WiringPathReverse (const RotorContact dest)
@@ -65,9 +76,9 @@ namespace enigmaSimulator {
 
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                if (it->second == dest)
+                if (it->second.dest == dest)
                 {
-                    src = it->first;
+                    src = it->second.src;
                 }
             }
 
@@ -88,34 +99,49 @@ namespace enigmaSimulator {
                 return { kRotorContact_end, kRotorContact_end };
             }
 
-            return { wiring_it_->first, wiring_it_->second };
+            return { wiring_it_->second.src, wiring_it_->second.dest };
+        }
+
+        void PrettyPrintWiringPathForward ()
+        {
+            std::string wiring;
+            for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
+            {
+                wiring.append (RotorContactStr[it->second.src]);
+            }
+            TraceLog (kLogLevel_trace, wiring.c_str ());
+        }
+
+        void PrettyPrintWiringPathReverse ()
+        {
+            std::string wiring;
+            for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
+            {
+                wiring.append (RotorContactStr[it->second.dest]);
+            }
+            TraceLog (kLogLevel_trace, wiring.c_str());
         }
 
     private:
-        std::map<RotorContact, RotorContact> wiring_;
-        std::map<RotorContact, RotorContact>::iterator wiring_it_;
+        WiringLayoutMap wiring_;
+        WiringLayoutMap::iterator wiring_it_;
 
-        void AddEntry (RotorContact src, RotorContact dest)
+        void AddEntry (RotorContact position, RotorContact src, RotorContact dest)
         {
-            if (wiring_.size () == MAX_WIRING_ENTRIES)
-            {
-                throw std::runtime_error ("Too many wiring entries!");
-            }
-
-            if (wiring_.find (src) != wiring_.end ())
-            {
-                throw std::runtime_error ("Duplicate source wiring contact!");
-            }
-
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                if (it->second == dest)
+                if (it->second.src == src)
+                {
+                    throw std::runtime_error ("Duplicate src wiring contact!");
+                }
+
+                if (it->second.dest == dest)
                 {
                     throw std::runtime_error ("Duplicate destination wiring contact!");
                 }
             }
 
-            wiring_.insert ({ src, dest });
+            wiring_.insert ({ position, {src, dest} });
         }
 
     };

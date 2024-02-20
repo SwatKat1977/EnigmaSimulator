@@ -20,14 +20,14 @@ namespace enigmaSimulator {
     const int MAX_CONTACT_NO = 26;
 
     Rotor::Rotor (std::string rotor_name,
-        RotorWiringLayout wiring,
+        RotorWireConfiguration wiring,
         std::vector<RotorContact> notches,
         RotorContact initialPosition)
         : rotor_name_ (rotor_name),
           notches_ (notches),
           rotor_position_(initialPosition)
     {
-        if (!wiring.IsValid ())
+        if (!wiring.HasValidWiring ())
         {
             throw std::runtime_error ("Wiring layout is not valid");
         }
@@ -110,7 +110,7 @@ namespace enigmaSimulator {
 
         if (forward)
         {
-            output_contact = wiring_.GetDestination(contact_position);
+            output_contact = wiring_.WiringPathForward (contact_position);
             DebugLog( "Rotor::" + std::string(__func__),
                 "=> Forward destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],
@@ -120,7 +120,7 @@ namespace enigmaSimulator {
         }
         else
         {
-            output_contact = wiring_.GetDestination (contact_position, false);
+            output_contact = wiring_.WiringPathReverse (contact_position);
             DebugLog( "Rotor::" + std::string(__func__),
                 "=> Backwards destination contact for '%s' (%d) : '%s' (%d)",
                 RotorContactStr[contact_position],
@@ -190,7 +190,7 @@ namespace enigmaSimulator {
         {
             DebugLog( "Rotor::" + std::string(__func__),
                       "=> Positive rotor offset");
-            new_position = (new_position % MAX_CONTACT_NO); // - 1;
+            new_position = (new_position % MAX_CONTACT_NO);
         }
         else if (new_position < kRotorContact_A)
         {
@@ -215,7 +215,7 @@ namespace enigmaSimulator {
         while (contact <= kRotorContact_Z)
         {
             src += RotorContactStr[contact];
-            dest += RotorContactStr[wiring_.GetDestination(
+            dest += RotorContactStr[wiring_.WiringPathForward (
                 RotorContact(contact))];
             contact++;
         }

@@ -38,6 +38,9 @@ namespace enigmaSimulator {
         virtual void FirstWiringPath () = 0;
         virtual void NextWiringPath () = 0;
         virtual WiringEntry CurrentWiringPath () = 0;
+
+        virtual void PrettyPrintWiringPathForward () = 0;
+        virtual void PrettyPrintWiringPathReverse () = 0;
     };
 
 }   // namespace enigmaSimulator

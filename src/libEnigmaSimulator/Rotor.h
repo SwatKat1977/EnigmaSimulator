@@ -16,6 +16,7 @@
 #define ROTOR_H
 #include <vector>
 #include "IRotor.h"
+#include "RotorWireConfiguration.h"
 
 namespace enigmaSimulator {
 
@@ -25,7 +26,7 @@ namespace enigmaSimulator {
     public:
         Rotor (
             std::string rotor_name,
-            RotorWiringLayout wiring_,
+            RotorWireConfiguration wiring_,
             std::vector<RotorContact> notches,
             RotorContact initialPosition = kRotorContact_A);
 
@@ -35,7 +36,7 @@ namespace enigmaSimulator {
         inline std::string RotorName () { return rotor_name_; }
 
         // Property getter : Wiring setup.
-        inline RotorWiringLayout Wiring () { return wiring_; }
+        inline RotorWireConfiguration Wiring () { return wiring_; }
 
         inline std::vector<RotorContact> Notches () { return notches_; }
 
@@ -56,7 +57,7 @@ namespace enigmaSimulator {
 
     protected:
         std::string rotor_name_;
-        RotorWiringLayout wiring_;
+        RotorWireConfiguration wiring_;
         std::vector<RotorContact> notches_;
         RotorContact rotor_position_;
     };
