@@ -64,7 +64,8 @@
       <Filter>Logging</Filter>
     </ClInclude>
     <ClInclude Include="Definitions.h" />
-    <ClInclude Include="IWiredRotaryDevice.h" />
+    <ClInclude Include="IWireConfiguredDevice.h" />
+    <ClInclude Include="WireConfiguredDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rotor">

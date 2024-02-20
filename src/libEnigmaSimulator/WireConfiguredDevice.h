@@ -23,13 +23,13 @@
 
 namespace enigmaSimulator {
 
-    class RotorWiringLayout : public IWireConfiguredDevice
+    class WireConfiguredDevice : public IWireConfiguredDevice
     {
     public:
 
-        RotorWiringLayout () = default;
+        WireConfiguredDevice () = default;
 
-        RotorWiringLayout (std::string layout)
+        WireConfiguredDevice (std::string layout)
         {
             if (layout.size () != MAX_WIRING_ENTRIES)
             {
@@ -44,7 +44,7 @@ namespace enigmaSimulator {
             }
         }
 
-        ~RotorWiringLayout () = default;
+        ~WireConfiguredDevice () = default;
 
         bool HasValidWiring () { return wiring_.size () == MAX_WIRING_ENTRIES; }
 

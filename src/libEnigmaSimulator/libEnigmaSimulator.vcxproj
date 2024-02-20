@@ -145,7 +145,7 @@
     <ClInclude Include="EnigmaMachineTypes.h" />
     <ClInclude Include="IReflector.h" />
     <ClInclude Include="IRotor.h" />
-    <ClInclude Include="IWiredRotaryDevice.h" />
+    <ClInclude Include="IWireConfiguredDevice.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Reflector.h" />
@@ -153,6 +153,7 @@
     <ClInclude Include="Rotor.h" />
     <ClInclude Include="RotorFactory.h" />
     <ClInclude Include="RotorWiringLayout.h" />
+    <ClInclude Include="WireConfiguredDevice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

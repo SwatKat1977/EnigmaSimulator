@@ -16,7 +16,7 @@
 #define VERSION_H
 #include <string>
 #include "RotorContact.h"
-#include "RotorWiringLayout.h"
+#include "WireConfiguredDevice.h"
 
 namespace enigmaSimulator {
 
@@ -29,7 +29,7 @@ namespace enigmaSimulator {
         virtual std::string RotorName () = 0;
 
         // Property getter : Wiring setup.
-        virtual RotorWiringLayout Wiring () = 0;
+        virtual WireConfiguredDevice Wiring () = 0;
 
         // Property getter : Turnover notches.
         virtual std::vector<RotorContact> Notches () = 0;

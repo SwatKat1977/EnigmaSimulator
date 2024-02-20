@@ -16,10 +16,10 @@
 
 namespace enigmaSimulator {
 
-    Reflector::Reflector(std::string name, RotorWiringLayout wiring)
+    Reflector::Reflector(std::string name, WireConfiguredDevice wiring)
         : name_(name)
     {
-        if (!wiring.IsValid ())
+        if (!wiring.HasValidWiring ())
         {
             throw std::runtime_error ("Wiring layout is not valid");
         }
@@ -29,7 +29,9 @@ namespace enigmaSimulator {
 
     RotorContact Reflector::Encrypt(RotorContact contact, bool forward)
     {
-        return wiring_.GetDestination(contact, forward);
+        return (forward) ?
+            wiring_.WiringPathForward (contact) :
+            wiring_.WiringPathReverse (contact);
     }
 
 }   // namespace enigmaSimulator
