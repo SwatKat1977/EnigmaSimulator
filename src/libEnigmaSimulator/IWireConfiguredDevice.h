@@ -34,11 +34,10 @@ namespace enigmaSimulator {
 
         virtual RotorContact WiringPathForward (const RotorContact src) = 0;
         virtual RotorContact WiringPathReverse (const RotorContact dest) = 0;
-#ifdef __TO_BE_IMPLEMENTED__
+
         virtual void FirstWiringPath () = 0;
         virtual void NextWiringPath () = 0;
         virtual WiringEntry CurrentWiringPath () = 0;
-#endif
     };
 
 }   // namespace enigmaSimulator

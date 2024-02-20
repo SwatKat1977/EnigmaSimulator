@@ -29,7 +29,7 @@ namespace enigmaSimulator {
 
         WireConfiguredDevice () = default;
 
-        WireConfiguredDevice (std::string layout)
+        WireConfiguredDevice (std::string layout) : wiring_it_(wiring_.end())
         {
             if (layout.size () != MAX_WIRING_ENTRIES)
             {
@@ -74,8 +74,26 @@ namespace enigmaSimulator {
             return src;
         }
 
+        void FirstWiringPath () { wiring_it_ = wiring_.begin (); }
+
+        void NextWiringPath ()
+        {
+            if (wiring_it_ != wiring_.end ()) wiring_it_++;
+        }
+
+        WiringEntry CurrentWiringPath ()
+        {
+            if (wiring_it_ == wiring_.end ())
+            {
+                return { kRotorContact_end, kRotorContact_end };
+            }
+
+            return { wiring_it_->first, wiring_it_->second };
+        }
+
     private:
         std::map<RotorContact, RotorContact> wiring_;
+        std::map<RotorContact, RotorContact>::iterator wiring_it_;
 
         void AddEntry (RotorContact src, RotorContact dest)
         {
