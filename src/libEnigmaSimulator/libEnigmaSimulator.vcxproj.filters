@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="RotorContact.h" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Rotor.cpp">
+      <Filter>Rotor</Filter>
+    </ClCompile>
+    <ClCompile Include="RotorFactory.cpp">
+      <Filter>Rotor</Filter>
+    </ClCompile>
+    <ClCompile Include="Reflector.cpp">
+      <Filter>Reflector</Filter>
+    </ClCompile>
+    <ClCompile Include="EnigmaMachine.cpp">
+      <Filter>Enigma Machine</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugboard.cpp">
+      <Filter>Plugboard</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectorFactory.cpp">
+      <Filter>Reflector</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging.cpp">
+      <Filter>Logging</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Rotor.h">
+      <Filter>Rotor</Filter>
+    </ClInclude>
+    <ClInclude Include="RotorFactory.h">
+      <Filter>Rotor</Filter>
+    </ClInclude>
+    <ClInclude Include="IReflector.h">
+      <Filter>Reflector</Filter>
+    </ClInclude>
+    <ClInclude Include="Reflector.h">
+      <Filter>Reflector</Filter>
+    </ClInclude>
+    <ClInclude Include="EnigmaMachine.h">
+      <Filter>Enigma Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="EnigmaMachineDefinition.h">
+      <Filter>Enigma Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="EnigmaMachineType.h">
+      <Filter>Enigma Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="EnigmaMachineTypes.h">
+      <Filter>Enigma Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugboard.h">
+      <Filter>Plugboard</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectorFactory.h">
+      <Filter>Reflector</Filter>
+    </ClInclude>
+    <ClInclude Include="IRotor.h">
+      <Filter>Rotor</Filter>
+    </ClInclude>
+    <ClInclude Include="Logging.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h" />
+    <ClInclude Include="IRotorWireConfiguration.h">
+      <Filter>Rotor Wiring Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="RotorWireConfiguration.h">
+      <Filter>Rotor Wiring Configuration</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Rotor">
+      <UniqueIdentifier>{6b15a07e-208d-4665-822b-253b11bfe7fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflector">
+      <UniqueIdentifier>{f7b2c040-3d98-48e0-b379-d49ac0245321}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enigma Machine">
+      <UniqueIdentifier>{cbadd93f-d50f-4cea-bab9-58fed5dfc286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugboard">
+      <UniqueIdentifier>{e23fe3e3-6283-48e7-b980-be781454e3f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{9dcc1694-5774-4c55-a521-8d7fc3db8f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rotor Wiring Configuration">
+      <UniqueIdentifier>{45001f7c-f08f-4583-94c3-a06f30b304b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

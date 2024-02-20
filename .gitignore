@@ -4,7 +4,6 @@
 # Visual Studio specific
 .vs
 *.user
-*.filters
 x64
 
 # Platform specific - Linux / Mac

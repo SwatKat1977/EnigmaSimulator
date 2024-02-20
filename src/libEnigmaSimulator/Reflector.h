@@ -18,7 +18,7 @@
 #include <string>
 #include "IReflector.h"
 #include "RotorContact.h"
-#include "RotorWiringLayout.h"
+#include "RotorWireConfiguration.h"
 
 namespace enigmaSimulator {
 
@@ -27,19 +27,19 @@ namespace enigmaSimulator {
     {
     public:
 
-        Reflector(std::string name, RotorWiringLayout wiring);
+        Reflector(std::string name, RotorWireConfiguration wiring);
 
         ~Reflector() = default;
 
         inline const std::string Name() { return name_; }
 
-        inline const RotorWiringLayout Wiring() { return wiring_; }
+        inline const RotorWireConfiguration Wiring() { return wiring_; }
 
         RotorContact Encrypt(RotorContact contact, bool forward = true);
 
     protected:
         std::string name_;
-        RotorWiringLayout wiring_;
+        RotorWireConfiguration wiring_;
     };
 
 }   // namespace enigmaSimulator
