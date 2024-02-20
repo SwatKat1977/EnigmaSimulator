@@ -16,7 +16,7 @@
 #define IREFLECTOR_H
 #include <string>
 #include "RotorContact.h"
-#include "RotorWiringLayout.h"
+#include "RotorWireConfiguration.h"
 
 namespace enigmaSimulator {
 
@@ -29,7 +29,7 @@ namespace enigmaSimulator {
 
         virtual const std::string Name() = 0;
 
-        virtual const RotorWiringLayout Wiring() = 0;
+        virtual const RotorWireConfiguration Wiring() = 0;
 
         virtual RotorContact Encrypt(RotorContact contact, bool forward = true) = 0;
     };

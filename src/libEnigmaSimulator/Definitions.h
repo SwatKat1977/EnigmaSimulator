@@ -12,26 +12,13 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
-#include "Reflector.h"
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
 
 namespace enigmaSimulator {
 
-    Reflector::Reflector(std::string name, RotorWireConfiguration wiring)
-        : name_(name)
-    {
-        if (!wiring.HasValidWiring ())
-        {
-            throw std::runtime_error ("Wiring layout is not valid");
-        }
-
-        wiring_ = wiring;
-    }
-
-    RotorContact Reflector::Encrypt(RotorContact contact, bool forward)
-    {
-        return (forward) ?
-            wiring_.WiringPathForward (contact) :
-            wiring_.WiringPathReverse (contact);
-    }
+    const int MAX_WIRING_ENTRIES = 26;
 
 }   // namespace enigmaSimulator
+
+#endif  //  #ifndef DEFINITIONS_H

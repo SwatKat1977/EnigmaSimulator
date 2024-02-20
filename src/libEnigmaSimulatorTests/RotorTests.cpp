@@ -72,10 +72,14 @@ TEST_F(RotorTest, EncryptNoPositionOrRingOffset)
         std::vector<enigmaSimulator::RotorContact>());
 
     auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
-    ASSERT_EQ(output, enigmaSimulator::kRotorContact_E);
+    EXPECT_EQ(output, enigmaSimulator::kRotorContact_E)
+        << "Expecting 'E', got '"
+        << enigmaSimulator::RotorContactStr[output] << "'";
 
     output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
-    ASSERT_EQ(output, enigmaSimulator::kRotorContact_U);
+    EXPECT_EQ(output, enigmaSimulator::kRotorContact_U)
+        << "Expecting 'E', got '"
+        << enigmaSimulator::RotorContactStr[output] << "'";
 }
 
 TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
@@ -99,11 +103,15 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
     // Forward test
     rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
     auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
-    ASSERT_EQ(output, enigmaSimulator::kRotorContact_J);
+    EXPECT_EQ(output, enigmaSimulator::kRotorContact_J)
+        << "Expecting 'J', got '"
+        << enigmaSimulator::RotorContactStr[output] << "'";
 
     // Reverse test
     output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
-    ASSERT_EQ(output, enigmaSimulator::kRotorContact_V);
+    EXPECT_EQ(output, enigmaSimulator::kRotorContact_V)
+        << "Expecting 'V', got '"
+        << enigmaSimulator::RotorContactStr[output] << "'";
 
     /*
     Test encrypting a letter with a longer position change, the position is
@@ -119,7 +127,9 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
     rotor.RotorPosition(enigmaSimulator::kRotorContact_F);
     output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
 
-    ASSERT_EQ(output, enigmaSimulator::kRotorContact_B);
+    ASSERT_EQ(output, enigmaSimulator::kRotorContact_B)
+        << "Expecting 'B', got '"
+        << enigmaSimulator::RotorContactStr[output] << "'";
 
     /*
     Test encrypting a letter where the position change overflows. The letter

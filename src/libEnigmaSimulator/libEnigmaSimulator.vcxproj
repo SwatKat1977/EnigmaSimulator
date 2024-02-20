@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EnigmaMachine.cpp" />
+    <ClCompile Include="Logging.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plugboard.cpp" />
     <ClCompile Include="Reflector.cpp" />
@@ -137,19 +138,21 @@
     <ClCompile Include="RotorFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Definitions.h" />
     <ClInclude Include="EnigmaMachine.h" />
     <ClInclude Include="EnigmaMachineDefinition.h" />
     <ClInclude Include="EnigmaMachineType.h" />
     <ClInclude Include="EnigmaMachineTypes.h" />
     <ClInclude Include="IReflector.h" />
     <ClInclude Include="IRotor.h" />
+    <ClInclude Include="IRotorWireConfiguration.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Reflector.h" />
     <ClInclude Include="ReflectorFactory.h" />
     <ClInclude Include="Rotor.h" />
     <ClInclude Include="RotorFactory.h" />
-    <ClInclude Include="RotorWiringLayout.h" />
+    <ClInclude Include="RotorWireConfiguration.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,7 +15,7 @@
 #include <map>
 #include <string>
 #include "RotorFactory.h"
-#include "RotorWiringLayout.h"
+#include "RotorWireConfiguration.h"
 
 namespace enigmaSimulator {
 
@@ -81,7 +81,7 @@ IRotor *CreateRotor(std::string rotorName)
 
     return new Rotor(
         rotorName,
-        RotorWiringLayout(entry.layout),
+        RotorWireConfiguration (entry.layout),
         notches);
 }
 
