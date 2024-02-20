@@ -24,11 +24,11 @@ namespace enigmaSimulator {
         RotorContact dest;
     };
 
-    class IWireConfiguredDevice
+    class IRotorWireConfiguration
     {
     public:
 
-        ~IWireConfiguredDevice () { }
+        ~IRotorWireConfiguration () { }
 
         virtual bool HasValidWiring () = 0;
 

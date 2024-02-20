@@ -18,18 +18,18 @@
 #include <stdexcept>
 #include <string>
 #include "Definitions.h"
-#include "IWireConfiguredDevice.h"
+#include "IRotorWireConfiguration.h"
 #include "RotorContact.h"
 
 namespace enigmaSimulator {
 
-    class WireConfiguredDevice : public IWireConfiguredDevice
+    class RotorWireConfiguration : public IRotorWireConfiguration
     {
     public:
 
-        WireConfiguredDevice () = default;
+        RotorWireConfiguration () = default;
 
-        WireConfiguredDevice (std::string layout) : wiring_it_(wiring_.end())
+        RotorWireConfiguration (std::string layout) : wiring_it_(wiring_.end())
         {
             if (layout.size () != MAX_WIRING_ENTRIES)
             {
@@ -44,7 +44,7 @@ namespace enigmaSimulator {
             }
         }
 
-        ~WireConfiguredDevice () = default;
+        ~RotorWireConfiguration () = default;
 
         bool HasValidWiring () { return wiring_.size () == MAX_WIRING_ENTRIES; }
 

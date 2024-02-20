@@ -16,7 +16,7 @@
 
 namespace enigmaSimulator {
 
-    Reflector::Reflector(std::string name, WireConfiguredDevice wiring)
+    Reflector::Reflector(std::string name, RotorWireConfiguration wiring)
         : name_(name)
     {
         if (!wiring.HasValidWiring ())

@@ -45,7 +45,7 @@ namespace enigmaSimulator {
             throw std::runtime_error ("Invalid reflector '" + name + "'");
         }
 
-        return new Reflector (name, WireConfiguredDevice (it->second));
+        return new Reflector (name, RotorWireConfiguration (it->second));
     }
 
 }   // namespace enigmaSimulator

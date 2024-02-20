@@ -63,8 +63,12 @@
       <Filter>Logging</Filter>
     </ClInclude>
     <ClInclude Include="Definitions.h" />
-    <ClInclude Include="IWireConfiguredDevice.h" />
-    <ClInclude Include="WireConfiguredDevice.h" />
+    <ClInclude Include="IRotorWireConfiguration.h">
+      <Filter>Rotor Wiring Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="RotorWireConfiguration.h">
+      <Filter>Rotor Wiring Configuration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rotor">
@@ -81,6 +85,9 @@
     </Filter>
     <Filter Include="Logging">
       <UniqueIdentifier>{9dcc1694-5774-4c55-a521-8d7fc3db8f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rotor Wiring Configuration">
+      <UniqueIdentifier>{45001f7c-f08f-4583-94c3-a06f30b304b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
