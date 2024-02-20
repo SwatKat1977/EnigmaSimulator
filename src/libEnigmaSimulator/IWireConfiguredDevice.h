@@ -18,6 +18,12 @@
 
 namespace enigmaSimulator {
 
+    struct WiringEntry
+    {
+        RotorContact src;
+        RotorContact dest;
+    };
+
     class IWireConfiguredDevice
     {
     public:
@@ -25,8 +31,14 @@ namespace enigmaSimulator {
         ~IWireConfiguredDevice () { }
 
         virtual bool HasValidWiring () = 0;
+#ifdef __TO_BE_IMPLEMENTED__
         virtual RotorContact WiringPathForward (const RotorContact src) = 0;
         virtual RotorContact WiringPathReverse (const RotorContact dest) = 0;
+
+        virtual void FirstWiringPath () = 0;
+        virtual void NextWiringPath () = 0;
+        virtual WiringEntry CurrentWiringPath () = 0;
+#endif
     };
 
 }   // namespace enigmaSimulator
