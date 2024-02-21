@@ -14,6 +14,7 @@
 */
 #include "Rotor.h"
 #include "Logging.h"
+#include "StringUtils.h"
 
 namespace enigmaSimulator {
 
@@ -34,11 +35,19 @@ namespace enigmaSimulator {
         }
 
         wiring_ = wiring;
+        wiring_default_ = wiring;
     }
 
     void Rotor::RotorPosition (RotorContact position)
     {
         rotor_position_ = position;
+    }
+
+    // Property getter : Position of the ring.
+    void Rotor::RingPosition (RotorContact pos)
+    {
+        ring_position_ = pos;
+        RecalculateWiring ();
     }
 
     void Rotor::Step ()
@@ -226,5 +235,27 @@ namespace enigmaSimulator {
         TraceLog( kLogLevel_trace,
                   "Destination : %s", dest.c_str());
     }
+
+    void Rotor::RecalculateWiring ()
+    {
+        auto src = wiring_default_.GetSrcWiringPathStr ();
+        auto dest = wiring_default_.GetDestWiringPathStr ();
+
+        if (ring_position_ > kRotorContact_A)
+        {
+            int ring_offset = static_cast<int>(ring_position_)
+                - static_cast<int>(kRotorContact_A);
+            RightRotateString (dest, ring_offset);
+            OffsetStringValue (dest, 1);
+        }
+
+        wiring_ = RotorWireConfiguration(dest, src);
+    }
+
+    // abcdefghijklmnopQrstuvwxyz
+    // ekmflgdqvzntowyhxuspaibrcj
+
+    // abcdefghijklmnopQrstuvwxyz
+    // kflngmherwaoupxziyvtqbjcsd
 
 }   // namespace enigmaSimulator
