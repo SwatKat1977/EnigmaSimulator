@@ -100,24 +100,36 @@ namespace enigmaSimulator {
             return { wiring_it_->second.src, wiring_it_->second.dest };
         }
 
-        void PrettyPrintWiringPathForward ()
+        void PrettyPrintSrcWiringPath ()
+        {
+            TraceLog (kLogLevel_trace, GetSrcWiringPathStr ().c_str ());
+        }
+
+        void PrettyPrintDestWiringPath ()
+        {
+            TraceLog (kLogLevel_trace, GetDestWiringPathStr ().c_str ());
+        }
+
+        std::string GetSrcWiringPathStr ()
         {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
                 wiring.append (RotorContactStr[it->second.src]);
             }
-            TraceLog (kLogLevel_trace, wiring.c_str ());
+
+            return wiring;
         }
 
-        void PrettyPrintWiringPathReverse ()
+        std::string GetDestWiringPathStr ()
         {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
                 wiring.append (RotorContactStr[it->second.dest]);
             }
-            TraceLog (kLogLevel_trace, wiring.c_str());
+
+            return wiring;
         }
 
     private:

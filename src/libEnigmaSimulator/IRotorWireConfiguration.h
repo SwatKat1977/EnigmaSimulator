@@ -39,8 +39,11 @@ namespace enigmaSimulator {
         virtual void NextWiringPath () = 0;
         virtual WiringEntry CurrentWiringPath () = 0;
 
-        virtual void PrettyPrintWiringPathForward () = 0;
-        virtual void PrettyPrintWiringPathReverse () = 0;
+        virtual void PrettyPrintSrcWiringPath () = 0;
+        virtual void PrettyPrintDestWiringPath () = 0;
+
+        virtual std::string GetSrcWiringPathStr () = 0;
+        virtual std::string GetDestWiringPathStr () = 0;
     };
 
 }   // namespace enigmaSimulator
