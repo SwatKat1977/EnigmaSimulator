@@ -65,6 +65,8 @@ namespace enigmaSimulator {
 
         IRotor *GetRotor(RotorPositionNumber);
 
+        void LogRotorStates (std::string prefix);
+
     protected:
         bool is_configured_;
         std::string lastError_;
@@ -74,8 +76,6 @@ namespace enigmaSimulator {
         std::map<RotorPositionNumber, IRotor *> rotors_;
 
         void StepRotors( );
-
-        void LogRotorStates(std::string prefix);
     };
 
 }   // namespace enigmaSimulator
