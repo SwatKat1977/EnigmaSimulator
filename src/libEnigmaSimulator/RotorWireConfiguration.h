@@ -115,7 +115,7 @@ namespace enigmaSimulator {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                wiring.append (RotorContactStr[it->second.src]);
+                wiring.push_back ( RotorContactStr[it->second.src]);
             }
 
             return wiring;
@@ -126,7 +126,7 @@ namespace enigmaSimulator {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                wiring.append (RotorContactStr[it->second.dest]);
+                wiring.push_back (RotorContactStr[it->second.dest]);
             }
 
             return wiring;
