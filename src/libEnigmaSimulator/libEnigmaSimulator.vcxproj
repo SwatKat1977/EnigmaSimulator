@@ -136,6 +136,7 @@
     <ClCompile Include="Rotor.cpp" />
     <ClCompile Include="RotorContact.h" />
     <ClCompile Include="RotorFactory.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Definitions.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Rotor.h" />
     <ClInclude Include="RotorFactory.h" />
     <ClInclude Include="RotorWireConfiguration.h" />
+    <ClInclude Include="StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

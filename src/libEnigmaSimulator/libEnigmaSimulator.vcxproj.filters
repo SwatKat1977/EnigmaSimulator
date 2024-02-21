@@ -24,6 +24,9 @@
     <ClCompile Include="Logging.cpp">
       <Filter>Logging</Filter>
     </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rotor.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="RotorWireConfiguration.h">
       <Filter>Rotor Wiring Configuration</Filter>
     </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Rotor">
@@ -88,6 +94,9 @@
     </Filter>
     <Filter Include="Rotor Wiring Configuration">
       <UniqueIdentifier>{45001f7c-f08f-4583-94c3-a06f30b304b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{550843a7-0b02-4b8e-b540-9194621ceac5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
