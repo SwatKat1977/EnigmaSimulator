@@ -49,7 +49,7 @@ namespace enigmaSimulator {
         inline RotorContact RingPosition() { return ring_position_; }
 
         // Property setter : Position of the ring.
-        inline void RingPosition(RotorContact pos) { ring_position_ = pos; }
+        void RingPosition (RotorContact pos);
 
         void Step ();
 
@@ -64,9 +64,12 @@ namespace enigmaSimulator {
     protected:
         std::string rotor_name_;
         RotorWireConfiguration wiring_;
+        RotorWireConfiguration wiring_default_;
         std::vector<RotorContact> notches_;
         RotorContact ring_position_;
         RotorContact rotor_position_;
+
+        void RecalculateWiring ();
     };
 
 }   // namespace enigmaSimulator

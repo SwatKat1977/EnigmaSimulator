@@ -12,6 +12,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 */
+#include "Definitions.h"
+#include "RotorContact.h"
 #include "StringUtils.h"
 
 namespace enigmaSimulator {
@@ -28,6 +30,19 @@ namespace enigmaSimulator {
     void RightRotateString (std::string& str, int offset)
     {
         LeftRotateString (str, static_cast<int>(str.length ()) - offset);
+    }
+
+    // Offset each letter by 'offset' amount, so if offset = 1 then 'A' becomes
+    // 'B'.
+    void OffsetStringValue (std::string& str, int offset)
+    {
+        for (int idx = 0; idx < str.size(); idx++)
+        {
+            int newLetter = ((str[idx] - 65) + 1) + offset;
+            newLetter = (newLetter > kRotorContact_Z) ?
+                (newLetter % MAX_WIRING_ENTRIES) : newLetter;
+            str[idx] = RotorContactStr[newLetter];
+        }
     }
 
 }   // namespace enigmaSimulator

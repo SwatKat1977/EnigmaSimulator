@@ -22,6 +22,8 @@ namespace enigmaSimulator {
 
     void RightRotateString (std::string& str, int offset);
 
+    void OffsetStringValue (std::string& str, int offset);
+
 }   // namespace enigmaSimulator
 
 #endif  //  #ifndef STRINGUTILS_H
