@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include "EnigmaMachine.h"
 #include "EnigmaMachineTypes.h"
 #include "Logging.h"
@@ -96,17 +97,17 @@ namespace enigmaSimulator {
     {
         RotorContact currentLetter = key;
 
-        TraceLog(kLogLevel_trace, "received : '%s'", RotorContactStr[key]);
+        TraceLog(kLogLevel_trace, "received : '%c'", RotorContactStr[key]);
 
         // To encrypt a key entry it needs to run through the circuit:
         // plug board => rotors => reflector => rotors => plugboard.
         //  The variable currentLetter will maintain the contact state.
-        LogRotorStates("=> Rotors before stepping :");
+        LogRotorStates("Rotors before stepping");
 
         // Before any encrypting can begin step the rotor.
         StepRotors();
 
-        LogRotorStates("Rotors after stepping :");
+        LogRotorStates("Rotors after stepping ");
 
         TraceLog(kLogLevel_trace,
             "===============================================================");
@@ -116,10 +117,10 @@ namespace enigmaSimulator {
         // If a plugboard exists for machine then encode through it.
         if (plugboard_)
         {
-            TraceLog(kLogLevel_trace, "=> Input : '%s' (%d)",
+            TraceLog(kLogLevel_trace, "=> Input : '%c' (%d)",
                 RotorContactStr[currentLetter], currentLetter);
             currentLetter = plugboard_->GetPlug(currentLetter);
-            TraceLog(kLogLevel_trace, "=> Output : '%s' (%d)",
+            TraceLog(kLogLevel_trace, "=> Output : '%c' (%d)",
                 RotorContactStr[currentLetter], currentLetter);
         }
         else
@@ -147,7 +148,7 @@ namespace enigmaSimulator {
             currentLetter = rotor->second->Encrypt (currentLetter);
 
             TraceLog(kLogLevel_trace,
-                "=> Input : '%s' (%d) | Output : '%s' (%d)",
+                "=> Input : '%c' (%d) | Output : '%c' (%d)",
                 RotorContactStr[oldLetter], oldLetter,
                 RotorContactStr[currentLetter], currentLetter);
         }
@@ -157,11 +158,11 @@ namespace enigmaSimulator {
         TraceLog(kLogLevel_trace, "=====| Passing through the reflector");
         TraceLog(kLogLevel_trace,
             "===============================================================");
-        TraceLog(kLogLevel_trace, "=> Input : '%s' (%d)",
+        TraceLog(kLogLevel_trace, "=> Input : '%c' (%d)",
             RotorContactStr[currentLetter], currentLetter);
         currentLetter = reflector_->Encrypt (currentLetter);
         currentLetter = plugboard_->GetPlug(currentLetter);
-        TraceLog(kLogLevel_trace, "=> Output : '%s' (%d)",
+        TraceLog(kLogLevel_trace, "=> Output : '%c' (%d)",
             RotorContactStr[currentLetter], currentLetter);
 
         TraceLog(kLogLevel_trace,
@@ -178,7 +179,7 @@ namespace enigmaSimulator {
             currentLetter = rotor->second->Encrypt (currentLetter, false);
 
             TraceLog(kLogLevel_trace,
-                "=> Input : '%s' (%d) | Output : '%s' (%d)",
+                "=> Input : '%c' (%d) | Output : '%c' (%d)",
                 RotorContactStr[oldLetter], oldLetter,
                 RotorContactStr[currentLetter], currentLetter);
         }
@@ -192,24 +193,37 @@ namespace enigmaSimulator {
         return currentLetter;
     }
 
-#ifdef __OLD_CODE__
+    // Set the position of the rotor.
+    void EnigmaMachine::SetRotorPosition (
+        RotorPositionNumber rotor, RotorContact position)
+    {
+        // Validate rotor position.
+        if (position == kRotorContact_end)
+        {
+            throw std::runtime_error ("Invalid rotor positions");
+        }
 
-        def set_rotor_position(self, rotor_no : int, position : int) -> None:
-            ''' Set the position of the rotor. '''
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
+        if (RotorCount(static_cast<int>(rotor) +1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
 
-            # Validate rotor positions.
-            if position < 0 or position > 25:
-                raise ValueError("Invalid rotor positions")
+        rotors_.find(rotor)->second->RotorPosition(position);
+    }
 
-            if rotor_no < 0 or rotor_no > (len(self._rotors) - 1):
-                raise ValueError("Invalid rotor")
+    RotorContact EnigmaMachine::GetRotorPosition (RotorPositionNumber rotor)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
 
-            # Set the new rotor position.
-            self._rotors[rotor_no].position = position
-
-        def get_rotor_position(self, rotor_no):
-            return self._rotors[rotor_no].position
-#endif
+        return rotors_.find (rotor)->second->RotorPosition ();
+    }
 
     /*
     Rotor stepping occurs from the right to left when a stepping notch is hit.
@@ -267,20 +281,36 @@ namespace enigmaSimulator {
         }
     }
 
+    // const char * THREE_ROTOR_ROTOR_LOG_STATE = "|%s Pos : %d Ring : % | %s Pos : %d Ring : % ||%s Pos : %d Ring : % | ";
+
+    //const char * ROTOR_LOG_MSG = "|%s Pos : %d Ring : % | %s Pos : %d Ring : % ||%s Pos : %d Ring : % | ";
+    const char* ROTOR_LOG_MSG = "%s Pos : %d Ring : %d";
+
     void EnigmaMachine::LogRotorStates(std::string prefix)
     {
-#ifdef __OLD_CODE__
-        rotor_0 = RotorContact(self._rotors[0].position).name
-        rotor_1 = RotorContact(self._rotors[1].position).name
-        rotor_2 = RotorContact(self._rotors[2].position).name
-        self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
-                               f"{rotor_2}")
-#endif
+        std::stringstream logMsg;
+        logMsg << prefix;
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;;
+        RotorPositionNumber lastPosition = RotorPositionNumber (
+            static_cast<int>(model.TotalRotors ()) -1 );
+
+        RotorPositionNumber position = kRotorPositionNumber_1;
+
+        while (position <= lastPosition)
+        {
+            auto rotor = rotors_.find (position)->second;
+            logMsg << " | Pos: '" << RotorContactStr[rotor->RotorPosition ()]
+                   << "' Ring: '" << RotorContactStr[rotor->RingPosition ()]
+                   << "'";
+            position = RotorPositionNumber (static_cast<int>(position) + 1);
+        }
+
+        TraceLog (kLogLevel_trace, logMsg.str ().c_str ());
     }
 
     IRotor *EnigmaMachine::GetRotor(RotorPositionNumber position)
     {
-        auto modelDetails = ENIGMA_MODELS.find(type_)->second;
+        auto modelDetails = ENIGMA_MODELS.find (type_)->second;
 
         if (static_cast<int>(position) >=
             static_cast<int>(modelDetails.TotalRotors()))

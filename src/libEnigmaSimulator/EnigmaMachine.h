@@ -60,9 +60,9 @@ namespace enigmaSimulator {
 
         RotorContact PressKey(RotorContact key);
 
-        void SetRotorPosition(int rotor_no, RotorContact position);
+        void SetRotorPosition(RotorPositionNumber rotor, RotorContact position);
 
-        void GetRotorPosition(int rotorNo);
+        RotorContact GetRotorPosition(RotorPositionNumber rotorNo);
 
         IRotor *GetRotor(RotorPositionNumber);
 
