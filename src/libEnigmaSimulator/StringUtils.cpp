@@ -16,4 +16,18 @@
 
 namespace enigmaSimulator {
 
+    // In-place string left rotatation by 'offset' positions.
+    void LeftRotateString (std::string& str, int offset)
+    {
+        std::reverse (str.begin (), str.begin () + offset);
+        std::reverse (str.begin () + offset, str.end ());
+        std::reverse (str.begin (), str.end ());
+    }
+
+    // In-place string right rotatation by 'offset' positions.
+    void RightRotateString (std::string& str, int offset)
+    {
+        LeftRotateString (str, static_cast<int>(str.length ()) - offset);
+    }
+
 }   // namespace enigmaSimulator
