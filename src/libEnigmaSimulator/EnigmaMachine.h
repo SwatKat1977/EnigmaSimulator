@@ -35,11 +35,6 @@ namespace enigmaSimulator {
     class EnigmaMachine
     {
     public:
-
-#ifdef __PY__
-        __slots__ = ['_double_step'
-#endif
-
         EnigmaMachine();
 
         inline bool IsConfigured() { return is_configured_; }
