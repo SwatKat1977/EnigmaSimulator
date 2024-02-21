@@ -194,7 +194,7 @@ namespace enigmaSimulator {
     }
 
     // Set the position of the rotor.
-    void EnigmaMachine::SetRotorPosition (
+    void EnigmaMachine::RotorPosition (
         RotorPositionNumber rotor, RotorContact position)
     {
         // Validate rotor position.
@@ -213,7 +213,7 @@ namespace enigmaSimulator {
         rotors_.find(rotor)->second->RotorPosition(position);
     }
 
-    RotorContact EnigmaMachine::GetRotorPosition (RotorPositionNumber rotor)
+    RotorContact EnigmaMachine::RotorPosition (RotorPositionNumber rotor)
     {
         EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
         RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
@@ -223,6 +223,30 @@ namespace enigmaSimulator {
         }
 
         return rotors_.find (rotor)->second->RotorPosition ();
+    }
+
+    void EnigmaMachine::RingSetting (RotorPositionNumber rotor, RotorContact setting)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
+
+        rotors_.find (rotor)->second->RingPosition (setting);
+    }
+
+    RotorContact EnigmaMachine::RingSetting (RotorPositionNumber rotor)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
+
+        return rotors_.find (rotor)->second->RingPosition ();
     }
 
     /*
@@ -280,11 +304,6 @@ namespace enigmaSimulator {
             position = position -= 1;
         }
     }
-
-    // const char * THREE_ROTOR_ROTOR_LOG_STATE = "|%s Pos : %d Ring : % | %s Pos : %d Ring : % ||%s Pos : %d Ring : % | ";
-
-    //const char * ROTOR_LOG_MSG = "|%s Pos : %d Ring : % | %s Pos : %d Ring : % ||%s Pos : %d Ring : % | ";
-    const char* ROTOR_LOG_MSG = "%s Pos : %d Ring : %d";
 
     void EnigmaMachine::LogRotorStates(std::string prefix)
     {
