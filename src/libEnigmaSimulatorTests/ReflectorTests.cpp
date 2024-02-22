@@ -27,7 +27,7 @@ TEST_F(ReflectorTest, ConstructWithValidWiring)
         auto rotor = enigmaSimulator::Reflector(
             "Valid Reflector", valid_wiring_layout_);
     }
-    catch(const std::exception& e)
+    catch(const std::exception&)
     {
         FAIL() << "Expected valid reflector wiring";
     }
@@ -46,7 +46,7 @@ TEST_F(ReflectorTest, ConstructWithInvalidWiring)
             "Invalid Reflector", invalid_wiring_layout_);
         FAIL() << "Expected invalid reflector wiring";
     }
-    catch(const std::exception& e)
+    catch(const std::exception&)
     {
     }
 }

@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -129,13 +129,16 @@
   <ItemGroup>
     <ClCompile Include="EnigmaMachine.cpp" />
     <ClCompile Include="Logging.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Plugboard.cpp" />
     <ClCompile Include="Reflector.cpp" />
     <ClCompile Include="ReflectorFactory.cpp" />
     <ClCompile Include="Rotor.cpp" />
     <ClCompile Include="RotorContact.h" />
     <ClCompile Include="RotorFactory.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Definitions.h" />
@@ -153,6 +156,7 @@
     <ClInclude Include="Rotor.h" />
     <ClInclude Include="RotorFactory.h" />
     <ClInclude Include="RotorWireConfiguration.h" />
+    <ClInclude Include="StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

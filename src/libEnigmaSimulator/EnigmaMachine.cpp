@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include "EnigmaMachine.h"
 #include "EnigmaMachineTypes.h"
 #include "Logging.h"
@@ -96,40 +97,49 @@ namespace enigmaSimulator {
     {
         RotorContact currentLetter = key;
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-            "received : '%s'", RotorContactStr[key]);
+        TraceLog(kLogLevel_trace, "received : '%c'", RotorContactStr[key]);
 
         // To encrypt a key entry it needs to run through the circuit:
         // plug board => rotors => reflector => rotors => plugboard.
         //  The variable currentLetter will maintain the contact state.
-        LogRotorStates("=> Rotors before stepping :");
+        LogRotorStates("Rotors before stepping");
 
         // Before any encrypting can begin step the rotor.
         StepRotors();
 
-        LogRotorStates("Rotors after stepping :");
+        LogRotorStates("Rotors after stepping ");
 
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
+        TraceLog(kLogLevel_trace, "=====| Passing through plugboard");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
         // If a plugboard exists for machine then encode through it.
         if (plugboard_)
         {
-            currentLetter = plugboard_->GetPlug(key);
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "Plugboard | Passed '%s' in and returned '%s'",
-                      RotorContactStr[key], RotorContactStr[currentLetter]);
+            TraceLog(kLogLevel_trace, "=> Input : '%c' (%d)",
+                RotorContactStr[currentLetter], currentLetter);
+            currentLetter = plugboard_->GetPlug(currentLetter);
+            TraceLog(kLogLevel_trace, "=> Output : '%c' (%d)",
+                RotorContactStr[currentLetter], currentLetter);
         }
+        else
+        {
+            TraceLog(kLogLevel_trace, "No plugboard present... Passed");
+        }
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "Passing letter through rotors from right to left");
-
+        TraceLog(kLogLevel_trace,
+            "=====| Passing through rotors from Right to left");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
         // Pass the letter through the rotors from right to left.
         for (auto rotor = rotors_.rbegin (); rotor != rotors_.rend (); ++rotor)
         {
             RotorContact oldLetter = currentLetter;
 
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "<===================================================>");
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "<==== ROTOR '%s' ====>",
+            TraceLog(kLogLevel_trace, "<==== ROTOR '%s' ====>",
                 rotor->second->RotorName ().c_str ());
             rotor->second->PrettyPrintWiring();
 
@@ -137,34 +147,41 @@ namespace enigmaSimulator {
             // take into account the position of the rotor.
             currentLetter = rotor->second->Encrypt (currentLetter);
 
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "Rotor | Passing '%s' returned '%s'",
-                RotorContactStr[oldLetter],
-                RotorContactStr[currentLetter]);
+            TraceLog(kLogLevel_trace,
+                "=> Input : '%c' (%d) | Output : '%c' (%d)",
+                RotorContactStr[oldLetter], oldLetter,
+                RotorContactStr[currentLetter], currentLetter);
         }
 
-        // Pass the letter through the reflector.
-        RotorContact oldLetter = currentLetter;
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
+        TraceLog(kLogLevel_trace, "=====| Passing through the reflector");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
+        TraceLog(kLogLevel_trace, "=> Input : '%c' (%d)",
+            RotorContactStr[currentLetter], currentLetter);
         currentLetter = reflector_->Encrypt (currentLetter);
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "[Reflector] '%s' => '%s'",
-            RotorContactStr[oldLetter], RotorContactStr[currentLetter]);
+        currentLetter = plugboard_->GetPlug(currentLetter);
+        TraceLog(kLogLevel_trace, "=> Output : '%c' (%d)",
+            RotorContactStr[currentLetter], currentLetter);
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "Passing letter through rotors from left to right");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
+        TraceLog(kLogLevel_trace,
+            "=====| Passing through rotors from Left to right");
+        TraceLog(kLogLevel_trace,
+            "===============================================================");
         for (auto rotor = rotors_.begin (); rotor != rotors_.end (); ++rotor)
         {
-            oldLetter = currentLetter;
+            TraceLog(kLogLevel_trace, "<==== ROTOR '%s' ====>",
+                rotor->second->RotorName ().c_str ());
+            auto oldLetter = currentLetter;
             currentLetter = rotor->second->Encrypt (currentLetter, false);
 
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "<==== ROTOR '%s' ====>",
-                rotor->second->RotorName ().c_str ());
-            rotor->second->PrettyPrintWiring();
-            DebugLog( "EnigmaMachine::" + std::string(__func__),
-                      "Rotor | Passing '%s' returned '%s'",
-                RotorContactStr[oldLetter],
-                RotorContactStr[currentLetter]);
+            TraceLog(kLogLevel_trace,
+                "=> Input : '%c' (%d) | Output : '%c' (%d)",
+                RotorContactStr[oldLetter], oldLetter,
+                RotorContactStr[currentLetter], currentLetter);
         }
 
         // If a plugboard exists for machine then encode through it.
@@ -173,33 +190,60 @@ namespace enigmaSimulator {
             currentLetter = plugboard_->GetPlug (currentLetter);
         }
 
-        DebugLog( "EnigmaMachine::" + std::string(__func__),
-                  "Output letter : '%s'", RotorContactStr[currentLetter]);
-        DebugLog( "EnigmaMachine::" + std::string(__func__), 
-                  "*********************************************");
-
-        // Return encoded character.
         return currentLetter;
     }
 
-#ifdef __OLD_CODE__
+    // Set the position of the rotor.
+    void EnigmaMachine::RotorPosition (
+        RotorPositionNumber rotor, RotorContact position)
+    {
+        // Validate rotor position.
+        if (position == kRotorContact_end)
+        {
+            throw std::runtime_error ("Invalid rotor positions");
+        }
 
-        def set_rotor_position(self, rotor_no : int, position : int) -> None:
-            ''' Set the position of the rotor. '''
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        if (RotorCount(static_cast<int>(rotor) +1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
 
-            # Validate rotor positions.
-            if position < 0 or position > 25:
-                raise ValueError("Invalid rotor positions")
+        rotors_.find(rotor)->second->RotorPosition(position);
+    }
 
-            if rotor_no < 0 or rotor_no > (len(self._rotors) - 1):
-                raise ValueError("Invalid rotor")
+    RotorContact EnigmaMachine::RotorPosition (RotorPositionNumber rotor)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
 
-            # Set the new rotor position.
-            self._rotors[rotor_no].position = position
+        return rotors_.find (rotor)->second->RotorPosition ();
+    }
 
-        def get_rotor_position(self, rotor_no):
-            return self._rotors[rotor_no].position
-#endif
+    void EnigmaMachine::RingSetting (RotorPositionNumber rotor, RotorContact setting)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
+
+        rotors_.find (rotor)->second->RingPosition (setting);
+    }
+
+    RotorContact EnigmaMachine::RingSetting (RotorPositionNumber rotor)
+    {
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
+        if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
+        {
+            throw std::runtime_error ("Invalid rotor");
+        }
+
+        return rotors_.find (rotor)->second->RingPosition ();
+    }
 
     /*
     Rotor stepping occurs from the right to left when a stepping notch is hit.
@@ -221,7 +265,6 @@ namespace enigmaSimulator {
 
             if (static_cast<int>(position +1) == details.TotalRotors())
             {
-                printf("[TMP] Furthest right rotor....\n");
                 //std::cout << "Rotor : " << rotor << std::endl;
                 // As the right-hand pawl has no rotor or ring to its right,
                 // rotor stepping happens with every key depression.
@@ -260,18 +303,29 @@ namespace enigmaSimulator {
 
     void EnigmaMachine::LogRotorStates(std::string prefix)
     {
-#ifdef __OLD_CODE__
-        rotor_0 = RotorContact(self._rotors[0].position).name
-        rotor_1 = RotorContact(self._rotors[1].position).name
-        rotor_2 = RotorContact(self._rotors[2].position).name
-        self._logger.log_debug(f"{prefix_str} {rotor_0} | {rotor_1} | " + \
-                               f"{rotor_2}")
-#endif
+        std::stringstream logMsg;
+        logMsg << prefix;
+        EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;;
+        RotorPositionNumber lastPosition = RotorPositionNumber (
+            static_cast<int>(model.TotalRotors ()) -1 );
+
+        RotorPositionNumber position = kRotorPositionNumber_1;
+
+        while (position <= lastPosition)
+        {
+            auto rotor = rotors_.find (position)->second;
+            logMsg << " | Pos: '" << RotorContactStr[rotor->RotorPosition ()]
+                   << "' Ring: '" << RotorContactStr[rotor->RingPosition ()]
+                   << "'";
+            position = RotorPositionNumber (static_cast<int>(position) + 1);
+        }
+
+        TraceLog (kLogLevel_trace, logMsg.str ().c_str ());
     }
 
     IRotor *EnigmaMachine::GetRotor(RotorPositionNumber position)
     {
-        auto modelDetails = ENIGMA_MODELS.find(type_)->second;
+        auto modelDetails = ENIGMA_MODELS.find (type_)->second;
 
         if (static_cast<int>(position) >=
             static_cast<int>(modelDetails.TotalRotors()))

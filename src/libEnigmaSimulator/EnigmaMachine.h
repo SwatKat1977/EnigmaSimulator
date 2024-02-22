@@ -35,11 +35,6 @@ namespace enigmaSimulator {
     class EnigmaMachine
     {
     public:
-
-#ifdef __PY__
-        __slots__ = ['_double_step'
-#endif
-
         EnigmaMachine();
 
         inline bool IsConfigured() { return is_configured_; }
@@ -60,11 +55,17 @@ namespace enigmaSimulator {
 
         RotorContact PressKey(RotorContact key);
 
-        void SetRotorPosition(int rotor_no, RotorContact position);
+        void RotorPosition(RotorPositionNumber rotor, RotorContact position);
 
-        void GetRotorPosition(int rotorNo);
+        RotorContact RotorPosition(RotorPositionNumber rotor);
+
+        void RingSetting (RotorPositionNumber rotor, RotorContact setting);
+
+        RotorContact RingSetting (RotorPositionNumber rotor);
 
         IRotor *GetRotor(RotorPositionNumber);
+
+        void LogRotorStates (std::string prefix);
 
     protected:
         bool is_configured_;
@@ -75,8 +76,6 @@ namespace enigmaSimulator {
         std::map<RotorPositionNumber, IRotor *> rotors_;
 
         void StepRotors( );
-
-        void LogRotorStates(std::string prefix);
     };
 
 }   // namespace enigmaSimulator

@@ -39,6 +39,12 @@ namespace enigmaSimulator {
 
         virtual void RotorPosition (RotorContact position) = 0;
 
+        // Property getter : Position of the ring.
+        virtual RotorContact RingPosition() = 0;
+
+        // Property setter : Position of the ring.
+        virtual void RingPosition(RotorContact position) = 0;
+
         virtual void Step () = 0;
 
         virtual RotorContact Encrypt (

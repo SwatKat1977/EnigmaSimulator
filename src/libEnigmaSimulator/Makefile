@@ -11,6 +11,7 @@ OBJS = EnigmaMachine.o \
 	ReflectorFactory.o \
 	Rotor.o \
 	RotorFactory.o \
+	StringUtils.o \
 	main.o
 
 LIBENIGMASIMULATOR = ${ENIGMASIM_BIN_DIR}/libEnigmaSimulator
