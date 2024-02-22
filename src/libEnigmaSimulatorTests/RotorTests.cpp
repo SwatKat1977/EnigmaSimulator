@@ -173,14 +173,6 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
         self.assertEqual(self._valid_pass_through_rotor.position, 1)
 */
 
-/*
-abcdefghijklmnopQrstuvwxyz
-ekmflgdqvzntowyhxuspaibrcj
-
-abcdefghijklmnopQrstuvwxyz
-kflngmherwaoupxziyvtqbjcsd
-*/
-
 TEST_F(RotorTest, EncryptNoPositionChangedHasRingOffset)
 {
     auto rotor = enigmaSimulator::Rotor(
@@ -208,16 +200,25 @@ TEST_F(RotorTest, EncryptNoPositionChangedHasRingOffset)
         << enigmaSimulator::RotorContactStr[revOut1] << "'";
 }
 
-/*
-abcdefghijklmnopQrstuvwxyz
-ekmflgdqvzntowyhxuspaibrcj
+TEST_F(RotorTest, EncryptPositionChangedHasRingOffset)
+{
+    auto rotor = enigmaSimulator::Rotor(
+    "Rotor 1",
+    valid_wiring_layout_,
+    std::vector<enigmaSimulator::RotorContact>());
 
-abcdefghijklmnopQrstuvwxyz
-kflngmherwaoupxziyvtqbjcsd
+    // Forward test 1
+    rotor.RingPosition(enigmaSimulator::kRotorContact_C);
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_G);
+    auto fwdOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_G);
+    EXPECT_EQ(fwdOut1, enigmaSimulator::kRotorContact_N)
+        << "Pos: 'G', Ring: 'C' From 'G' expecting 'N', got "
+        << enigmaSimulator::RotorContactStr[fwdOut1];
 
-M == F ???
-
-Input - 1 : 'M' => 'K'
-*/
-
-/// g -> c
+    // Reverse test
+    //rotor.RingPosition(enigmaSimulator::kRotorContact_C);
+    auto revOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_C, false);
+    EXPECT_EQ(revOut1, enigmaSimulator::kRotorContact_W)
+        << "Pos: 'G', Ring: 'C' From 'G' expecting 'N', got "
+        << enigmaSimulator::RotorContactStr[fwdOut1];
+}
