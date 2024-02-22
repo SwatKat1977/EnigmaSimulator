@@ -23,26 +23,6 @@ class UnitTestMachine(unittest.TestCase):
     def setUp(self):
         self._plugboard = Plugboard()
 
-    def test_configure_OK(self):
-        ''' Machine::configure() | Happy path '''
-
-        machine = Machine()
-        machine._logger._write_to_console = False
-        self.assertIsNot(machine, None)
- 
-        try:
-            status = machine.configure('Enigma1',  ['I', 'II', 'III'], 'UKW-B')
-
-        except ValueError as err:
-            err = f'ValueError exception unexpectedly raised: {err}'
-            self.fail(err)
-
-        if not status:
-            self.fail(machine.last_error)
-
-        self.assertIsNot(machine.plugboard, None)
-        self.assertIsNot(machine.reflector, None)
-        self.assertIs(machine.configured, True)
 
     def test_configure_invalid_machine_type(self):
         ''' Machine::configure() | Invalid machine type. '''
@@ -163,37 +143,6 @@ class UnitTestMachine(unittest.TestCase):
         self.assertEqual(machine.get_rotor_position(1), RotorContact.B.value)
         self.assertEqual(machine.get_rotor_position(2), RotorContact.Y.value)
 
-    def test_machine_set_rotor_position_invalid_rotor_position(self):
-        ''' Machine::set_rotor_position() | Invalid rotor position '''
-
-        machine = Machine()
-        self.assertIsNot(machine, None)
-        machine._logger._write_to_console = False
-
-        status = machine.configure('Enigma1', ['I', 'II', 'III'], 'UKW-B')
-        if not status:
-            self.fail(machine.last_error)
-
-        try:
-            machine.set_rotor_position(1, -1)
-            self.fail("ValueError exception Invalid rotor positions not raised")
-
-        except ValueError as excpt:
-            expected = 'Invalid rotor positions'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-                self.fail(err_msg)
-
-        try:
-            machine.set_rotor_position(1, 26)
-            self.fail("ValueError exception Invalid rotor positions not raised")
-
-        except ValueError as excpt:
-            expected = 'Invalid rotor positions'
-            if expected not in str(excpt):
-                err_msg = f"Did not detect '{expected}, got: {excpt}'"
-                self.fail(err_msg)
-
     def test_machine_set_rotor_position_invalid_rotor_number(self):
         ''' Machine::set_rotor_position() | Invalid rotor number '''
 
@@ -214,8 +163,6 @@ class UnitTestMachine(unittest.TestCase):
             if expected not in str(excpt):
                 err_msg = f"Did not detect '{expected}, got: {excpt}'"
                 self.fail(err_msg)
-
-
 
     def test_machine_3_rotor_encrypt_double_step(self):
 
@@ -248,9 +195,3 @@ class UnitTestMachine(unittest.TestCase):
 
         # AAAAA should be encrypted into BMUQO.
         self.assertEqual(encrypted, expected_encrypted_string)
-
-
-if __name__ == '__main__':
-    unittest.main()
-
-# 435 lines

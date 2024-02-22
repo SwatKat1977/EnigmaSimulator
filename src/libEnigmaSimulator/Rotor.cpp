@@ -246,7 +246,8 @@ namespace enigmaSimulator {
             int ring_offset = static_cast<int>(ring_position_)
                 - static_cast<int>(kRotorContact_A);
             RightRotateString (dest, ring_offset);
-            OffsetStringValue (dest, 1);
+            OffsetStringValue (dest, static_cast<int>(ring_position_)
+                - static_cast<int>(kRotorContact_A));
         }
 
         wiring_ = RotorWireConfiguration(dest, src);

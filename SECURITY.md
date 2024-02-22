@@ -8,7 +8,7 @@ currently being supported with security updates.
 | Version | Supported          |
 | ------- | ------------------ |
 | Pre-alpha C++ | :white_check_mark: |
-| Pre-alpga Python | :x:                |
+| Pre-alpha Python | :x:                |
 
 ## Reporting a Vulnerability
 
