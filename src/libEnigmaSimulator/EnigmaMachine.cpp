@@ -204,7 +204,6 @@ namespace enigmaSimulator {
         }
 
         EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
-        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
         if (RotorCount(static_cast<int>(rotor) +1) > model.TotalRotors ())
         {
             throw std::runtime_error ("Invalid rotor");
@@ -216,7 +215,6 @@ namespace enigmaSimulator {
     RotorContact EnigmaMachine::RotorPosition (RotorPositionNumber rotor)
     {
         EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
-        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
         if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
         {
             throw std::runtime_error ("Invalid rotor");
@@ -228,7 +226,6 @@ namespace enigmaSimulator {
     void EnigmaMachine::RingSetting (RotorPositionNumber rotor, RotorContact setting)
     {
         EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
-        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
         if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
         {
             throw std::runtime_error ("Invalid rotor");
@@ -240,7 +237,6 @@ namespace enigmaSimulator {
     RotorContact EnigmaMachine::RingSetting (RotorPositionNumber rotor)
     {
         EnigmaMachineType model = ENIGMA_MODELS.find (type_)->second;
-        RotorCount rotorCount = RotorCount (static_cast<int>(rotor) + 1);
         if (RotorCount (static_cast<int>(rotor) + 1) > model.TotalRotors ())
         {
             throw std::runtime_error ("Invalid rotor");
