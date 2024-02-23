@@ -41,6 +41,7 @@ namespace enigmaSimulator {
     void Rotor::RotorPosition (RotorContact position)
     {
         rotor_position_ = position;
+        RecalculateWiring ();
     }
 
     // Property getter : Position of the ring.
@@ -218,22 +219,10 @@ namespace enigmaSimulator {
 
     void Rotor::PrettyPrintWiring()
     {
-        int contact = kRotorContact_A;
-        std::string src;
-        std::string dest;
-
-        while (contact <= kRotorContact_Z)
-        {
-            src += RotorContactStr[contact];
-            dest += RotorContactStr[wiring_.WiringPathForward (
-                RotorContact(contact))];
-            contact++;
-        }
-
         TraceLog( kLogLevel_trace,
-                  "Source      : %s", src.c_str());
+                  "Source      : %s", wiring_.GetSrcWiringPathStr().c_str());
         TraceLog( kLogLevel_trace,
-                  "Destination : %s", dest.c_str());
+                  "Destination : %s", wiring_.GetDestWiringPathStr().c_str());
     }
 
     void Rotor::RecalculateWiring ()
@@ -254,13 +243,16 @@ namespace enigmaSimulator {
             OffsetStringValue (dest, ring_offset);
         }
 
+        // Stage 2 : Modify wiring based on rotor position.
+        // 1] Get the rotor offset (remove 1 to account for position 'a').
+        int rotor_offset = static_cast<int>(rotor_position_)
+            - static_cast<int>(kRotorContact_A);
+        // 2] Rotate all source wiring 'rotor_position_' places left.
+        LeftRotateString(src, rotor_offset);
+        // 2] Rotate all destination wiring 'rotor_position_' places left.
+        LeftRotateString(dest, rotor_offset);
+
         wiring_ = RotorWireConfiguration(dest, src);
     }
-
-    // abcdefghijklmnopQrstuvwxyz
-    // ekmflgdqvzntowyhxuspaibrcj
-
-    // abcdefghijklmnopQrstuvwxyz
-    // kflngmherwaoupxziyvtqbjcsd
 
 }   // namespace enigmaSimulator
