@@ -241,13 +241,17 @@ namespace enigmaSimulator {
         auto src = wiring_default_.GetSrcWiringPathStr ();
         auto dest = wiring_default_.GetDestWiringPathStr ();
 
+        // Stage 1 : Modify wiring based on ring position.
         if (ring_position_ > kRotorContact_A)
         {
+            // 1] Get the offset ring (remove 1 to account for position 'a').
             int ring_offset = static_cast<int>(ring_position_)
                 - static_cast<int>(kRotorContact_A);
+            // 2] Rotate all destination wiring 'ring_offset' places right.
             RightRotateString (dest, ring_offset);
-            OffsetStringValue (dest, static_cast<int>(ring_position_)
-                - static_cast<int>(kRotorContact_A));
+            // 3] Offset/increment all destination wiring by 'ring_offset'.
+            //    E.g. with ring_offset of 2, 'A' would become 'C'.
+            OffsetStringValue (dest, ring_offset);
         }
 
         wiring_ = RotorWireConfiguration(dest, src);
