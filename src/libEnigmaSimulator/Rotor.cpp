@@ -76,9 +76,6 @@ namespace enigmaSimulator {
         Enigma Rotor 1 will return 'K' for a letter 'B'
 
         === STEP 2 ===
-        Take ring settings into account : CURRENTLY NOT IMPLEMENTED
-
-        === STEP 3 ===
         Take rotor offset into account
         When a rotor has stepped, the offset must be taken into account when it
         comes to the output and the entrypoint of the next rotor.
@@ -141,27 +138,7 @@ namespace enigmaSimulator {
         }
 
         DebugLog( "Rotor::" + std::string(__func__),
-            "|==== STEP 2: Correct input contact with ring position ====|");
-        // STEP 2: Correct input contact using ring position
-        // Ring positions are not implemented - untested code
-
-#ifdef __USE_UNTESTED_CODE__
-        if self.__ringSetting > 1:
-            outputPin = outputPin + (self.__ringSetting -1)
-
-        if (outputPin - (self.__ringSetting -1)) <= 0:
-            outputPin = NumberOfRotorPins - ((self.__ringSetting - 1) \
-            - outputPin)
-        else:
-            outputPin -= (self.__ringSetting - 1)
-
-        if outputPin > NumberOfRotorPins:
-            outputPin = outputPin - NumberOfRotorPins;
-            final_contact = output_contact
-#endif
-
-        DebugLog( "Rotor::" + std::string(__func__),
-            "|==== STEP 3: Correct input contact with rotor offset ====|");
+            "|==== STEP 2: Correct input contact with rotor offset ====|");
 
         // STEP 3: Take rotor offset into account
         DebugLog( "Rotor::" + std::string(__func__),
