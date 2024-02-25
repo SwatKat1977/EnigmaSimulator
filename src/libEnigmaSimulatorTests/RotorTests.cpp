@@ -71,12 +71,12 @@ TEST_F(RotorTest, EncryptNoPositionOrRingOffset)
         valid_wiring_layout_,
         std::vector<enigmaSimulator::RotorContact>());
 
-    auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
+    auto output = rotor.EncryptForward(enigmaSimulator::kRotorContact_A);
     EXPECT_EQ(output, enigmaSimulator::kRotorContact_E)
         << "Expecting 'E', got '"
         << enigmaSimulator::RotorContactStr[output] << "'";
 
-    output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
+    output = rotor.EncryptReverse(enigmaSimulator::kRotorContact_A);
     EXPECT_EQ(output, enigmaSimulator::kRotorContact_U)
         << "Expecting 'E', got '"
         << enigmaSimulator::RotorContactStr[output] << "'";
@@ -102,16 +102,16 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
 
     // Forward test
     rotor.RotorPosition(enigmaSimulator::kRotorContact_B);
-    auto output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
+    auto output = rotor.EncryptForward(enigmaSimulator::kRotorContact_A);
     EXPECT_EQ(output, enigmaSimulator::kRotorContact_J)
         << "Expecting 'J', got '"
         << enigmaSimulator::RotorContactStr[output] << "'";
 
     // Reverse test
-    output = rotor.Encrypt(enigmaSimulator::kRotorContact_A, false);
-    EXPECT_EQ(output, enigmaSimulator::kRotorContact_V)
-        << "Expecting 'V', got '"
-        << enigmaSimulator::RotorContactStr[output] << "'";
+    output = rotor.EncryptReverse(enigmaSimulator::kRotorContact_H);
+    EXPECT_EQ(output, enigmaSimulator::kRotorContact_U)
+        << "From 'I' expecting 'U', got " << enigmaSimulator::RotorContactStr[output];
+
 
     /*
     Test encrypting a letter with a longer position change, the position is
@@ -125,7 +125,7 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
     on the way out it is offset -5 positions, therefore 'B' is returned.
     */
     rotor.RotorPosition(enigmaSimulator::kRotorContact_F);
-    output = rotor.Encrypt(enigmaSimulator::kRotorContact_A);
+    output = rotor.EncryptForward(enigmaSimulator::kRotorContact_A);
 
     ASSERT_EQ(output, enigmaSimulator::kRotorContact_B)
         << "Expecting 'B', got '"
@@ -145,7 +145,7 @@ TEST_F(RotorTest, EncryptPositionChangedSimpleNoRingOffset)
     on the way out it is at a -6 position, therefore 'B' is returned.
     */
     rotor.RotorPosition(enigmaSimulator::kRotorContact_D);
-    output = rotor.Encrypt(enigmaSimulator::kRotorContact_X);
+    output = rotor.EncryptForward(enigmaSimulator::kRotorContact_X);
 
     ASSERT_EQ(output, enigmaSimulator::kRotorContact_B)
         << "Expected 'B', got '"
@@ -182,19 +182,19 @@ TEST_F(RotorTest, EncryptNoPositionChangedHasRingOffset)
 
     // Forward test 1 / 2
     rotor.RingPosition(enigmaSimulator::kRotorContact_C);
-    auto fwdOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_G);
+    auto fwdOut1 = rotor.EncryptForward(enigmaSimulator::kRotorContact_G);
     EXPECT_EQ(fwdOut1, enigmaSimulator::kRotorContact_N)
         << "From 'G' expecting 'N', got " << enigmaSimulator::RotorContactStr[fwdOut1];
 
     // Forward test 2 / 2
     rotor.RingPosition(enigmaSimulator::kRotorContact_Z);
-    auto fwdOut2 = rotor.Encrypt(enigmaSimulator::kRotorContact_K);
+    auto fwdOut2 = rotor.EncryptForward(enigmaSimulator::kRotorContact_K);
     EXPECT_EQ(fwdOut2, enigmaSimulator::kRotorContact_S)
         << "From 'K' expecting 'S', got " << enigmaSimulator::RotorContactStr[fwdOut2];
 
     // Reverse test
     rotor.RingPosition(enigmaSimulator::kRotorContact_C);
-    auto revOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_C, false);
+    auto revOut1 = rotor.EncryptReverse(enigmaSimulator::kRotorContact_C);
     EXPECT_EQ(revOut1, enigmaSimulator::kRotorContact_W)
         << "From 'C' expecting 'W', got '"
         << enigmaSimulator::RotorContactStr[revOut1] << "'";
@@ -210,15 +210,16 @@ TEST_F(RotorTest, EncryptPositionChangedHasRingOffset)
     // Forward test 1
     rotor.RingPosition(enigmaSimulator::kRotorContact_C);
     rotor.RotorPosition(enigmaSimulator::kRotorContact_G);
-    auto fwdOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_G);
-    EXPECT_EQ(fwdOut1, enigmaSimulator::kRotorContact_N)
-        << "Pos: 'G', Ring: 'C' From 'G' expecting 'N', got "
+    auto fwdOut1 = rotor.EncryptForward(enigmaSimulator::kRotorContact_G);
+    EXPECT_EQ(fwdOut1, enigmaSimulator::kRotorContact_J)
+        << "Pos: 'G', Ring: 'C' From 'G' expecting 'J', got "
         << enigmaSimulator::RotorContactStr[fwdOut1];
 
     // Reverse test
-    //rotor.RingPosition(enigmaSimulator::kRotorContact_C);
-    auto revOut1 = rotor.Encrypt(enigmaSimulator::kRotorContact_C, false);
+    rotor.RingPosition(enigmaSimulator::kRotorContact_C);
+    rotor.RotorPosition(enigmaSimulator::kRotorContact_C);
+    auto revOut1 = rotor.EncryptReverse(enigmaSimulator::kRotorContact_Z);
     EXPECT_EQ(revOut1, enigmaSimulator::kRotorContact_W)
-        << "Pos: 'G', Ring: 'C' From 'G' expecting 'N', got "
+        << "Pos: 'J', Ring: 'Y' From 'Z' expecting 'N', got "
         << enigmaSimulator::RotorContactStr[fwdOut1];
 }
