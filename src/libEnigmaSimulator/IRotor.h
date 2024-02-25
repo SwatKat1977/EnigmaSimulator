@@ -47,9 +47,9 @@ namespace enigmaSimulator {
 
         virtual void Step () = 0;
 
-        virtual RotorContact Encrypt (
-            RotorContact contact,
-            bool forward = true) = 0;
+        virtual RotorContact EncryptForward (RotorContact contact) = 0;
+
+        virtual RotorContact EncryptReverse (RotorContact contact) = 0;
 
         virtual bool WillStepNext () = 0;
 
