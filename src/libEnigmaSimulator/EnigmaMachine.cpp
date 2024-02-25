@@ -265,7 +265,6 @@ namespace enigmaSimulator {
 
             if (static_cast<int>(position +1) == details.TotalRotors())
             {
-                //std::cout << "Rotor : " << rotor << std::endl;
                 // As the right-hand pawl has no rotor or ring to its right,
                 // rotor stepping happens with every key depression.
                 //willStepNextRotor = rotor->WillStepNext();
@@ -273,7 +272,6 @@ namespace enigmaSimulator {
             }
             else
             {
-                printf("[TMP] Rotor to step...\n");
                 rotor->Step();
             }
 
