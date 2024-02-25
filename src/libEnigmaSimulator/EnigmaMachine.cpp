@@ -145,7 +145,7 @@ namespace enigmaSimulator {
 
             // Get substituted letter from each rotor. The returned value will
             // take into account the position of the rotor.
-            currentLetter = rotor->second->Encrypt (currentLetter);
+            currentLetter = rotor->second->EncryptForward (currentLetter);
 
             TraceLog(kLogLevel_trace,
                 "=> Input : '%c' (%d) | Output : '%c' (%d)",
@@ -176,7 +176,7 @@ namespace enigmaSimulator {
             TraceLog(kLogLevel_trace, "<==== ROTOR '%s' ====>",
                 rotor->second->RotorName ().c_str ());
             auto oldLetter = currentLetter;
-            currentLetter = rotor->second->Encrypt (currentLetter, false);
+            currentLetter = rotor->second->EncryptReverse (currentLetter);
 
             TraceLog(kLogLevel_trace,
                 "=> Input : '%c' (%d) | Output : '%c' (%d)",
