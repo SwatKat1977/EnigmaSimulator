@@ -29,7 +29,7 @@ TEST_F(RotorTest, ConstructWithValidWiring)
             valid_wiring_layout_,
             std::vector<enigmaSimulator::RotorContact>());
     }
-    catch(const std::exception& e)
+    catch(const std::exception&)
     {
         FAIL() << "Expected valid rotor wiring";
     }
@@ -50,7 +50,7 @@ TEST_F(RotorTest, ConstructWithInvalidWiring)
             std::vector<enigmaSimulator::RotorContact>());
         FAIL() << "Expected invalid rotor wiring";
     }
-    catch(const std::exception& e)
+    catch(const std::exception&)
     {
     }
 }
