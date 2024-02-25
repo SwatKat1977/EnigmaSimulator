@@ -122,12 +122,13 @@ namespace enigmaSimulator {
                   "=> Current Rotor position : '%c' (%d) is offset by %d",
             RotorContactStr[rotor_position_], rotor_position_, rotor_offset);
 
-        // STEP 1: Correct the input contact entrypoint for position
+        // Correct the input contact entrypoint for position
         auto contact_position = OffsetContactPosition (
             contact, rotor_position_ - kRotorContact_A);
 
         RotorContact output_contact = kRotorContact_end;
 
+        // Get the destination, in this case the 'source'.
         output_contact = wiring_.WiringPathReverse (contact_position);
         DebugLog( "Rotor::EncryptReverse",
             "=> Backwards destination contact for '%c' (%d) : '%c' (%d)",
