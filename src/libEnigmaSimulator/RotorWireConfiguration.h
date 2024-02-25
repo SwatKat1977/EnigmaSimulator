@@ -14,7 +14,7 @@
 */
 #ifndef ROTORWIRINGLAYOUT_H
 #define ROTORWIRINGLAYOUT_H
-#include <map>
+#include <vector>
 #include <stdexcept>
 #include <string>
 #include "Definitions.h"
@@ -24,7 +24,7 @@
 
 namespace enigmaSimulator {
 
-    using WiringLayoutMap = std::map<RotorContact, WiringEntry>;
+    using WiringLayout = std::vector<WiringEntry>;
 
     const std::string DEFAULT_SRC_LAYOUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -48,10 +48,9 @@ namespace enigmaSimulator {
 
             for (int i = 0; i < src_layout.size (); i++)
             {
-                RotorContact position = RotorContact (i + 1);
                 RotorContact src = RotorContact ((src_layout.c_str ()[i] - 65) + 1);
                 RotorContact dest = RotorContact ((dest_layout.c_str ()[i] - 65) + 1);
-                AddEntry (position, src, dest);
+                AddEntry (src, dest);
             }
         }
 
@@ -63,7 +62,7 @@ namespace enigmaSimulator {
         {
             if (!HasValidWiring ()) throw std::runtime_error ("Invalid wiring");
 
-            return wiring_.find (src)->second.dest;
+            return wiring_[(static_cast<int>(src) - 1)].dest;
         }
 
         RotorContact WiringPathReverse (const RotorContact dest)
@@ -74,9 +73,9 @@ namespace enigmaSimulator {
 
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                if (it->second.dest == dest)
+                if (it->dest == dest)
                 {
-                    src = it->second.src;
+                    src = it->src;
                 }
             }
 
@@ -97,7 +96,7 @@ namespace enigmaSimulator {
                 return { kRotorContact_end, kRotorContact_end };
             }
 
-            return { wiring_it_->second.src, wiring_it_->second.dest };
+            return { wiring_it_->src, wiring_it_->dest };
         }
 
         void PrettyPrintSrcWiringPath ()
@@ -115,7 +114,7 @@ namespace enigmaSimulator {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                wiring.push_back ( RotorContactStr[it->second.src]);
+                wiring.push_back ( RotorContactStr[it->src]);
             }
 
             return wiring;
@@ -126,32 +125,32 @@ namespace enigmaSimulator {
             std::string wiring;
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                wiring.push_back (RotorContactStr[it->second.dest]);
+                wiring.push_back (RotorContactStr[it->dest]);
             }
 
             return wiring;
         }
 
     private:
-        WiringLayoutMap wiring_;
-        WiringLayoutMap::iterator wiring_it_;
+        WiringLayout wiring_;
+        WiringLayout::iterator wiring_it_;
 
-        void AddEntry (RotorContact position, RotorContact src, RotorContact dest)
+        void AddEntry (RotorContact src, RotorContact dest)
         {
             for (auto it = wiring_.begin (); it != wiring_.end (); ++it)
             {
-                if (it->second.src == src)
+                if (it->src == src)
                 {
                     throw std::runtime_error ("Duplicate src wiring contact!");
                 }
 
-                if (it->second.dest == dest)
+                if (it->dest == dest)
                 {
                     throw std::runtime_error ("Duplicate destination wiring contact!");
                 }
             }
 
-            wiring_.insert ({ position, {src, dest} });
+            wiring_.push_back ( {src, dest} );
         }
 
     };

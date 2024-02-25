@@ -12,6 +12,8 @@
 #include "Logging.h"
 #include "StringUtils.h"
 
+using namespace enigmaSimulator;
+
 void LogDebugMessage(std::string functionName, std::string msg, bool clipped)
 {
     std::cout << "[DEBUG] " << functionName << "() " << msg << std::endl;
@@ -62,9 +64,19 @@ int main (int argc, char** argv)
 
     try
     {
-        //machine.RotorPosition (enigmaSimulator::kRotorPositionNumber_1,
-        //    enigmaSimulator::kRotorContact_B);
-        machine.RingSetting (enigmaSimulator::kRotorPositionNumber_2, enigmaSimulator::kRotorContact_C);
+        printf("[PRESET] Setting Rotor 1 rotor position to 'B'\n");
+        machine.RotorPosition (enigmaSimulator::kRotorPositionNumber_1,
+            enigmaSimulator::kRotorContact_C);
+        machine.RotorPosition (enigmaSimulator::kRotorPositionNumber_2,
+            enigmaSimulator::kRotorContact_Z);
+
+        printf("[PRESET] Setting Rotor 2 ring position to 'C'\n");
+        machine.RingSetting (
+            enigmaSimulator::kRotorPositionNumber_1,
+            enigmaSimulator::kRotorContact_Y);
+        machine.RingSetting (
+            enigmaSimulator::kRotorPositionNumber_2,
+            enigmaSimulator::kRotorContact_G);
     }
     catch (std::exception& ex)
     {
